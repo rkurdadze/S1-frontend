@@ -23,10 +23,10 @@
         <button class="icon-btn" aria-label="Избранное">
           <span class="material">♡</span>
         </button>
-        <button class="icon-btn" aria-label="Корзина">
+        <a class="icon-btn" aria-label="Корзина" [routerLink]="['/cart']">
           <span class="material">🛍</span>
-          <span class="badge">3</span>
-        </button>
+          <span class="badge">{{ cartCount$ | async }}</span>
+        </a>
 
         @if (isLoggedIn$ | async) {
           <div class="dropdown">

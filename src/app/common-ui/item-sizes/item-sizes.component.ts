@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {Inventories} from "../../data/interfaces/inventories.interface";
 import {EditModalComponent, EditModalField} from "../edit-modal/edit-modal.component";
@@ -25,6 +25,8 @@ export class ItemSizesComponent implements OnChanges {
     @Input() item: Item | null = null;
     @Input() forColor: string | null = null;
     @Input() isAdmin: boolean = false;
+    @Input() selectedSize: string | null = null;
+    @Output() sizeSelected = new EventEmitter<string>();
 
     groupedInventories: Map<string, Inventories[]> | null = null;
 
@@ -150,7 +152,7 @@ export class ItemSizesComponent implements OnChanges {
 
 
     openInventoryModal(sizeName: string): void {
-        if (this.groupedInventories && this.groupedInventories.has(sizeName)) {
+        if (this.isAdmin && this.groupedInventories && this.groupedInventories.has(sizeName)) {
             // ✅ Use .get(sizeName) instead of indexing
             let inventoryList = this.groupedInventories.get(sizeName);
 
@@ -166,7 +168,7 @@ export class ItemSizesComponent implements OnChanges {
                 console.warn(`No inventory found for size: ${sizeName}`);
             }
         } else {
-            console.warn(`Size "${sizeName}" not found in groupedInventories`);
+            this.selectSize(sizeName);
         }
     }
 
@@ -271,6 +273,13 @@ export class ItemSizesComponent implements OnChanges {
 
     groupedInventoriesKeys(): string[] {
         return this.groupedInventories ? Array.from(this.groupedInventories.keys()) : [];
+    }
+
+    selectSize(sizeName: string): void {
+        if (this.isAdmin) return;
+        if (this.getTotalStockCount(sizeName) === 0) return;
+        this.selectedSize = sizeName;
+        this.sizeSelected.emit(sizeName);
     }
 
 }

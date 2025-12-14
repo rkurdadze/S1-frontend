@@ -21,6 +21,7 @@ import {GoogleAuthService} from "../../data/services/google-auth.service";
 import {ItemVisualPanelComponent} from "../../common-ui/item-visual-panel/item-visual-panel.component";
 import {ItemMetaPanelComponent} from "../../common-ui/item-meta-panel/item-meta-panel.component";
 import {ItemSuggestionRailComponent} from "../../common-ui/item-suggestion-rail/item-suggestion-rail.component";
+import {CartService} from "../../data/services/cart.service";
 
 @Component({
     selector: 'app-item-page',
@@ -51,6 +52,8 @@ export class ItemPageComponent implements OnInit {
     selectedImage: { id: string, url: string } | null = null;
     currentIndex: number = 0;
     currentColor: string = '#ffffff';
+    selectedSize: string | null = null;
+    quantity: number = 1;
 
     colorImageMap: { [colorName: string]: { id: string, url: string }[] } = {};
     selectedColor: string | null = null;
@@ -68,7 +71,8 @@ export class ItemPageComponent implements OnInit {
         private itemService: ItemService,
         private loadingService: LoaderService,
         private photoService: PhotoService,
-        private googleAuth: GoogleAuthService
+        private googleAuth: GoogleAuthService,
+        private cartService: CartService
     ) {
         this.isLoggedIn$ = this.googleAuth.user$;
         this.isLoggedIn$.subscribe(user => {
@@ -184,6 +188,8 @@ export class ItemPageComponent implements OnInit {
         this.http.get<Item>(`${this.baseApiUrl}items/${id}`).subscribe({
             next: (data) => {
                 this.item = data;
+                this.quantity = 1;
+                this.selectedSize = null;
                 this.modalData = data;
                 this.loadImagesByColor(data.colors, forColor, photoIdToSelectAfterLoad);
                 this.loadSuggestions(data.id);
@@ -305,6 +311,7 @@ export class ItemPageComponent implements OnInit {
             this.updateImagesForSelectedColor();
         }
         this.currentColor = colorName;
+        this.selectedSize = null;
     }
 
     updateImagesForSelectedColor(): void {
@@ -341,5 +348,42 @@ export class ItemPageComponent implements OnInit {
             this.currentIndex = (this.currentIndex + 1) % this.images.length;
             this.selectedImage = this.images[this.currentIndex];
         }
+    }
+
+    onSizeSelected(sizeName: string): void {
+        this.selectedSize = sizeName;
+    }
+
+    get itemPrice(): number {
+        return this.item?.price ?? 0;
+    }
+
+    onQuantityChange(value: number): void {
+        this.quantity = value > 0 ? value : 1;
+    }
+
+    addToCart(): void {
+        if (!this.item || !this.item.id) return;
+        if (!this.selectedColor) {
+            alert('Выберите цвет перед добавлением в корзину.');
+            return;
+        }
+        if (!this.selectedSize) {
+            alert('Выберите размер перед добавлением в корзину.');
+            return;
+        }
+
+        this.cartService.addItem({
+            itemId: this.item.id,
+            name: this.item.name,
+            colorName: this.selectedColor,
+            sizeName: this.selectedSize,
+            quantity: this.quantity,
+            price: this.itemPrice,
+            photoId: this.selectedImage ? Number(this.selectedImage.id) : undefined,
+            item: this.item
+        });
+
+        alert('Товар добавлен в корзину. Перейдите в корзину для оформления.');
     }
 }

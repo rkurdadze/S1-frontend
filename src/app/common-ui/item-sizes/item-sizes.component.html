@@ -1,7 +1,10 @@
 <div class="item-page__sizes">
     <ng-container *ngIf="groupedInventories && groupedInventories.size > 0">
         <div *ngFor="let sizeName of groupedInventoriesKeys()">
-            <div class="size-box" (click)="isAdmin ? openInventoryModal(sizeName) : null">
+            <div class="size-box"
+                 [class.size-box--disabled]="getTotalStockCount(sizeName)===0 && !isAdmin"
+                 [class.size-box--selected]="selectedSize === sizeName"
+                 (click)="openInventoryModal(sizeName)">
                 {{ sizeName }}
 
                 @if (isAdmin) {

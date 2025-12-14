@@ -298,10 +298,36 @@ h1 {
   gap: 8px;
 }
 
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.price {
+  font-size: 28px;
+  font-weight: 800;
+}
+
 .cta-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 10px;
+}
+
+.quantity-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quantity-control input {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
 }
 
 .btn {

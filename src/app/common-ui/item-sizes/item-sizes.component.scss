@@ -66,3 +66,15 @@
 .size-box.out-of-stock {
   border: 1px solid red;
 }
+
+.size-box--selected {
+  border: 2px solid var(--dark-color);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+.size-box--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}

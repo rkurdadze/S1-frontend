@@ -8,6 +8,9 @@ import { GoogleAuthService } from '../../data/services/google-auth.service';
 import {Observable} from "rxjs";
 import {LoginButtonComponent} from "../login-button/login-button.component";
 import {BASE_API_URL} from "../../app.config";
+import {CartService} from "../../data/services/cart.service";
+import {map} from "rxjs/operators";
+import {RouterLink} from "@angular/router";
 
 declare var bootstrap: any;
 
@@ -18,13 +21,16 @@ declare var bootstrap: any;
     EditModalComponent,
     AsyncPipe,
     NgIf,
-    LoginButtonComponent
+    LoginButtonComponent,
+    RouterLink
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   isLoggedIn$: Observable<any>;
+  private cartService = inject(CartService);
+  cartCount$ = this.cartService.items$.pipe(map(items => items.reduce((total, item) => total + item.quantity, 0)));
   baseApiUrl = inject(BASE_API_URL);
   userIcon: string | null = null;
   isAdmin: boolean = false;

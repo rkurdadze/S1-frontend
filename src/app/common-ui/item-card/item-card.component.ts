@@ -1,6 +1,6 @@
 import {Component, inject, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Item} from '../../data/interfaces/item.interface';
-import {JsonPipe, NgClass, NgIf, NgStyle} from '@angular/common';
+import {DecimalPipe, JsonPipe, NgClass, NgIf, NgStyle} from '@angular/common';
 import {ItemHelpers} from '../../helpers/ItemHelpers';
 import {Router} from "@angular/router";
 import {BASE_API_URL} from "../../app.config";
@@ -14,7 +14,8 @@ import {PhotoService} from "../../data/services/photo.service";
         JsonPipe,
         NgStyle,
         NgClass,
-        NgIf
+        NgIf,
+        DecimalPipe
     ],
   templateUrl: './item-card.component.html',
   styleUrl: './item-card.component.scss'
