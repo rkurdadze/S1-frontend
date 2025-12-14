@@ -132,9 +132,21 @@
             <label>Количество</label>
             <input type="number" min="1" [(ngModel)]="quantity" (change)="onQuantityChange(quantity)" />
           </div>
-          <button class="btn btn-dark" (click)="addToCart()">В корзину</button>
-          <button class="btn btn-outline">Сохранить образ</button>
-          <button class="btn btn-ghost">Задать вопрос стилисту</button>
+          <button class="btn btn-dark" (click)="addToCart()">
+              <i class="fa-solid fa-cart-plus"></i>
+              В корзину
+          </button>
+        </div>
+
+        <div class="share-actions" *ngIf="item">
+          <button type="button" class="btn btn-social btn-facebook" (click)="openShareModal('facebook')">
+            <i class="fab fa-facebook-f"></i>
+            Поделиться в Facebook
+          </button>
+          <button disabled type="button" class="disabled btn btn-social btn-instagram" (click)="openShareModal('instagram')">
+            <i class="fab fa-instagram"></i>
+            Поделиться в Instagram
+          </button>
         </div>
       </div>
     </div>
@@ -215,3 +227,85 @@
   [initialData]="modalData"
   (modalResult)="onModalResult($event)"
 ></app-edit-modal>
+
+<div class="share-modal__backdrop" *ngIf="shareModalOpen">
+  <div class="share-modal" role="dialog" aria-modal="true">
+    <div class="share-modal__header">
+      <div>
+        <p class="eyebrow">Поделиться товаром</p>
+        <h3>{{ item?.name }}</h3>
+      </div>
+      <button class="btn btn-ghost btn-icon" type="button" (click)="closeShareModal()" aria-label="Закрыть">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="share-modal__content">
+      <div class="share-preview">
+        <div class="share-preview__grid" *ngIf="sharePreviewImages.length; else emptyPreview">
+          <img
+            *ngFor="let image of sharePreviewImages; trackBy: trackByIndex"
+            [src]="image"
+            [alt]="item?.name || 'Превью'"
+          />
+        </div>
+        <ng-template #emptyPreview>
+          <div class="share-preview__empty">
+            <i class="fas fa-image"></i>
+            <p>Нет изображений для выбранного цвета</p>
+          </div>
+        </ng-template>
+        <p class="muted">Все фото выбранного цвета будут отправлены как {{ shareDestination === 'story' ? 'история' : 'пост' }}.</p>
+      </div>
+
+      <div class="share-form">
+        <label class="form-label">Платформа</label>
+        <div class="chip-group">
+          <button type="button" class="chip" [class.active]="sharePlatform === 'facebook'" (click)="sharePlatform = 'facebook'">
+            <i class="fab fa-facebook-f"></i>
+            Facebook
+          </button>
+          <button disabled type="button" class="chip disabled" [class.active]="sharePlatform === 'instagram'" (click)="sharePlatform = 'instagram'">
+            <i class="fab fa-instagram"></i>
+            Instagram
+          </button>
+        </div>
+
+        <label class="form-label">Формат публикации</label>
+        <div class="chip-group">
+          <button type="button" class="chip" [class.active]="shareDestination === 'feed'" (click)="shareDestination = 'feed'">
+            <i class="fas fa-stream"></i>
+            Лента
+          </button>
+          <button disabled type="button" class="chip disabled" [class.active]="shareDestination === 'story'" (click)="shareDestination = 'story'">
+            <i class="fas fa-history"></i>
+            Story
+          </button>
+        </div>
+
+        <label class="form-label">Текст поста</label>
+        <textarea [(ngModel)]="shareCaption" rows="5" placeholder="Отредактируйте перед публикацией"></textarea>
+        <p class="share-hint">После нажатия мы скопируем текст и ссылку в буфер обмена, а затем откроем окно компоновки Facebook или Instagram. Если поле в composer окажется пустым, просто вставьте скопированный текст перед отправкой.</p>
+        <p class="share-error" *ngIf="shareError">{{ shareError }}</p>
+
+        <div class="share-modal__actions">
+          <button type="button" class="btn btn-ghost" (click)="closeShareModal()">Отмена</button>
+
+            <button
+                    type="button"
+                    class="btn btn-dark"
+                    [disabled]="shareBusy || !sharePlatform"
+                    (click)="shareItem()"
+            >
+                <i class="fas"
+                   [class.fa-spinner]="shareBusy"
+                   [class.fa-share]="!shareBusy"
+                   [class.fa-spin]="shareBusy"></i>
+                {{ shareBusy ? 'Публикуем…' : 'Поделиться' }}
+            </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

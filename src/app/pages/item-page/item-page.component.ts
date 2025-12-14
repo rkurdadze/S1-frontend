@@ -13,7 +13,7 @@ import {ColorPickerComponent} from "../../common-ui/color-picker/color-picker.co
 import {LoaderService} from "../../data/services/loader.service";
 import {LoadingComponent} from "../../common-ui/loading/loading.component";
 import {PhotoService} from "../../data/services/photo.service";
-import {Observable, Subscription} from "rxjs";
+import {Observable, Subscription, firstValueFrom} from "rxjs";
 import {EventService} from "../../data/services/event.service";
 import {ItemColorsComponent} from "../../common-ui/item-colors/item-colors.component";
 import {ItemSizesComponent} from "../../common-ui/item-sizes/item-sizes.component";
@@ -22,6 +22,8 @@ import {ItemVisualPanelComponent} from "../../common-ui/item-visual-panel/item-v
 import {ItemMetaPanelComponent} from "../../common-ui/item-meta-panel/item-meta-panel.component";
 import {ItemSuggestionRailComponent} from "../../common-ui/item-suggestion-rail/item-suggestion-rail.component";
 import {CartService} from "../../data/services/cart.service";
+import {ShareService} from "../../data/services/share.service";
+import {ShareRequest} from "../../data/interfaces/share.interface";
 
 @Component({
     selector: 'app-item-page',
@@ -64,6 +66,14 @@ export class ItemPageComponent implements OnInit {
 
     isAdmin: boolean = false;
 
+    shareModalOpen = false;
+    sharePlatform: 'facebook' | 'instagram' | null = null;
+    shareDestination: 'feed' | 'story' = 'feed';
+    shareCaption = '';
+    shareError = '';
+    shareBusy = false;
+    sharePreviewImages: string[] = [];
+
     constructor(
         private eventService: EventService,
         private route: ActivatedRoute,
@@ -72,7 +82,8 @@ export class ItemPageComponent implements OnInit {
         private loadingService: LoaderService,
         private photoService: PhotoService,
         private googleAuth: GoogleAuthService,
-        private cartService: CartService
+        private cartService: CartService,
+        private shareService: ShareService
     ) {
         this.isLoggedIn$ = this.googleAuth.user$;
         this.isLoggedIn$.subscribe(user => {
@@ -386,4 +397,205 @@ export class ItemPageComponent implements OnInit {
 
         alert('Товар добавлен в корзину. Перейдите в корзину для оформления.');
     }
+
+    openShareModal(platform: 'facebook' | 'instagram'): void {
+        if (!this.item) return;
+        this.sharePlatform = platform;
+        this.shareDestination = 'feed';
+        this.shareCaption = this.buildDefaultShareCaption();
+        this.sharePreviewImages = this.getImagesForCurrentSelection();
+        this.shareError = '';
+        this.shareModalOpen = true;
+    }
+
+    closeShareModal(): void {
+        this.shareModalOpen = false;
+        this.shareBusy = false;
+        this.shareError = '';
+    }
+
+    private getImagesForCurrentSelection(): string[] {
+        if (this.selectedColor && this.colorImageMap[this.selectedColor]?.length) {
+            return this.colorImageMap[this.selectedColor].map(img => img.url);
+        }
+
+        const firstColorWithPhotos = this.item?.colors?.find(c => this.colorImageMap[c.name]?.length);
+        if (firstColorWithPhotos) {
+            return this.colorImageMap[firstColorWithPhotos.name].map(img => img.url);
+        }
+
+        return [];
+    }
+
+    private buildDefaultShareCaption(): string {
+        if (!this.item) return '';
+        const parts: string[] = [];
+        parts.push(`${this.item.name}${this.selectedColor ? ` · ${this.selectedColor}` : ''}`);
+        if (this.item.description) {
+            parts.push(this.item.description);
+        }
+        parts.push(`Цена: ${this.itemPrice.toLocaleString('ru-RU')} ₸`);
+        return parts.join('\n');
+    }
+
+    trackByIndex(index: number): number {
+        return index;
+    }
+
+    private getShareUrl(): string {
+        if (this.item?.id) {
+            const urlTree = this.router.createUrlTree(['/item', this.item.id]);
+            return `${window.location.origin}${this.router.serializeUrl(urlTree)}`;
+        }
+        return window.location.href;
+    }
+
+    private buildShareRequest(): ShareRequest | null {
+        if (!this.item || !this.sharePlatform) return null;
+
+        return {
+            platform: this.sharePlatform,
+            destination: this.shareDestination,
+            caption: this.shareCaption,
+            url: this.getShareUrl(),
+            images: this.getImagesForCurrentSelection(),
+            colorName: this.selectedColor,
+            itemName: this.item.name,
+            description: this.item.description,
+            price: this.itemPrice,
+            itemId: this.item.id,
+        };
+    }
+
+    private openFacebookComposer(url: string, text: string): void {
+        const params = new URLSearchParams({
+            u: url,
+        });
+
+        if (text) {
+            params.set('quote', text);
+        }
+
+        const composerUrl = `https://www.facebook.com/sharer/sharer.php?${params.toString()}`;
+        window.open(composerUrl, '_blank', 'noopener');
+    }
+
+    private async copyShareText(text: string): Promise<void> {
+        if (!navigator.clipboard) return;
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (error) {
+            console.warn('Не удалось скопировать подпись', error);
+        }
+    }
+
+    private async openInstagramComposer(text: string): Promise<void> {
+        await this.copyShareText(text);
+
+        const instagramPath = this.shareDestination === 'story'
+            ? 'https://www.instagram.com/create/story/'
+            : 'https://www.instagram.com/create/details/';
+
+        window.open(instagramPath, '_blank', 'noopener');
+    }
+
+    async shareItem(): Promise<void> {
+        if (!this.item || this.item.id == null || !this.sharePlatform) {
+            this.shareError = 'Товар не загружен или ещё не сохранён';
+            return;
+        }
+
+        const shareRequest = this.buildShareRequest();
+        if (!shareRequest) {
+            this.shareError = 'Недостаточно данных';
+            return;
+        }
+
+        // ✅ ТЕКСТ ДЛЯ CLIPBOARD — СРАЗУ
+        const clipboardText = [
+            shareRequest.caption,
+            shareRequest.description,
+            `Цена:  ₸`,
+            shareRequest.url
+        ]
+            .filter(Boolean)
+            .join('\n\n');
+
+        // ✅ СИНХРОННО (работает в Safari)
+        const copied =
+            this.copyToClipboardSync(clipboardText) ||
+            (navigator.clipboard
+                ? await navigator.clipboard.writeText(clipboardText).then(() => true).catch(() => false)
+                : false);
+
+        if (!copied) {
+            console.warn('Clipboard copy failed');
+        }
+
+        // 🔻 ТОЛЬКО ПОСЛЕ ЭТОГО — async
+        this.shareBusy = true;
+        this.shareError = '';
+
+        try {
+            const response = await firstValueFrom(
+                this.shareService.createItemShare(this.item.id, shareRequest)
+            );
+
+            const shareUrl = response?.shareUrl || shareRequest.url;
+
+            // ---------- FACEBOOK ----------
+            if (this.sharePlatform === 'facebook') {
+                if (shareUrl.includes('localhost') || shareUrl.includes('127.0.0.1')) {
+                    this.shareError =
+                        'Facebook не поддерживает публикацию с localhost. ' +
+                        'Текст скопирован — вставьте вручную.';
+                    return;
+                }
+
+                const fbUrl =
+                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+
+                window.open(fbUrl, '_blank');
+            }
+
+            // ---------- INSTAGRAM ----------
+            if (this.sharePlatform === 'instagram') {
+                const instagramPath =
+                    this.shareDestination === 'story'
+                        ? 'https://www.instagram.com/create/story/'
+                        : 'https://www.instagram.com/create/details/';
+
+                window.open(instagramPath, '_blank');
+            }
+
+            this.closeShareModal();
+
+        } catch {
+            this.shareError = 'Не удалось подготовить публикацию';
+        } finally {
+            this.shareBusy = false;
+        }
+    }
+
+    private copyToClipboardSync(text: string): boolean {
+        try {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            const success = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            return success;
+        } catch {
+            return false;
+        }
+    }
+
+
+
+
 }
