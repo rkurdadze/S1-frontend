@@ -1,0 +1,41 @@
+<div class="item-card" (click)="navigateToItemPage()">
+  <div class="item-card__media">
+    <img [src]="getPhotoSrc()" [alt]="item.name" />
+    <span class="item-card__badge">{{ getPrimaryColor() }}</span>
+    <div class="item-card__overlay">
+      <div class="item-card__colors">
+        @for (color of item.colors; track color.id) {
+          <div
+            class="color-circle"
+            [ngStyle]="{'background-color': color.name.toLowerCase()}"
+            [ngClass]="{'out-of-stock': isColorOutOfStock(color)}"
+          ></div>
+        }
+      </div>
+      <div class="item-card__sizes">
+        @for (size of getUniqueSizes(item); track size.id) {
+          <div
+            class="size-box"
+            [ngClass]="{'out-of-stock': isOutOfStock(item, size)}"
+          >
+            {{ size.name }}
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="item-card__body">
+    <div class="item-card__title">
+      <span *ngIf="!isProduction" class="muted">#{{ item.id }}</span>
+      <h3>{{ item.name }}</h3>
+    </div>
+    <p class="item-card__desc">{{ item.description }}</p>
+    <div class="item-card__meta">
+      <span class="pill">{{ item.colors.length }} цвета</span>
+      <span class="pill" [ngClass]="{'pill--warn': totalStock(item) === 0}">
+        {{ totalStock(item) === 0 ? 'Нет в наличии' : totalStock(item) + ' шт.' }}
+      </span>
+    </div>
+  </div>
+</div>

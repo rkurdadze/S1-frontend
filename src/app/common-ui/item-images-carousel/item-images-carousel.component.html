@@ -1,0 +1,13 @@
+@if (images.length > 1 || isAdmin) {
+    <div class="image-carousel" style="grid-area: left;">
+        <div *ngFor="let img of images; let i = index" class="carousel-item-my" (click)="selectImage(img)">
+            <img [src]="img.url + '/200'" [class.selected]="img === selectedImage" loading="lazy" alt="Item image"/>
+
+            @if (isAdmin) {
+                <button type="button" class="btn btn-sm btn-danger delete-icon" (click)="deleteImage(img.id, $event)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            }
+        </div>
+    </div>
+}

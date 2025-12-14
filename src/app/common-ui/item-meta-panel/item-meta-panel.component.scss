@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.meta-card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), #f8fafc);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.meta-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #e5e7eb;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+
+.meta-card__title {
+  margin: 0 0 4px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.meta-card__subtitle {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.45;
+}

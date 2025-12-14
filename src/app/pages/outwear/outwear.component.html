@@ -1,0 +1,142 @@
+<section class="hero" id="new-drop">
+  <div class="hero__content">
+    <p class="eyebrow">Новая зима 24/25</p>
+    <h1>Архитектурные силуэты, тёплые материалы и идеальная посадка.</h1>
+    <p class="lede">Пуховики, тренчи и жилеты, которые работают в городе и в путешествии. Все модели можно адаптировать под ваш цвет и длину.</p>
+    <div class="hero__cta">
+      <a class="btn primary" href="#collections">Смотреть капсулы</a>
+      <a class="btn ghost" href="#product-grid">Все позиции</a>
+    </div>
+    <div class="hero__stats">
+      <div><strong>48</strong><span>моделей на складе</span></div>
+      <div><strong>5-7</strong><span>дней кастомизации</span></div>
+      <div><strong>-25°C</strong><span>тесты утепления</span></div>
+    </div>
+  </div>
+  <div class="hero__visual">
+    <div class="hero__card">
+      <span class="chip">Lookbook</span>
+      <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1100&q=80" alt="outerwear" />
+      <div class="hero__note">Матовые ткани, скрытые молнии и утеплитель 750 FP</div>
+    </div>
+  </div>
+</section>
+
+
+<!--<div class="section-head">-->
+<!--    <div>-->
+<!--        <p class="eyebrow">Collections</p>-->
+<!--    </div>-->
+<!--</div>-->
+<section class="collection-cards" id="collections">
+  @for (collection of highlightCollections; track collection.title) {
+    <article class="collection-card">
+      <div class="collection-card__image">
+        <img [src]="collection.image" [alt]="collection.title" />
+        <span class="chip">{{ collection.tag }}</span>
+      </div>
+      <div class="collection-card__body">
+        <h3>{{ collection.title }}</h3>
+        <p>{{ collection.description }}</p>
+        <a [href]="collection.anchor" class="text-link">Смотреть подборку →</a>
+      </div>
+    </article>
+  }
+</section>
+
+<section class="product-area" id="product-grid">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Каталог</p>
+      <h2>Готовые модели и кастомные заказы</h2>
+      <p class="lede">Все позиции доступны для примерки в шоуруме и онлайн-консультации.</p>
+    </div>
+    <div class="filters">
+      <button class="pill active">Все</button>
+      <button class="pill">Пуховики</button>
+      <button class="pill">Тренчи</button>
+      <button class="pill">Жилеты</button>
+    </div>
+  </div>
+
+  <div class="item-card__wrapper">
+    @if (items.length === 0) {
+      <div class="empty">Каталог пока пуст. Добавьте позиции через панель администратора.</div>
+    } @else {
+      @for (item of items; track item.id) {
+        <app-item-card [item]="item"></app-item-card>
+      }
+    }
+  </div>
+</section>
+
+<section class="lookbook" id="lookbook">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Lookbook</p>
+      <h2>Вдохновение и готовые образы</h2>
+    </div>
+    <a href="#" class="text-link">Смотреть всё →</a>
+  </div>
+  <div class="lookbook__grid">
+    @for (frame of lookbookFrames; track frame.title) {
+      <div class="lookbook__card">
+        <img [src]="frame.image" [alt]="frame.title" />
+        <div class="lookbook__overlay">
+          <h4>{{ frame.title }}</h4>
+          <p>{{ frame.caption }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="perks">
+  @for (perk of perks; track perk.title) {
+    <div class="perk">
+      <h4>{{ perk.title }}</h4>
+      <p>{{ perk.desc }}</p>
+    </div>
+  }
+</section>
+
+<section class="editorial" id="editorial">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Истории</p>
+      <h2>Исследуем ткани, температурные режимы и посадку</h2>
+    </div>
+    <a href="#" class="text-link">Журнал Studio101 →</a>
+  </div>
+  <div class="editorial__grid">
+    @for (story of editorials; track story.title) {
+      <article class="story">
+        <div class="story__image">
+          <img [src]="story.image" [alt]="story.title" />
+        </div>
+        <div class="story__body">
+          <h3>{{ story.title }}</h3>
+          <p>{{ story.summary }}</p>
+          <a href="#" class="text-link">{{ story.cta }}</a>
+        </div>
+      </article>
+    }
+  </div>
+</section>
+
+<section class="community" id="newsletter">
+  <div class="community__intro">
+    <p class="eyebrow">Сообщество</p>
+    <h2>Подпишитесь на новые дропы и закрытые релизы</h2>
+    <p class="lede">Раз в неделю присылаем новые цвета, материалы и капсулы. Без спама.</p>
+    <form class="newsletter">
+      <input type="email" placeholder="Ваш email" required />
+      <button type="submit" class="btn primary">Подписаться</button>
+    </form>
+  </div>
+  <div class="community__grid">
+    @for (shot of communityGrid; track shot) {
+      <img [src]="shot" alt="community look" />
+    }
+  </div>
+</section>

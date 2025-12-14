@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --dark-color: #0a0a0f;
+  --light-color: #f5f5f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--dark-color);
+  color: var(--light-color);
+  min-height: 100vh;
+}
+
+// Повышаем z-index модального окна и подложки, чтобы они всегда были над контентом страницы
+.modal {
+  z-index: 2000;
+}
+
+.modal-backdrop {
+  z-index: 1999;
+}
+
+a {
+  color: inherit;
+}
+
+button, input {
+  font-family: inherit;
+}

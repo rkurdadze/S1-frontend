@@ -1,0 +1,14 @@
+We use Google OAuth 2.0 solely for user authentication in our web application Studio101.
+
+**What data we collect:**
+- User's name
+- Email address
+- Profile picture
+
+**How we use the data:**
+- Only for user authentication
+- We do not share data with third parties
+- We do not use data for advertising purposes
+
+We do not request access to Gmail, Google Drive, or any other Google services.
+All data is securely stored, and users can request data deletion at any time.

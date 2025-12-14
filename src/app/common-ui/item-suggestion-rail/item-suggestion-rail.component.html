@@ -1,0 +1,18 @@
+<section class="suggestion-rail">
+  <div class="suggestion-rail__header">
+    <div>
+      <p class="eyebrow">Рекомендации</p>
+      <h3>{{ title }}</h3>
+      <p class="muted" *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
+    <a class="ghost-link" href="/" aria-label="Открыть коллекцию">Смотреть все →</a>
+  </div>
+
+  <div class="rail" *ngIf="items?.length; else emptyState">
+    <app-item-card *ngFor="let item of items" [item]="item"></app-item-card>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty">Нет подборок для показа</div>
+  </ng-template>
+</section>

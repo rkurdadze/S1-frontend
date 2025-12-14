@@ -1,0 +1,135 @@
+
+
+/* Updated Media Query для ограничения высоты */
+@media (max-height: 350px) {
+
+}
+
+
+
+
+
+
+
+:root {
+  --min-page-height: 350px; /* Минимальная высота страницы */
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--min-page-height);
+  margin: 0;
+  font-family: "DM Sans", Arial, Helvetica, sans-serif;
+  background: #fff;
+}
+
+
+
+.border {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  min-height: 500px; /* Учитываем отступы сверху и снизу */
+  border: 2px solid #60C091;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column; /* Расположить элементы по вертикали */
+  justify-content: space-between; /* Распределить элементы равномерно по вертикали */
+  align-items: center; /* Центрировать элементы по горизонтали */
+  padding: 20px 20px 40px;
+  text-align: center;
+  min-height: 100%; /* Обеспечивает заполнение всей высоты */
+  height: 100%; /* Гарантирует, что элемент занимает доступное пространство */
+}
+
+
+
+.studio-box {
+  width: 200px;
+  height: 200px;
+  background-color: #60C091;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.studio-text {
+  font-family: "DM Sans", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+}
+
+.copy-wrapper {
+  margin-top: 0;
+}
+
+.flan-logo {
+  width: 220px;
+  margin: 20px auto;
+}
+
+.copy {
+  font-size: 18px;
+  font-weight: 800;
+  color: #000;
+}
+
+.cta {
+  display: block;
+  width: 170px;
+  padding: 16px 20px;
+  margin: 20px auto 0;
+  background-color: #000;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  text-align: center;
+  transition: .25s background-color ease, .25s border-color ease, .25s color ease;
+}
+
+.cta:hover {
+  color: #eaff00;
+}
+
+.copyright {
+  font-weight: 800;
+  font-size: 15px;
+  /* text-transform: uppercase; */
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+/* Updated Media Query для ограничения высоты */
+@media (max-height: 350px) {
+  html,
+  body {
+    min-height: var(--min-page-height); /* Минимальная высота */
+    height: auto; /* Автоматическая регулировка высоты */
+    overflow: auto; /* Включаем прокрутку */
+  }
+
+  .page-wrapper {
+    min-height: var(--min-page-height); /* Минимальная высота */
+    height: auto; /* Автоматическая регулировка высоты */
+  }
+
+  .border {
+    min-height: calc(var(--min-page-height) - 40px); /* Последовательность с отступами */
+  }
+}

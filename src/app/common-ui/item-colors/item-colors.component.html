@@ -1,0 +1,39 @@
+@if (isAdmin) {
+    <div class="item-page__colors-edit-wrapper">
+        <app-color-picker [(ngModel)]="currentlyPickedColor"></app-color-picker>
+        <button type="button" class="btn add-icon item-page__sz_btn"
+                title="Add Color"
+                (click)="addColor()"
+        >
+            <i class="fas fa-plus"></i>
+        </button>
+        @if (colors?.length ?? 0 > 0) {
+            <button type="button" class="btn add-icon item-page__sz_btn"
+                    title="Remove Color"
+                    (click)="removeColor()"
+            >
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn item-page__sz_btn"
+                    title="Edit Color"
+                    (click)="editColor()"
+            >
+                <i class="fas fa-pen"></i>
+            </button>
+        }
+    </div>
+}
+<div class="color-selection">
+    <div class="item-page__item-colors-wrapper d-flex flex-wrap">
+        <div *ngFor="let color of colors"
+             class="color-square"
+             [style.background]="color.name"
+             (click)="selectColor(color.name)"
+             [class.selected]="color.name === selectedColor"
+             [attr.title]="color.name">
+            @if (isAdmin) {
+                <div class="image-count">{{ getImagesCount(color.name) }}</div>
+            }
+        </div>
+    </div>
+</div>

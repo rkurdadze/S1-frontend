@@ -1,0 +1,14 @@
+<div class="login-container">
+    <div class="login-card">
+        <h2 *ngIf="!(isLoggedIn$ | async)">Регистрация или вход</h2>
+        <h2 *ngIf="isLoggedIn$ | async">Вы вошли в систему</h2>
+        <p>Используйте Google для {{ (isLoggedIn$ | async) ? 'выхода' : 'входа' }}</p>
+
+        <div id="google-signin-button" *ngIf="!(isLoggedIn$ | async)"></div>
+
+        <button *ngIf="isLoggedIn$ | async" (click)="logout()" class="google-signout-button">
+            <img src="assets/google-icon.svg" alt="Google Logo" class="google-icon">
+            Выйти
+        </button>
+    </div>
+</div>

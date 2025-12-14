@@ -1,0 +1,178 @@
+<div class="modal fade" tabindex="-1" #editModal id="editModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Заголовок -->
+            <div class="modal-header">
+                <h5 class="modal-title">{{ title }}</h5>
+                <button
+                        type="button"
+                        class="btn-close"
+                        aria-label="Close"
+                        (click)="onCancel()"
+                ></button>
+            </div>
+
+            <!-- Форма c валидацией -->
+            <form
+                    (ngSubmit)="onOk()"
+                    #editForm="ngForm"
+                    class="modal-body"
+            >
+                <div *ngFor="let field of fields" class="mb-3">
+
+                    <!-- Checkbox -->
+                    <div *ngIf="field.type === 'checkbox'" class="form-check">
+                        <input
+                                class="form-check-input"
+                                id="{{ getFieldId(field.name) }}"
+                                type="checkbox"
+                                [required]="field.required ?? false"
+                                [(ngModel)]="formData[field.name]"
+                                name="{{ field.name }}"
+                        />
+                        <label
+                                class="form-check-label"
+                                for="{{ getFieldId(field.name) }}"
+                        >
+                            {{ field.label }}
+                            <span *ngIf="field.required" style="color:red;">*</span>
+                        </label>
+                    </div>
+
+                    <!-- Общая метка, если не чекбокс / мультирежим -->
+                    <ng-container *ngIf="field.type !== 'checkbox' && field.type !== 'multiselect'">
+                        <label
+                                class="form-label"
+                                for="{{ getFieldId(field.name) }}"
+                        >
+                            {{ field.label }}
+                            <span *ngIf="field.required" style="color:red;">*</span>
+                        </label>
+                    </ng-container>
+
+                    <!-- Поле text -->
+                    <input
+                            *ngIf="field.type === 'text'"
+                            id="{{ getFieldId(field.name) }}"
+                            type="text"
+                            class="form-control"
+                            [placeholder]="field.placeholder ?? ''"
+                            [required]="field.required ?? false"
+                            [attr.minlength]="field.minLength"
+                            [attr.maxlength]="field.maxLength"
+                            [attr.readonly]="field.readonly"
+                            [disabled]="field.readonly ?? false"
+                            [attr.pattern]="field.pattern ?? null"
+                            [(ngModel)]="formData[field.name]"
+                            name="{{ field.name }}"
+                    />
+
+                    <!-- Textarea -->
+                    <textarea
+                            *ngIf="field.type === 'textarea'"
+                            id="{{ getFieldId(field.name) }}"
+                            rows="3"
+                            class="form-control"
+                            [placeholder]="field.placeholder ?? ''"
+                            [required]="field.required ?? false"
+                            [attr.minlength]="field.minLength"
+                            [attr.maxlength]="field.maxLength"
+                            [attr.pattern]="field.pattern ?? null"
+                            [attr.readonly]="field.readonly"
+                            [disabled]="field.readonly ?? false"
+                            [(ngModel)]="formData[field.name]"
+                            name="{{ field.name }}"
+                    ></textarea>
+
+                    <!-- Select c объектами { id, value } -->
+                    <select
+                            *ngIf="field.type === 'select'"
+                            id="{{ getFieldId(field.name) }}"
+                            class="form-select"
+                            [required]="field.required ?? false"
+                            [(ngModel)]="formData[field.name]"
+                            name="{{ field.name }}"
+                    >
+                        <option *ngFor="let opt of field.options" [ngValue]="opt">
+                            {{ opt.value }}
+                        </option>
+                    </select>
+
+                    <!-- Number -->
+                    <input
+                            *ngIf="field.type === 'number'"
+                            id="{{ getFieldId(field.name) }}"
+                            type="number"
+                            class="form-control"
+                            [placeholder]="field.placeholder ?? ''"
+                            [required]="field.required ?? false"
+                            [attr.min]="field.min"
+                            [attr.max]="field.max"
+                            [attr.readonly]="field.readonly"
+                            [disabled]="field.readonly ?? false"
+                            [(ngModel)]="formData[field.name]"
+                            name="{{ field.name }}"
+                    />
+
+                    <!-- Date -->
+                    <input
+                            *ngIf="field.type === 'date'"
+                            id="{{ getFieldId(field.name) }}"
+                            type="date"
+                            class="form-control"
+                            [required]="field.required ?? false"
+                            [(ngModel)]="formData[field.name]"
+                            [attr.readonly]="field.readonly"
+                            [disabled]="field.readonly ?? false"
+                            name="{{ field.name }}"
+                    />
+
+                    <!-- Multiselect (объекты { id, value }) -->
+                    <ng-container *ngIf="field.type === 'multiselect'">
+                        <label
+                                class="form-label"
+                                for="{{ getFieldId(field.name) }}"
+                        >
+                            {{ field.label }}
+                            <span *ngIf="field.required" style="color:red;">*</span>
+                        </label>
+                        <div *ngFor="let opt of field.options" class="form-check">
+                            <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    [attr.id]="getFieldId((field?.name || 'default') + '-' + (opt.value || 'default'))"
+                                    [checked]="isOptionSelected(field.name, opt)"
+                                    (change)="toggleSelection(field.name, opt, $any($event.target).checked)"
+                            />
+
+                            <label
+                                    class="form-check-label"
+                                    [attr.for]="getFieldId((field?.name || 'default') + '-' + (opt.value || 'default'))"
+                            >
+                                {{ opt.value }}
+                            </label>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                            type="submit"
+                            class="btn btn-primary"
+                            [disabled]="editForm.invalid"
+                    >
+                        OK
+                    </button>
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            (click)="onCancel()"
+                    >
+                        Отмена
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

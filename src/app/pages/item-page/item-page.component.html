@@ -1,0 +1,203 @@
+<app-loading></app-loading>
+
+<section class="item-page">
+  <div class="item-shell">
+    <div class="item-topbar">
+      <div class="crumbs">Каталог · Верхняя одежда · {{ item?.name || 'Товар' }}</div>
+      <div class="status-chip" [class.status-chip--draft]="!item?.publish">{{ item?.publish ? 'В наличии' : 'Черновик' }}</div>
+    </div>
+
+    <div class="item-hero">
+      <div class="item-hero__gallery">
+        <app-item-visual-panel
+          [images]="images"
+          [selectedImage]="selectedImage"
+          [selectedColor]="selectedColor"
+          [showImageControls]="showImageControls"
+          [isAdmin]="isAdmin"
+          (selectImage)="selectImage($event)"
+          (prevImage)="prevImage()"
+          (nextImage)="nextImage()"
+        ></app-item-visual-panel>
+
+        <div class="gallery-meta" *ngIf="item">
+          <div class="gallery-meta__tag">Коллекция · Studio101</div>
+          <div class="gallery-meta__chips">
+            <span class="pill pill--outline">{{ item.colors.length }} оттенков</span>
+            <span class="pill pill--soft">Образцы в шоуруме</span>
+            <span class="pill pill--outline">Подбор стилистом</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-hero__info">
+        @if (isAdmin) {
+          <div class="item-page__edit_item-wrapper">
+            <button type="button" class="btn item-page__edit_btn" (click)="openModal()" aria-label="Редактировать">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button type="button" class="btn item-page__edit_btn" (click)="deleteItem()" aria-label="Удалить">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        }
+
+        @if (item) {
+          <div class="title-block">
+            <p class="eyebrow">Outerwear capsule · Studio101</p>
+            <div class="title-row">
+              <h1>{{ item.name }}</h1>
+              <span class="pill" [class.pill--success]="item.publish">{{ item.publish ? 'В каталоге' : 'Черновик' }}</span>
+            </div>
+            <p class="lead">{{ item.description }}</p>
+          </div>
+
+          <div class="info-cards">
+            <div class="info-card">
+              <p class="eyebrow">Доставка</p>
+              <p class="strong">1–3 дня по РФ</p>
+              <p class="muted">Примерка и бесплатный возврат</p>
+            </div>
+            <div class="info-card">
+              <p class="eyebrow">Материалы</p>
+              <p class="strong">Мембрана, утепление Primaloft®</p>
+              <p class="muted">Тестируем влагу и ветер</p>
+            </div>
+            <div class="info-card">
+              <p class="eyebrow">Крой</p>
+              <p class="strong">Парка · Куртка · Пуховик</p>
+              <p class="muted">Регулируемые кулиски и капюшон</p>
+            </div>
+          </div>
+
+          <div class="badge-row">
+            <span class="pill pill--soft">{{ item.colors.length }} цветов в палитре</span>
+            <span class="pill pill--outline">Лимитированный выпуск</span>
+            <span class="pill pill--outline">Собрано в шоуруме</span>
+          </div>
+
+          <div class="selector-grid">
+            <div class="selector-block">
+              <p class="selector-label">Цветовая палитра</p>
+              <app-item-colors
+                [isAdmin]="isAdmin"
+                [colors]="item.colors!"
+                [itemId]="item.id!"
+                (selectedColorEmitter)="selectColor($event)"
+              ></app-item-colors>
+            </div>
+
+            <div class="selector-block">
+              <p class="selector-label">Размеры и наличие</p>
+              <app-item-sizes [item]="item" [forColor]="selectedColor" [isAdmin]="isAdmin"></app-item-sizes>
+            </div>
+          </div>
+        }
+
+        @if (isAdmin) {
+          <div class="upload-card">
+            <div>
+              <p class="strong">Фото для выбранного цвета</p>
+              <p class="muted">Добавьте снимки для витрины и лукбука</p>
+            </div>
+            <div class="upload-actions">
+              <input
+                type="file"
+                #fileInput
+                multiple
+                accept="image/jpeg, image/jpg"
+                class="d-none"
+                (change)="onImageSelected($event)"
+              />
+              <button type="button" class="btn btn-primary" (click)="fileInput.click()" [disabled]="!selectedColor">
+                <i class="fas fa-upload"></i>
+                Загрузить фото
+              </button>
+            </div>
+          </div>
+        }
+
+        <div class="cta-row">
+          <button class="btn btn-dark">В корзину</button>
+          <button class="btn btn-outline">Сохранить образ</button>
+          <button class="btn btn-ghost">Задать вопрос стилисту</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="capsule-panels">
+      <div class="capsule-card">
+        <div class="capsule-card__header">
+          <p class="eyebrow">Outerwear capsule</p>
+          <p class="muted">Уточните посадку, утепление и подбор слоёв — мы собрали сервисную информацию рядом с карточкой.</p>
+        </div>
+        <div class="micro-grid">
+          <div>
+            <p class="muted">Примерка</p>
+            <p class="strong">В шоуруме или у вас дома</p>
+          </div>
+          <div>
+            <p class="muted">Доставка</p>
+            <p class="strong">1–3 дня, бесплатный возврат</p>
+          </div>
+          <div>
+            <p class="muted">Гарантия</p>
+            <p class="strong">12 месяцев сервис</p>
+          </div>
+          <div>
+            <p class="muted">Материалы</p>
+            <p class="strong">Влагоотталкивающая мембрана</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="capsule-lookbook" role="presentation">
+        <div class="capsule-lookbook__copy">
+          <p class="eyebrow">Lookbook</p>
+          <p class="muted">Соберите образ: капюшон со скрытыми кулисками, объёмный рукав, сатиновая подкладка и тёплый слой.</p>
+          <div class="badge-row">
+            <span class="pill pill--soft">Тестируем влагу и ветер</span>
+            <span class="pill pill--outline">Съёмный пуховой слой</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta-and-stories">
+      <div class="meta-section">
+        <app-item-meta-panel></app-item-meta-panel>
+      </div>
+
+      <div class="story-board">
+        <div class="story-card">
+          <p class="eyebrow">Детали и крой</p>
+          <h3>Смарт-карманы, скрытые швы, регулируемые кулиски</h3>
+          <p class="muted">Работаем с итальянскими фабриками: плотная ткань с водоотталкивающей пропиткой, утепление Primaloft® и сатиновый подклад.</p>
+        </div>
+        <div class="story-card story-card--image" role="presentation"></div>
+      </div>
+    </div>
+
+    <div class="suggestions">
+      <app-item-suggestion-rail
+        [title]="'Похожие модели'"
+        [subtitle]="'Подборка по силуэту, длине и фактуре'"
+        [items]="similarItems"
+      ></app-item-suggestion-rail>
+
+      <app-item-suggestion-rail
+        [title]="'С чем сочетать'"
+        [subtitle]="'Стайлинг с аксессуарами и базовыми слоями'"
+        [items]="styledItems"
+      ></app-item-suggestion-rail>
+    </div>
+  </div>
+</section>
+
+<app-edit-modal
+  #editModalRef
+  [title]="modalTitle"
+  [fields]="modalFields"
+  [initialData]="modalData"
+  (modalResult)="onModalResult($event)"
+></app-edit-modal>

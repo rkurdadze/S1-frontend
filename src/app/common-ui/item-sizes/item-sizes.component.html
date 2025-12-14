@@ -1,0 +1,50 @@
+<div class="item-page__sizes">
+    <ng-container *ngIf="groupedInventories && groupedInventories.size > 0">
+        <div *ngFor="let sizeName of groupedInventoriesKeys()">
+            <div class="size-box" (click)="isAdmin ? openInventoryModal(sizeName) : null">
+                {{ sizeName }}
+
+                @if (isAdmin) {
+                    <div class="counter" [hidden]="getTotalStockCount(sizeName)===0">
+                        {{ getTotalStockCount(sizeName) }}
+                    </div>
+                }
+
+                @if (isAdmin) {
+                    <div class="remove" [hidden]="getTotalStockCount(sizeName)>0"
+                         (click)="deleteInventoryClick(sizeName, $event)">
+                        <i class="fas fa-xmark"></i>
+                    </div>
+                }
+            </div>
+        </div>
+    </ng-container>
+
+    @if (isAdmin) {
+        <button type="button"
+                class="btn add-icon item-page__sz_btn"
+                (click)="openSizesModal()"
+                [disabled]="forColor == null"
+                title="Add Size"
+        >
+            <i class="fas fa-plus"></i>
+        </button>
+    }
+</div>
+
+
+<app-edit-modal
+    #editSizesModalRef
+    [title]="sizesModalTitle"
+    [fields]="sizesModalFields"
+    [initialData]="sizesModalData"
+    (modalResult)="onSizesModalResult($event)"
+></app-edit-modal>
+
+<app-edit-modal
+    #editInventoryModalRef
+    [title]="inventoryModalTitle"
+    [fields]="inventoryModalFields"
+    [initialData]="inventoryModalData"
+    (modalResult)="onInventoryModalResult($event)"
+></app-edit-modal>

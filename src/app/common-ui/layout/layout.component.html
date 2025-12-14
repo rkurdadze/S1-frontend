@@ -1,0 +1,54 @@
+<div class="page-shell">
+  <div class="background-texture"></div>
+  <div class="header-container">
+    <app-header></app-header>
+  </div>
+
+  <main class="main-container">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__brand">
+      <p class="eyebrow">STUDIO101 ATELIER</p>
+      <h3>Верхняя одежда премиум-класса, созданная для жизни в движении.</h3>
+      <p>Тактильные ткани, архитектурные силуэты и оттенки сезона — все, что нужно для современного гардероба.</p>
+    </div>
+    <div class="footer__grid">
+      <div>
+        <h4>Коллекции</h4>
+        <ul>
+          <li><a href="#collections">Архивные капсулы</a></li>
+          <li><a href="#new-drop">Новые поступления</a></li>
+          <li><a href="#lookbook">Lookbook FW</a></li>
+          <li><a href="#editorial">Истории</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Сервис</h4>
+        <ul>
+          <li><a href="#">Персональный подбор</a></li>
+          <li><a href="#">Доставка по миру</a></li>
+          <li><a href="#">Уход за изделиями</a></li>
+          <li><a href="#">Возвраты</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Контакты</h4>
+        <ul class="footer__contacts">
+          <li>+995 (555) 101-101</li>
+          <li>hello&#64;studio101.ge</li>
+          <li>Тбилиси, Руставели 12</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© {{ currentYear }} Studio101. Crafted with care.</span>
+      <div class="footer__socials">
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="Pinterest">Pinterest</a>
+        <a href="#" aria-label="Telegram">Telegram</a>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,64 @@
+.item-page__colors-edit-wrapper {
+  display: grid;
+  //grid-template-columns: 1fr min-content min-content min-content;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min-content, 1fr);
+
+  width: fit-content;
+  align-items: center;
+  padding-top: 20px;
+  gap: 5px;
+}
+
+.color-chooser {
+  border: 1px solid var(--dark-color);
+  width: 40px;
+  margin-right: 5px;
+}
+
+.color-selection {
+  grid-area: color;
+  display: flex; /* Combined with grid-area */
+  margin-top: 20px;
+}
+
+.color-square {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 0.2s ease-in-out, border 0.2s ease-in-out;
+
+  .image-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 16px;
+    height: 16px;
+    background: #2b2b2b;
+    color: #fff; /* Shortened color code */
+    font-size: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  &.selected {
+    border: 1px solid black;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); // Добавляем эффект drop shadow
+  }
+}
+
+.item-page__sz_btn {
+  border-radius: 50%;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  background: var(--dark-color);
+  color: var(--light-color);
+}

@@ -1,0 +1,65 @@
+<header class="header">
+  <div class="header__bar">
+    <div class="brand">
+      <span class="brand__mark">Studio101</span>
+      <span class="brand__tag">Outerwear House</span>
+    </div>
+
+    <nav class="nav">
+      <a href="#collections">Коллекции</a>
+      <a href="#new-drop">Новое</a>
+      <a href="#lookbook">Lookbook</a>
+      <a href="#editorial">Истории</a>
+      <a href="#newsletter">Подписка</a>
+    </nav>
+
+    <div class="header__actions">
+      <div class="search">
+        <input type="text" placeholder="Поиск по моделям" aria-label="Поиск" />
+        <span class="search__hint">#пуховики #тренчи #капсулы</span>
+      </div>
+
+      <div class="icons">
+        <button class="icon-btn" aria-label="Избранное">
+          <span class="material">♡</span>
+        </button>
+        <button class="icon-btn" aria-label="Корзина">
+          <span class="material">🛍</span>
+          <span class="badge">3</span>
+        </button>
+
+        @if (isLoggedIn$ | async) {
+          <div class="dropdown">
+            <img
+              [src]="userIcon"
+              alt="Профиль"
+              class="user-avatar dropdown-toggle"
+              id="userDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              (click)="toggleDropdown($event)"
+            />
+
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              @if (isAdmin) {
+                <li><a class="dropdown-item" href="#" (click)="openModal()">Добавить товар</a></li>
+                <li><hr class="dropdown-divider" /></li>
+              }
+              <li><a class="dropdown-item" (click)="logout()">Выйти</a></li>
+            </ul>
+          </div>
+        } @else {
+          <app-login-button></app-login-button>
+        }
+      </div>
+    </div>
+  </div>
+</header>
+
+<app-edit-modal
+  #editModalRef
+  [title]="modalTitle"
+  [fields]="modalFields"
+  [initialData]="modalData"
+  (modalResult)="onModalResult($event)"
+></app-edit-modal>

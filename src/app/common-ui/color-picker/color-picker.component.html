@@ -1,0 +1,31 @@
+<div class="color-picker-container">
+    <div class="color-preview" [style.background]="selectedColor" (click)="togglePicker()">
+<!--        <span class="color-hex">{{ selectedColor }}</span>-->
+    </div>
+
+    <div class="custom-picker" [style.display]="showPicker ? 'block' : 'none'">
+        <div class="color-palette" #colorPalette
+             (mousedown)="startDragging($event)"
+             (touchstart)="startDragging($event)">
+            <canvas #colorCanvas></canvas>
+            <div class="color-selector"
+                 [style.left.px]="selectorX"
+                 [style.top.px]="selectorY"></div>
+        </div>
+
+        <div class="hue-slider">
+            <input type="range"
+                   min="0"
+                   max="360"
+                   [(ngModel)]="hue"
+                   (input)="updateColorFromHue()"
+                   (change)="updateColorFromHue()">
+        </div>
+
+        <input type="color"
+               [(ngModel)]="selectedColor"
+               (change)="updateFromNative()"
+               class="native-color-picker"
+               #nativePicker>
+    </div>
+</div>

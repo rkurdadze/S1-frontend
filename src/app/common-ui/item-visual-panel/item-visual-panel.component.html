@@ -1,0 +1,53 @@
+<div class="visual-panel">
+  <div class="visual-panel__thumbs">
+    <div class="thumbs__header">
+      <span class="label">Галерея</span>
+      <span class="pill" *ngIf="selectedColor">{{ selectedColor }}</span>
+    </div>
+    <div class="thumbs__list" role="list">
+      <button
+        *ngFor="let image of images; trackBy: trackById"
+        type="button"
+        class="thumb"
+        [class.thumb--active]="selectedImage?.id === image.id"
+        (click)="selectImage.emit(image)"
+        aria-label="Выбрать фото"
+      >
+        <img [src]="image.url + '/256'" alt="Фото изделия" loading="lazy" />
+      </button>
+      <div class="thumb thumb--placeholder" *ngIf="!images?.length">
+        <span>Нет фото</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="visual-panel__main">
+    <div class="glass">
+      <div class="badge-stack">
+        <span class="pill">Премиум</span>
+        <span class="pill pill--outline" *ngIf="selectedColor">{{ selectedColor }}</span>
+      </div>
+      <div class="main-image__wrapper">
+        <button *ngIf="showImageControls" class="nav prev" (click)="prevImage.emit()" aria-label="Предыдущее фото">
+          <span>‹</span>
+        </button>
+
+        <img *ngIf="selectedImage" [src]="selectedImage.url + '/1024'" class="main-image" alt="Изображение изделия"/>
+        <div class="main-image main-image--empty" *ngIf="!selectedImage">
+          <p>Добавьте визуализацию для этого цвета</p>
+        </div>
+
+        <button *ngIf="showImageControls" class="nav next" (click)="nextImage.emit()" aria-label="Следующее фото">
+          <span>›</span>
+        </button>
+      </div>
+      <div class="meta-line">
+        <div>
+          <p class="eyebrow">Lookbook Studio101</p>
+          <p class="muted">Снимите мерки: рост модели 178 см, размер M</p>
+        </div>
+        <div class="muted">Полистайте, чтобы увидеть детали</div>
+      </div>
+    </div>
+  </div>
+</div>

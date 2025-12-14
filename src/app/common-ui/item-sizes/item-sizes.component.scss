@@ -1,0 +1,68 @@
+.item-page__sizes {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.item-page__sz_btn {
+  border-radius: 50%;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  background: var(--dark-color);
+  color: var(--light-color);
+}
+
+.size-box {
+  position: relative; /* ✅ Нужно для абсолютного позиционирования .counter */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  background: rgba(23, 205, 60, 0.65);
+  border-radius: 4px;
+  border: 1px solid var(--dark-color);
+  font-weight: bold;
+  text-align: center;
+  min-width: 35px;
+  max-width: 55px;
+  font-size: 14px;
+  min-height: 35px;
+  cursor: pointer;
+
+  .counter {
+    position: absolute; /* ✅ Выходит за границы .size-box */
+    top: -5px; /* ✅ Смещаем вверх */
+    right: -5px; /* ✅ Смещаем вправо */
+    width: 16px;
+    height: 16px;
+    background: #424242;
+    color: #fff;
+    font-size: 10px;
+    display: flex; /* ✅ Центрируем число */
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .remove {
+    position: absolute; /* ✅ Выходит за границы .size-box */
+    bottom: -5px; /* ✅ Смещаем вверх */
+    right: -5px; /* ✅ Смещаем вправо */
+    width: 16px;
+    height: 16px;
+    background: red;
+    color: #fff;
+    font-size: 10px;
+    display: flex; /* ✅ Центрируем число */
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.size-box.out-of-stock {
+  border: 1px solid red;
+}
