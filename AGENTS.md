@@ -30,4 +30,5 @@ This repository contains an Angular 18 frontend application (CLI 18.2.x) with su
 1. Before delivering any final answer, run the full unit test suite via `npm test -- --watch=false --browsers=ChromeHeadless` and report results.
 2. Maintain the established directory separation (pages vs common-ui vs data vs helpers) when adding files.
 3. Keep schemas in `src/app/data/interfaces/` authoritative; update documentation and dependent services if schema changes.
-4. Summaries or PR notes should reference relevant file paths to help future contributors navigate quickly.
+4. Summaries or PR notes should reference relevant file paths to help future contributors navigate quickly. 
+5. If any changes are needed for the backend - generate AI prompt optimized for codex/gemini, describing all requirement and changes made.
