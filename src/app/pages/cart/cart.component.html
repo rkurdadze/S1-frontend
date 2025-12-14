@@ -1,18 +1,23 @@
 <section class="cart-page">
-  <div class="cart-page__header">
-    <div>
+  <div class="cart-hero">
+    <div class="cart-hero__copy">
       <p class="eyebrow">Корзина и оформление</p>
       <h1>Ваши товары</h1>
-      <p class="muted">Выберите способ доставки, оставьте контакты и оплатите Google Pay.</p>
+      <p class="muted">Выберите доставку, оставьте контакты и оплатите через Google Pay или при подтверждении заказа.</p>
+      <div class="cart-hero__chips">
+        <span class="chip">{{ cartItems.length }} позиций</span>
+        <span class="chip chip--ghost">Налоги и стоимость доставки уточняются при подтверждении</span>
+      </div>
     </div>
-    <div class="cart-page__summary">
-      <p class="eyebrow">Сумма</p>
-      <div class="cart-page__total">{{ total | number:'1.2-2' }} ₸</div>
-      <p class="muted">Налоги и стоимость доставки рассчитываются на стороне сервера.</p>
+    <div class="cart-hero__summary">
+      <p class="muted">Сумма заказа</p>
+      <div class="cart-hero__total">{{ total | number:'1.2-2' }} ₸</div>
+      <p class="muted">Финальная стоимость будет уточнена менеджером</p>
+      <button class="btn btn-ghost" *ngIf="cartItems.length > 0" (click)="clearCart()">Очистить корзину</button>
     </div>
   </div>
 
-  <div class="cart-grid">
+  <div class="cart-shell">
     <div class="cart-items">
       <div class="cart-card" *ngFor="let item of cartItems">
         <div class="cart-card__media">
@@ -21,26 +26,33 @@
         <div class="cart-card__body">
           <div class="cart-card__head">
             <div>
-              <p class="eyebrow">{{ item.colorName }} · {{ item.sizeName }}</p>
+              <p class="eyebrow eyebrow--faded">{{ item.colorName }} · {{ item.sizeName }}</p>
               <h3>{{ item.name }}</h3>
             </div>
-            <button class="btn btn-ghost" (click)="removeItem(item)">
+            <button class="icon-circle" (click)="removeItem(item)" aria-label="Удалить товар">
               <i class="fas fa-trash"></i>
             </button>
           </div>
 
           <div class="cart-card__meta">
-            <div>
-              <p class="muted">Цена</p>
-              <p class="strong">{{ item.price | number:'1.2-2' }} ₸</p>
+            <div class="meta-block">
+              <span class="muted">Цена</span>
+              <span class="strong">{{ item.price | number:'1.2-2' }} ₸</span>
             </div>
-            <div class="quantity-control">
+            <div class="meta-block quantity-control">
               <label class="muted">Кол-во</label>
-              <input type="number" min="1" [value]="item.quantity" (change)="updateQuantity(item, $any($event.target).valueAsNumber || 1)" />
+              <div class="quantity-control__field">
+                <input
+                  type="number"
+                  min="1"
+                  [value]="item.quantity"
+                  (change)="updateQuantity(item, $any($event.target).valueAsNumber || 1)"
+                />
+              </div>
             </div>
-            <div>
-              <p class="muted">Итого</p>
-              <p class="strong">{{ (item.price * item.quantity) | number:'1.2-2' }} ₸</p>
+            <div class="meta-block align-end">
+              <span class="muted">Итого</span>
+              <span class="strong">{{ (item.price * item.quantity) | number:'1.2-2' }} ₸</span>
             </div>
           </div>
         </div>
@@ -48,74 +60,86 @@
 
       <div class="cart-empty" *ngIf="cartItems.length === 0">
         <p class="strong">Корзина пока пуста</p>
-        <p class="muted">Перейдите в каталог и добавьте вещи для оформления.</p>
-      </div>
-
-      <div class="cart-actions" *ngIf="cartItems.length > 0">
-        <button class="btn btn-outline" (click)="clearCart()">Очистить</button>
+        <p class="muted">Добавьте вещи из каталога, чтобы оформить заказ.</p>
       </div>
     </div>
 
-    <div class="checkout-panel">
-      <form [formGroup]="contactForm" class="form-grid">
-        <div class="form-section">
+    <form [formGroup]="contactForm" class="checkout-form">
+      <div class="panel-card">
+        <div class="panel-card__header">
           <p class="eyebrow">Контакты</p>
-          <div class="field-row">
-            <label>Имя</label>
+          <p class="muted">Отправим подтверждение и статус заказа на указанные контакты.</p>
+        </div>
+        <div class="field-grid two-cols">
+          <label class="field">
+            <span>Имя</span>
             <input type="text" formControlName="firstName" placeholder="Иван" />
-          </div>
-          <div class="field-row">
-            <label>Фамилия</label>
+          </label>
+          <label class="field">
+            <span>Фамилия</span>
             <input type="text" formControlName="lastName" placeholder="Иванов" />
-          </div>
-          <div class="field-row">
-            <label>Email</label>
+          </label>
+          <label class="field">
+            <span>Email</span>
             <input type="email" formControlName="email" placeholder="you@example.com" />
-          </div>
-          <div class="field-row">
-            <label>Телефон</label>
+          </label>
+          <label class="field">
+            <span>Телефон</span>
             <input type="tel" formControlName="phone" placeholder="+995 5xx xxx xxx" />
-          </div>
+          </label>
         </div>
+      </div>
 
-        <div class="form-section">
+      <div class="panel-card">
+        <div class="panel-card__header">
           <p class="eyebrow">Доставка</p>
-          <div class="field-row">
-            <label>Адрес</label>
-            <input type="text" formControlName="addressLine1" placeholder="Улица, дом" />
-          </div>
-          <div class="field-row">
-            <label>Квартира / офис</label>
-            <input type="text" formControlName="addressLine2" placeholder="Кв., подъезд" />
-          </div>
-          <div class="field-row">
-            <label>Город</label>
-            <input type="text" formControlName="city" placeholder="Тбилиси" />
-          </div>
-          <div class="field-row">
-            <label>Регион</label>
-            <input type="text" formControlName="region" placeholder="Кахети" />
-          </div>
-          <div class="field-row">
-            <label>Почтовый индекс</label>
-            <input type="text" formControlName="postalCode" placeholder="0100" />
-          </div>
-
-          <div class="field-row">
-            <label>Способ доставки</label>
-            <select formControlName="deliveryOption">
-              <option *ngFor="let option of deliveryOptions" [value]="option.id">{{ option.label }} — {{ option.description }}</option>
-            </select>
-          </div>
-
-          <div class="field-row">
-            <label>Комментарии</label>
-            <textarea formControlName="notes" placeholder="Уточнения по доставке" rows="3"></textarea>
-          </div>
+          <p class="muted">Выберите удобный способ и уточните адрес.</p>
         </div>
-      </form>
 
-      <div class="payment-panel">
+        <div class="delivery-options">
+          <label class="delivery-option" *ngFor="let option of deliveryOptions">
+            <input type="radio" formControlName="deliveryOption" [value]="option.id" />
+            <div>
+              <span class="delivery-option__title">{{ option.label }}</span>
+              <p class="muted">{{ option.description }}</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="field-grid two-cols">
+          <label class="field">
+            <span>Адрес</span>
+            <input type="text" formControlName="addressLine1" placeholder="Улица, дом" />
+          </label>
+          <label class="field">
+            <span>Квартира / офис</span>
+            <input type="text" formControlName="addressLine2" placeholder="Кв., подъезд" />
+          </label>
+          <label class="field">
+            <span>Город</span>
+            <input type="text" formControlName="city" placeholder="Тбилиси" />
+          </label>
+          <label class="field">
+            <span>Регион</span>
+            <input type="text" formControlName="region" placeholder="Кахети" />
+          </label>
+          <label class="field">
+            <span>Почтовый индекс</span>
+            <input type="text" formControlName="postalCode" placeholder="0100" />
+          </label>
+          <label class="field">
+            <span>Страна</span>
+            <input type="text" formControlName="country" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Комментарии</span>
+          <textarea formControlName="notes" placeholder="Уточнения по доставке" rows="3"></textarea>
+        </label>
+      </div>
+
+      <div class="panel-card payment-panel">
         <div class="payment-panel__row">
           <div>
             <p class="eyebrow">Итого к оплате</p>
@@ -137,9 +161,9 @@
           </button>
         </div>
 
-        <div class="payment-panel__hint">Оплата доступна только авторизованным пользователям. После создания заказа будет отправлено письмо с подтверждением.</div>
+        <div class="payment-panel__hint">После создания заказа отправим письмо с подтверждением.</div>
         <div class="payment-panel__error" *ngIf="paymentError">{{ paymentError }}</div>
       </div>
-    </div>
+    </form>
   </div>
 </section>

@@ -23,6 +23,28 @@
 
 .brand {
   display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand__logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.brand__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+}
+
+.brand__text {
+  display: flex;
   flex-direction: column;
   gap: 4px;
 }
