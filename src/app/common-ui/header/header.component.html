@@ -6,14 +6,14 @@
             </div>
             <div class="brand__text">
                 <span class="brand__mark">Studio101</span>
-                <span class="brand__tag">Outerwear House</span>
+                <span class="brand__tag">{{ 'brand.tagline' | translate }}</span>
             </div>
         </div>
 
         <button
                 class="navbar-toggler"
                 type="button"
-                aria-label="Переключить меню"
+                [attr.aria-label]="'aria.toggleMenu' | translate"
                 aria-controls="headerNav"
                 [attr.aria-expanded]="isMenuOpen"
                 (click)="toggleMenu()">
@@ -25,12 +25,12 @@
         </button>
 
         <nav id="headerNav" class="nav collapse" [class.show]="isMenuOpen">
-            <a href="#collections" (click)="onNavClick($event, 'collections')">Коллекции</a>
-            <a href="#product-grid" (click)="onNavClick($event, 'product-grid')">Каталог</a>
-            <a href="#new-drop" (click)="onNavClick($event, 'new-drop')">Новое</a>
-            <a href="#lookbook" (click)="onNavClick($event, 'lookbook')">Lookbook</a>
-            <a href="#editorial" (click)="onNavClick($event, 'editorial')">Истории</a>
-            <a href="#newsletter" (click)="onNavClick($event, 'newsletter')">Подписка</a>
+            <a href="#collections" (click)="onNavClick($event, 'collections')">{{ 'nav.collections' | translate }}</a>
+            <a href="#product-grid" (click)="onNavClick($event, 'product-grid')">{{ 'nav.catalog' | translate }}</a>
+            <a href="#new-drop" (click)="onNavClick($event, 'new-drop')">{{ 'nav.new' | translate }}</a>
+            <a href="#lookbook" (click)="onNavClick($event, 'lookbook')">{{ 'nav.lookbook' | translate }}</a>
+            <a href="#editorial" (click)="onNavClick($event, 'editorial')">{{ 'nav.stories' | translate }}</a>
+            <a href="#newsletter" (click)="onNavClick($event, 'newsletter')">{{ 'nav.subscribe' | translate }}</a>
         </nav>
 
 
@@ -38,44 +38,62 @@
 
         <div class="header__actions">
             <div class="search">
-                <input type="text" placeholder="Поиск по моделям" aria-label="Поиск"/>
-                <span class="search__hint">#пуховики #тренчи #капсулы</span>
+                <input
+                  type="text"
+                  [placeholder]="'search.placeholder' | translate"
+                  [attr.aria-label]="'search.placeholder' | translate"/>
+                <span class="search__hint">{{ 'search.hint' | translate }}</span>
             </div>
 
-            <div class="icons">
-                <button class="icon-btn" aria-label="Избранное" (click)="addToFavorites()">
-                    <span class="material">♡</span>
-                </button>
-                <a class="icon-btn" aria-label="Корзина" [routerLink]="['/cart']">
-                    <span class="material">🛍</span>
-                    <span class="badge">{{ cartCount$ | async }}</span>
-                </a>
+            <div class="actions-tray">
+                <div class="lang-switcher" role="group" aria-label="Language switcher">
+                    <button
+                      type="button"
+                      class="lang-switcher__btn"
+                      *ngFor="let language of languages"
+                      [class.is-active]="language.code === currentLanguage"
+                      [attr.aria-pressed]="language.code === currentLanguage"
+                      [attr.aria-label]="language.label"
+                      (click)="setLanguage(language.code)">
+                        <span class="lang-switcher__flag">{{ language.flag }}</span>
+                    </button>
+                </div>
 
-                @if (isLoggedIn$ | async) {
-                    <div class="dropdown">
-                        <img
-                                [src]="userIcon"
-                                alt="Профиль"
-                                class="user-avatar dropdown-toggle"
-                                id="userDropdown"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                (click)="toggleDropdown($event)"
-                        />
+                <div class="icons">
+                    <button class="icon-btn" [attr.aria-label]="'aria.favorites' | translate" (click)="addToFavorites()">
+                        <span class="material">♡</span>
+                    </button>
+                    <a class="icon-btn" [attr.aria-label]="'aria.cart' | translate" [routerLink]="['/cart']">
+                        <span class="material">🛍</span>
+                        <span class="badge">{{ cartCount$ | async }}</span>
+                    </a>
 
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            @if (isAdmin) {
-                                <li><a class="dropdown-item" href="#" (click)="openModal()">Добавить товар</a></li>
-                                <li>
-                                    <hr class="dropdown-divider"/>
-                                </li>
-                            }
-                            <li><a class="dropdown-item" (click)="logout()">Выйти</a></li>
-                        </ul>
-                    </div>
-                } @else {
-                    <app-login-button></app-login-button>
-                }
+                    @if (isLoggedIn$ | async) {
+                        <div class="dropdown">
+                            <img
+                                    [src]="userIcon"
+                                    alt="Профиль"
+                                    class="user-avatar dropdown-toggle"
+                                    id="userDropdown"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    (click)="toggleDropdown($event)"
+                            />
+
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                @if (isAdmin) {
+                                    <li><a class="dropdown-item" href="#" (click)="openModal()">{{ 'dropdown.addItem' | translate }}</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider"/>
+                                    </li>
+                                }
+                                <li><a class="dropdown-item" (click)="logout()">{{ 'dropdown.logout' | translate }}</a></li>
+                            </ul>
+                        </div>
+                    } @else {
+                        <app-login-button></app-login-button>
+                    }
+                </div>
             </div>
         </div>
     </div>

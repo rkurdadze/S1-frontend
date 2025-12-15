@@ -161,6 +161,54 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.actions-tray {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lang-switcher__btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.lang-switcher__btn:hover {
+  border-color: rgba(255, 118, 84, 0.6);
+  box-shadow: 0 8px 20px rgba(255, 118, 84, 0.2);
+}
+
+.lang-switcher__btn.is-active {
+  border-color: rgba(255, 118, 84, 0.85);
+  box-shadow: 0 12px 24px rgba(255, 118, 84, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-switcher__flag {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .icons {
   display: flex;
   align-items: center;
@@ -237,6 +285,10 @@
   .icons {
     justify-content: flex-end;
   }
+
+  .actions-tray {
+    justify-content: space-between;
+  }
 }
 
 
@@ -252,6 +304,15 @@
   .nav {
     overflow-x: auto;
     scrollbar-width: thin;
+  }
+
+  .actions-tray {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .lang-switcher {
+    padding: 6px 4px;
   }
 }
 
@@ -287,6 +348,11 @@
   }
 
   .icons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .actions-tray {
     width: 100%;
     justify-content: center;
   }

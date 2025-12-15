@@ -1,0 +1,43 @@
+{
+  "brand": {
+    "tagline": "Дом верхней одежды"
+  },
+  "nav": {
+    "collections": "Коллекции",
+    "catalog": "Каталог",
+    "new": "Новое",
+    "lookbook": "Lookbook",
+    "stories": "Истории",
+    "subscribe": "Подписка"
+  },
+  "search": {
+    "placeholder": "Поиск по моделям",
+    "hint": "#пуховики #тренчи #капсулы"
+  },
+  "aria": {
+    "toggleMenu": "Переключить меню",
+    "favorites": "Избранное",
+    "cart": "Корзина"
+  },
+  "dropdown": {
+    "addItem": "Добавить товар",
+    "logout": "Выйти"
+  },
+  "toast": {
+    "favorites": "Добавить страницу в избранное: нажмите {{shortcut}}"
+  },
+  "modal": {
+    "title": "Добавление товара",
+    "name": {
+      "label": "Название",
+      "placeholder": "Введите название"
+    },
+    "description": {
+      "label": "Описание",
+      "placeholder": "Введите описание"
+    },
+    "publish": {
+      "label": "Опубликовать"
+    }
+  }
+}

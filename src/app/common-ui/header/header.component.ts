@@ -1,20 +1,24 @@
-import {Component, inject, ViewChild} from '@angular/core';
-import {EditModalComponent, EditModalField} from "../edit-modal/edit-modal.component";
-import {ItemService} from "../../data/services/item.service";
-import {Router} from "@angular/router";
-import {Item} from "../../data/interfaces/item.interface";
-import {AsyncPipe, NgIf} from "@angular/common";
+import { Component, DestroyRef, ViewChild, inject } from '@angular/core';
+import { Router, RouterLink } from "@angular/router";
+import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { map } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+import { EditModalComponent, EditModalField } from "../edit-modal/edit-modal.component";
+import { ItemService } from "../../data/services/item.service";
+import { Item } from "../../data/interfaces/item.interface";
 import { GoogleAuthService } from '../../data/services/google-auth.service';
-import {Observable} from "rxjs";
-import {LoginButtonComponent} from "../login-button/login-button.component";
-import {BASE_API_URL} from "../../app.config";
-import {CartService} from "../../data/services/cart.service";
-import {map} from "rxjs/operators";
-import {RouterLink} from "@angular/router";
-import {ToastService} from "../toast-container/toast.service";
+import { LoginButtonComponent } from "../login-button/login-button.component";
+import { BASE_API_URL } from "../../app.config";
+import { CartService } from "../../data/services/cart.service";
+import { ToastService } from "../toast-container/toast.service";
 
 
 declare var bootstrap: any;
+
+type SupportedLanguage = 'ka' | 'en' | 'ru';
 
 @Component({
   selector: 'app-header',
@@ -22,9 +26,11 @@ declare var bootstrap: any;
   imports: [
     EditModalComponent,
     AsyncPipe,
+    NgFor,
     NgIf,
     LoginButtonComponent,
-    RouterLink
+    RouterLink,
+    TranslateModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -37,52 +43,92 @@ export class HeaderComponent {
   userIcon: string | null = null;
   isAdmin: boolean = false;
   isMenuOpen = false;
+  private readonly storageKey = 'studio101_language';
+  languages: Array<{ code: SupportedLanguage; flag: string; label: string }> = [
+    { code: 'ka', flag: '🇬🇪', label: 'ქართული' },
+    { code: 'en', flag: '🇬🇧', label: 'English' },
+    { code: 'ru', flag: '🇷🇺', label: 'Русский' }
+  ];
+  currentLanguage: SupportedLanguage;
 
   @ViewChild('editModalRef') editModalRef!: EditModalComponent;
   private itemService = inject(ItemService);
   private router = inject(Router);
   private toastService = inject(ToastService);
+  private translate = inject(TranslateService);
+  private destroyRef = inject(DestroyRef);
 
 
   constructor(private googleAuth: GoogleAuthService) {
+    this.translate.addLangs(this.languages.map(({ code }) => code));
+    const initialLanguage = this.loadLanguage();
+    this.translate.setDefaultLang('en');
+    this.translate.use(initialLanguage);
+    this.currentLanguage = initialLanguage;
     this.isLoggedIn$ = this.googleAuth.user$;
 
     // Подписываемся на изменения пользователя и обновляем `userIcon`
-    this.isLoggedIn$.subscribe(user => {
-      if (user && user.id) {
-        this.userIcon = `${this.baseApiUrl}auth/${user.id}` || null;
-        this.isAdmin = googleAuth.isAdmin;
-      } else {
-        this.userIcon = null;
-      }
-    });
+    this.isLoggedIn$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
+        if (user && user.id) {
+          this.userIcon = `${this.baseApiUrl}auth/${user.id}` || null;
+          this.isAdmin = googleAuth.isAdmin;
+        } else {
+          this.userIcon = null;
+        }
+      });
+
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(event => {
+        this.currentLanguage = event.lang as SupportedLanguage;
+        this.updateModalContent();
+      });
+
+    this.updateModalContent();
 
   }
 
-  modalTitle = 'ახალის დამატება';
-  modalFields: EditModalField[] = [
-    {
-      name: 'name',
-      label: 'დასახელება',
-      type: 'text',
-      required: true,
-      placeholder: 'შეიყვანეთ დასახელება',
-      maxLength: 200,
-    },
-    {
-      name: 'description',
-      label: 'აღწერილობა',
-      type: 'text',
-      placeholder: 'შეიყვანეთ აღწერილობა',
-      maxLength: 1000,
-    },
-    {
-      name: 'publish',
-      label: 'გამოქვეყნება',
-      type: 'checkbox',
-    }
-  ];
+  modalTitle = '';
+  modalFields: EditModalField[] = [];
   modalData = {};
+
+
+  setLanguage(language: SupportedLanguage): void {
+    if (language === this.currentLanguage) {
+      return;
+    }
+
+    this.translate.use(language);
+    this.persistLanguage(language);
+  }
+
+  private updateModalContent(): void {
+    this.modalTitle = this.translate.instant('modal.title');
+    this.modalFields = [
+      {
+        name: 'name',
+        label: this.translate.instant('modal.name.label'),
+        type: 'text',
+        required: true,
+        placeholder: this.translate.instant('modal.name.placeholder'),
+        maxLength: 200,
+      },
+      {
+        name: 'description',
+        label: this.translate.instant('modal.description.label'),
+        type: 'text',
+        placeholder: this.translate.instant('modal.description.placeholder'),
+        maxLength: 1000,
+      },
+      {
+        name: 'publish',
+        label: this.translate.instant('modal.publish.label'),
+        type: 'checkbox',
+      }
+    ];
+  }
 
 
   openModal(): void {
@@ -121,9 +167,11 @@ export class HeaderComponent {
     const isMac = /Mac/i.test(navigator.userAgent);
     const shortcut = isMac ? '⌘ Cmd + D' : 'Ctrl + D';
 
+    const message = this.translate.instant('toast.favorites', { shortcut });
+
     this.toastService.info(
-        `Добавить страницу в избранное: нажмите ${shortcut}`,
-        { autoClose: true, duration: 5000 }
+      message,
+      { autoClose: true, duration: 5000 }
     );
   }
 
@@ -158,10 +206,24 @@ export class HeaderComponent {
     }
   }
 
+  private loadLanguage(): SupportedLanguage {
+    try {
+      const saved = localStorage.getItem(this.storageKey) as SupportedLanguage | null;
+      if (saved && this.languages.some(({ code }) => code === saved)) {
+        return saved;
+      }
+    } catch (error) {
+      // ignore storage errors
+    }
 
+    return 'en';
+  }
 
-
-
-
-
+  private persistLanguage(language: SupportedLanguage): void {
+    try {
+      localStorage.setItem(this.storageKey, language);
+    } catch (error) {
+      // ignore storage errors
+    }
+  }
 }

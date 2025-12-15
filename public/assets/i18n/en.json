@@ -1,0 +1,43 @@
+{
+  "brand": {
+    "tagline": "Outerwear House"
+  },
+  "nav": {
+    "collections": "Collections",
+    "catalog": "Catalog",
+    "new": "New in",
+    "lookbook": "Lookbook",
+    "stories": "Stories",
+    "subscribe": "Newsletter"
+  },
+  "search": {
+    "placeholder": "Search for models",
+    "hint": "#puffer jackets #trenches #capsules"
+  },
+  "aria": {
+    "toggleMenu": "Toggle menu",
+    "favorites": "Add to favorites",
+    "cart": "Cart"
+  },
+  "dropdown": {
+    "addItem": "Add item",
+    "logout": "Log out"
+  },
+  "toast": {
+    "favorites": "Add the page to favorites: press {{shortcut}}"
+  },
+  "modal": {
+    "title": "Add new item",
+    "name": {
+      "label": "Name",
+      "placeholder": "Enter name"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Enter description"
+    },
+    "publish": {
+      "label": "Publish"
+    }
+  }
+}
