@@ -543,7 +543,7 @@ export class ItemPageComponent implements OnInit {
                 : false);
 
         if (!copied) {
-            console.warn('Clipboard copy failed');
+            console.warn('Не удалось скопировать данные в буфер обмена');
         }
 
         // 🔻 ТОЛЬКО ПОСЛЕ ЭТОГО — async

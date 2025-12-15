@@ -165,7 +165,7 @@ export class ItemSizesComponent implements OnChanges {
 
                 this.editInventoryModalRef.openModal();
             } else {
-                console.warn(`No inventory found for size: ${sizeName}`);
+                console.warn(`Не найдены остатки для размера: ${sizeName}`);
             }
         } else {
             this.selectSize(sizeName);

@@ -44,7 +44,7 @@ export class ColorPickerComponent implements ControlValueAccessor, AfterViewInit
         this.ctx = canvas.getContext('2d');
 
         if (!this.ctx) {
-            console.error('Failed to get 2D context');
+            console.error('Не удалось получить 2D-контекст полотна');
             return;
         }
 

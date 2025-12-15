@@ -62,7 +62,7 @@ export class HeaderComponent {
   constructor(private googleAuth: GoogleAuthService) {
     this.translate.addLangs(this.languages.map(({ code }) => code));
     const initialLanguage = this.loadLanguage();
-    this.translate.setDefaultLang('en');
+    this.translate.setDefaultLang('ka');
     this.translate.use(initialLanguage);
     this.currentLanguage = initialLanguage;
     this.isLoggedIn$ = this.googleAuth.user$;
@@ -216,7 +216,7 @@ export class HeaderComponent {
       // ignore storage errors
     }
 
-    return 'en';
+    return 'ka';
   }
 
   private persistLanguage(language: SupportedLanguage): void {

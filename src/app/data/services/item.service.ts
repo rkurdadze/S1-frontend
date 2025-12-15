@@ -54,7 +54,7 @@ export class ItemService {
     }
 
     editColor(color_id: number, color: { item_id: number; name: string }): Observable<any> {
-        console.log(color);
+        console.log('Сохраняем цвет:', color);
         const itemToSubmit = JSON.stringify(color);
         return this.http.put<any>(`${this.baseApiUrl}colors/${color_id}`, itemToSubmit, {
             headers: {'Content-Type': 'application/json'}
