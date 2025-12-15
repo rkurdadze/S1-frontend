@@ -5,7 +5,7 @@ import {FormsModule} from "@angular/forms";
 import {Color} from "../../data/interfaces/color.interface";
 import {EventService} from "../../data/services/event.service";
 import {ItemService} from "../../data/services/item.service";
-import {ToastService} from "../../helpers/toast.service";
+import {ToastService} from "../toast-container/toast.service";
 
 @Component({
     selector: 'app-item-colors',

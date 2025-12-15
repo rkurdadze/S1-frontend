@@ -11,7 +11,7 @@ import {BASE_API_URL} from "../../app.config";
 import {CartService} from "../../data/services/cart.service";
 import {map} from "rxjs/operators";
 import {RouterLink} from "@angular/router";
-import {ToastService} from "../../helpers/toast.service";
+import {ToastService} from "../toast-container/toast.service";
 
 
 declare var bootstrap: any;

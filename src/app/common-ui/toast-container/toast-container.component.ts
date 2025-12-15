@@ -1,6 +1,6 @@
 import { AsyncPipe, NgClass, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
-import {ToastMessage, ToastService} from "../../helpers/toast.service";
+import {ToastMessage, ToastService} from "./toast.service";
 
 @Component({
   selector: 'app-toast-container',

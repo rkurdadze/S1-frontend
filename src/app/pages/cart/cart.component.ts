@@ -11,7 +11,7 @@ import {GoogleAuthService} from '../../data/services/google-auth.service';
 import {Subscription} from 'rxjs';
 import {GooglePayService} from '../../data/services/google-pay.service';
 import {DeliveryOption} from '../../data/interfaces/delivery-option.interface';
-import {ToastService} from "../../helpers/toast.service";
+import {ToastService} from "../../common-ui/toast-container/toast.service";
 
 @Component({
   selector: 'app-cart',

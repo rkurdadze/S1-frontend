@@ -37,6 +37,7 @@ export class ItemCardComponent implements OnChanges{
 
   navigateToItemPage(): void {
     this.router.navigate(['/item', this.item.id]); // Navigate to item-page with item ID
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   getPhotoSrc(): string {

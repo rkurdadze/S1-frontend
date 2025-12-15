@@ -24,7 +24,7 @@ import {ItemSuggestionRailComponent} from "../../common-ui/item-suggestion-rail/
 import {CartService} from "../../data/services/cart.service";
 import {ShareService} from "../../data/services/share.service";
 import {ShareRequest} from "../../data/interfaces/share.interface";
-import {ToastService} from "../../helpers/toast.service";
+import {ToastService} from "../../common-ui/toast-container/toast.service";
 
 @Component({
     selector: 'app-item-page',
