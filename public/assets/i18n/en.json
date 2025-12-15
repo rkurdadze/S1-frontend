@@ -39,5 +39,117 @@
     "publish": {
       "label": "Publish"
     }
+  },
+  "outwear": {
+    "hero": {
+      "eyebrow": "New Winter 24/25",
+      "title": "Architectural silhouettes, warm materials, and a perfect fit.",
+      "lede": "Down jackets, trench coats, and vests that work in the city and on the go. All models can be customized to your color and length.",
+      "cta_capsules": "See capsules",
+      "cta_all": "All items",
+      "stat_models": "models in stock",
+      "stat_customization": "days for customization",
+      "stat_insulation": "insulation tests"
+    },
+    "hero_visual": {
+      "chip": "Lookbook",
+      "note": "Matte fabrics, hidden zippers, and 750 FP insulation"
+    },
+    "collections": {
+      "eyebrow": "Collections",
+      "cta": "View selection →"
+    },
+    "product_grid": {
+      "eyebrow": "Catalog",
+      "title": "Ready-made models and custom orders",
+      "lede": "All items are available for fitting in the showroom and for online consultation.",
+      "filter_all": "All",
+      "filter_puffers": "Puffers",
+      "filter_trenches": "Trench coats",
+      "filter_vests": "Vests",
+      "empty": "The catalog is empty for now. Add items through the admin panel."
+    },
+    "lookbook": {
+      "eyebrow": "Lookbook",
+      "title": "Inspiration and ready-made looks",
+      "cta": "See all →"
+    },
+    "stories": {
+      "eyebrow": "Stories",
+      "title": "Exploring fabrics, temperature ratings, and fit",
+      "cta": "Studio101 Magazine →"
+    },
+    "community": {
+      "eyebrow": "Community",
+      "title": "Subscribe for new drops and private releases",
+      "lede": "Once a week, we send out new colors, materials, and capsules. No spam.",
+      "form_placeholder": "Your email",
+      "form_button": "Subscribe"
+    },
+    "highlightCollections": [
+      {
+        "id": "scandi-minimal",
+        "title": "Scandi Minimal",
+        "description": "Clean lines, matte textures, and a focus on functionality for the cold season.",
+        "tag": "New Drop"
+      },
+      {
+        "id": "city-armor",
+        "title": "City Armor",
+        "description": "Monochrome puffers and parkas designed for windy city days.",
+        "tag": "Urban Line"
+      },
+      {
+        "id": "weekend-escape",
+        "title": "Weekend Escape",
+        "description": "Limited travel capsule: waterproof fabrics, removable hoods, Aquaguard zippers.",
+        "tag": "Limited"
+      }
+    ],
+    "lookbookFrames": [
+      {
+        "id": "monochrome-layering",
+        "title": "Monochrome layering",
+        "caption": "Asymmetrical lapels + soft belt for a perfect fit."
+      },
+      {
+        "id": "nordic-light",
+        "title": "Nordic light",
+        "caption": "Light-colored puffers with a voluminous collar and warm lining."
+      },
+      {
+        "id": "evening-stroll",
+        "title": "Evening stroll",
+        "caption": "Dramatic dark shades and a sleek silhouette without extra details."
+      }
+    ],
+    "perks": [
+      {
+        "title": "Personal Stylist",
+        "desc": "Outfit selection based on your parameters and the weather."
+      },
+      {
+        "title": "Instant Delivery",
+        "desc": "In Tbilisi within 2 hours, express delivery worldwide."
+      },
+      {
+        "title": "Care Service",
+        "desc": "Professional cleaning and fabric restoration."
+      }
+    ],
+    "editorials": [
+      {
+        "id": "puffer-jacket",
+        "title": "How to choose the perfect puffer jacket",
+        "summary": "5 questions to help you find your model: fit, fillers, temperature rating.",
+        "cta": "Read story"
+      },
+      {
+        "id": "graphite-color",
+        "title": "Color of the season: graphite",
+        "summary": "Why dark gray has become the new classic and how to combine it with basics.",
+        "cta": "Open collection"
+      }
+    ]
   }
 }
