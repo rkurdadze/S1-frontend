@@ -10,44 +10,44 @@
 
   <footer class="footer">
     <div class="footer__brand">
-      <p class="eyebrow">STUDIO101 ATELIER</p>
-      <h3>Верхняя одежда премиум-класса, созданная для жизни в движении.</h3>
-      <p>Тактильные ткани, архитектурные силуэты и оттенки сезона — все, что нужно для современного гардероба.</p>
+      <p class="eyebrow">{{ 'footer.brand.eyebrow' | translate }}</p>
+      <h3>{{ 'footer.brand.title' | translate }}</h3>
+      <p>{{ 'footer.brand.subtitle' | translate }}</p>
     </div>
     <div class="footer__grid">
       <div>
-        <h4>Коллекции</h4>
+        <h4>{{ 'footer.collections.title' | translate }}</h4>
         <ul>
-          <li><a href="#collections">Collections</a></li>
-          <li><a href="#new-drop">Новые поступления</a></li>
-          <li><a href="#lookbook">Lookbook FW</a></li>
-          <li><a href="#editorial">Истории</a></li>
+          <li><a href="#collections">{{ 'footer.collections.all' | translate }}</a></li>
+          <li><a href="#new-drop">{{ 'footer.collections.new' | translate }}</a></li>
+          <li><a href="#lookbook">{{ 'footer.collections.lookbook' | translate }}</a></li>
+          <li><a href="#editorial">{{ 'footer.collections.stories' | translate }}</a></li>
         </ul>
       </div>
       <div>
-        <h4>Сервис</h4>
+        <h4>{{ 'footer.service.title' | translate }}</h4>
         <ul>
-          <li><a href="#">Персональный подбор</a></li>
-          <li><a href="#">Доставка по миру</a></li>
-          <li><a href="#">Уход за изделиями</a></li>
-          <li><a href="#">Возвраты</a></li>
+          <li><a href="#">{{ 'footer.service.personal_shopping' | translate }}</a></li>
+          <li><a href="#">{{ 'footer.service.worldwide_delivery' | translate }}</a></li>
+          <li><a href="#">{{ 'footer.service.product_care' | translate }}</a></li>
+          <li><a href="#">{{ 'footer.service.returns' | translate }}</a></li>
         </ul>
       </div>
       <div>
-        <h4>Контакты</h4>
+        <h4>{{ 'footer.contacts.title' | translate }}</h4>
         <ul class="footer__contacts">
-          <li>+995 (555) 101-101</li>
-          <li>hello&#64;studio101.ge</li>
-          <li>Тбилиси, Руставели 12</li>
+          <li>{{ 'footer.contacts.phone' | translate }}</li>
+          <li>{{ 'footer.contacts.email' | translate }}</li>
+          <li>{{ 'footer.contacts.address' | translate }}</li>
         </ul>
       </div>
     </div>
     <div class="footer__bottom">
-      <span>© {{ currentYear }} Studio101. Crafted with care.</span>
+      <span>{{ 'footer.copyright' | translate:{ currentYear: currentYear } }}</span>
       <div class="footer__socials">
-        <a href="#" aria-label="Instagram">Instagram</a>
-        <a href="#" aria-label="Pinterest">Pinterest</a>
-        <a href="#" aria-label="Telegram">Telegram</a>
+        <a href="#" [attr.aria-label]="'footer.socials.instagram' | translate">{{ 'footer.socials.instagram' | translate }}</a>
+        <a href="#" [attr.aria-label]="'footer.socials.pinterest' | translate">{{ 'footer.socials.pinterest' | translate }}</a>
+        <a href="#" [attr.aria-label]="'footer.socials.telegram' | translate">{{ 'footer.socials.telegram' | translate }}</a>
       </div>
     </div>
   </footer>

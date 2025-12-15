@@ -25,6 +25,7 @@ import {CartService} from "../../data/services/cart.service";
 import {ShareService} from "../../data/services/share.service";
 import {ShareRequest} from "../../data/interfaces/share.interface";
 import {ToastService} from "../../common-ui/toast-container/toast.service";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
     selector: 'app-item-page',
@@ -39,7 +40,8 @@ import {ToastService} from "../../common-ui/toast-container/toast.service";
         ItemSizesComponent,
         ItemVisualPanelComponent,
         ItemMetaPanelComponent,
-        ItemSuggestionRailComponent
+        ItemSuggestionRailComponent,
+        TranslateModule
     ],
     templateUrl: './item-page.component.html',
     styleUrls: ['./item-page.component.scss']

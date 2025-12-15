@@ -1,23 +1,23 @@
 <section class="hero" id="new-drop">
   <div class="hero__content">
-    <p class="eyebrow">Новая зима 24/25</p>
-    <h1>Архитектурные силуэты, тёплые материалы и идеальная посадка.</h1>
-    <p class="lede">Пуховики, тренчи и жилеты, которые работают в городе и в путешествии. Все модели можно адаптировать под ваш цвет и длину.</p>
+    <p class="eyebrow">{{ 'outwear.hero.eyebrow' | translate }}</p>
+    <h1>{{ 'outwear.hero.title' | translate }}</h1>
+    <p class="lede">{{ 'outwear.hero.lede' | translate }}</p>
     <div class="hero__cta">
-      <a class="btn primary" href="#collections">Смотреть капсулы</a>
-      <a class="btn ghost" href="#product-grid">Все позиции</a>
+      <a class="btn primary" href="#collections">{{ 'outwear.hero.cta_capsules' | translate }}</a>
+      <a class="btn ghost" href="#product-grid">{{ 'outwear.hero.cta_all' | translate }}</a>
     </div>
     <div class="hero__stats">
-      <div><strong>48</strong><span>моделей на складе</span></div>
-      <div><strong>5-7</strong><span>дней кастомизации</span></div>
-      <div><strong>-25°C</strong><span>тесты утепления</span></div>
+      <div><strong>48</strong><span>{{ 'outwear.hero.stat_models' | translate }}</span></div>
+      <div><strong>5-7</strong><span>{{ 'outwear.hero.stat_customization' | translate }}</span></div>
+      <div><strong>-25°C</strong><span>{{ 'outwear.hero.stat_insulation' | translate }}</span></div>
     </div>
   </div>
   <div class="hero__visual">
     <div class="hero__card">
-      <span class="chip">Lookbook</span>
+      <span class="chip">{{ 'outwear.hero_visual.chip' | translate }}</span>
       <img src="./assets/model2.png" alt="outerwear" />
-      <div class="hero__note">Матовые ткани, скрытые молнии и утеплитель 750 FP</div>
+      <div class="hero__note">{{ 'outwear.hero_visual.note' | translate }}</div>
     </div>
   </div>
 </section>
@@ -25,7 +25,7 @@
 
 <div class="section-head" id="collections">
     <div>
-        <p class="eyebrow">Collections</p>
+        <p class="eyebrow">{{ 'outwear.collections.eyebrow' | translate }}</p>
     </div>
 </div>
 <section class="collection-cards" id="collection">
@@ -38,7 +38,7 @@
       <div class="collection-card__body">
         <h3>{{ collection.title }}</h3>
         <p>{{ collection.description }}</p>
-        <a [href]="collection.anchor" class="text-link">Смотреть подборку →</a>
+        <a [href]="collection.anchor" class="text-link">{{ 'outwear.collections.cta' | translate }}</a>
       </div>
     </article>
   }
@@ -47,21 +47,21 @@
 <section class="product-area" id="product-grid">
   <div class="section-head">
     <div>
-      <p class="eyebrow">Каталог</p>
-      <h2>Готовые модели и кастомные заказы</h2>
-      <p class="lede">Все позиции доступны для примерки в шоуруме и онлайн-консультации.</p>
+      <p class="eyebrow">{{ 'outwear.product_grid.eyebrow' | translate }}</p>
+      <h2>{{ 'outwear.product_grid.title' | translate }}</h2>
+      <p class="lede">{{ 'outwear.product_grid.lede' | translate }}</p>
     </div>
     <div class="filters">
-      <button class="pill active">Все</button>
-      <button class="pill">Пуховики</button>
-      <button class="pill">Тренчи</button>
-      <button class="pill">Жилеты</button>
+      <button class="pill active">{{ 'outwear.product_grid.filter_all' | translate }}</button>
+      <button class="pill">{{ 'outwear.product_grid.filter_puffers' | translate }}</button>
+      <button class="pill">{{ 'outwear.product_grid.filter_trenches' | translate }}</button>
+      <button class="pill">{{ 'outwear.product_grid.filter_vests' | translate }}</button>
     </div>
   </div>
 
   <div class="item-card__wrapper">
     @if (items.length === 0) {
-      <div class="empty">Каталог пока пуст. Добавьте позиции через панель администратора.</div>
+      <div class="empty">{{ 'outwear.product_grid.empty' | translate }}</div>
     } @else {
       @for (item of items; track item.id) {
         <app-item-card [item]="item"></app-item-card>
@@ -73,10 +73,10 @@
 <section class="lookbook" id="lookbook">
   <div class="section-head">
     <div>
-      <p class="eyebrow">Lookbook</p>
-      <h2>Вдохновение и готовые образы</h2>
+      <p class="eyebrow">{{ 'outwear.lookbook.eyebrow' | translate }}</p>
+      <h2>{{ 'outwear.lookbook.title' | translate }}</h2>
     </div>
-    <a href="#" class="text-link">Смотреть всё →</a>
+    <a href="#" class="text-link">{{ 'outwear.lookbook.cta' | translate }}</a>
   </div>
   <div class="lookbook__grid">
     @for (frame of lookbookFrames; track frame.title) {
@@ -103,10 +103,10 @@
 <section class="editorial" id="editorial">
   <div class="section-head">
     <div>
-      <p class="eyebrow">Истории</p>
-      <h2>Исследуем ткани, температурные режимы и посадку</h2>
+      <p class="eyebrow">{{ 'outwear.stories.eyebrow' | translate }}</p>
+      <h2>{{ 'outwear.stories.title' | translate }}</h2>
     </div>
-    <a href="#" class="text-link">Журнал Studio101 →</a>
+    <a href="#" class="text-link">{{ 'outwear.stories.cta' | translate }}</a>
   </div>
   <div class="editorial__grid">
     @for (story of editorials; track story.title) {
@@ -126,12 +126,12 @@
 
 <section class="community" id="newsletter">
   <div class="community__intro">
-    <p class="eyebrow">Сообщество</p>
-    <h2>Подпишитесь на новые дропы и закрытые релизы</h2>
-    <p class="lede">Раз в неделю присылаем новые цвета, материалы и капсулы. Без спама.</p>
+    <p class="eyebrow">{{ 'outwear.community.eyebrow' | translate }}</p>
+    <h2>{{ 'outwear.community.title' | translate }}</h2>
+    <p class="lede">{{ 'outwear.community.lede' | translate }}</p>
     <form class="newsletter">
-      <input type="email" placeholder="Ваш email" required />
-      <button type="submit" class="btn primary">Подписаться</button>
+      <input type="email" [placeholder]="'outwear.community.form_placeholder' | translate" required />
+      <button type="submit" class="btn primary">{{ 'outwear.community.form_button' | translate }}</button>
     </form>
   </div>
   <div class="community__grid">

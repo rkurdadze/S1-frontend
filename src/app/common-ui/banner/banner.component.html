@@ -1,14 +1,14 @@
 <div class="border"></div>
 <div class="page-wrapper">
   <div class="studio-box">
-    <span class="studio-text">studio 101</span>
+    <span class="studio-text">{{ 'banner.studio101' | translate }}</span>
   </div>
   <div class="copy-wrapper">
-    <p class="copy">made in Georgia</p>
+    <p class="copy">{{ 'banner.madeIn' | translate }}</p>
     <img class="flan-logo" alt="Studio101 logo" src="https://www.flannels.com/images/core/flanlogo-black.svg"/>
-    <a class="cta" title="Shop the Studio101 website" href="https://www.studio101.ge/" target="_blank">Shop now</a>
+    <a class="cta" title="Shop the Studio101 website" href="https://www.studio101.ge/" target="_blank">{{ 'banner.shopNow' | translate }}</a>
   </div>
   <div class="copyright">
-    <p>&copy; Copyright {{ currentYear }} by Studio 101</p>
+    <p>{{ 'banner.copyright' | translate:{ currentYear: currentYear } }}</p>
   </div>
 </div>

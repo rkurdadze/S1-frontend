@@ -1,11 +1,11 @@
 <section class="suggestion-rail">
   <div class="suggestion-rail__header">
     <div>
-      <p class="eyebrow">Рекомендации</p>
+      <p class="eyebrow">{{ 'item_suggestion_rail.eyebrow' | translate }}</p>
       <h3>{{ title }}</h3>
       <p class="muted" *ngIf="subtitle">{{ subtitle }}</p>
     </div>
-    <a class="ghost-link" href="/" aria-label="Открыть коллекцию">Смотреть все →</a>
+    <a class="ghost-link" href="/" [attr.aria-label]="'item_suggestion_rail.aria_open_collection' | translate">{{ 'item_suggestion_rail.seeAll' | translate }}</a>
   </div>
 
   <div class="rail" *ngIf="items?.length; else emptyState">
@@ -13,6 +13,6 @@
   </div>
 
   <ng-template #emptyState>
-    <div class="empty">Нет подборок для показа</div>
+    <div class="empty">{{ 'item_suggestion_rail.empty' | translate }}</div>
   </ng-template>
 </section>

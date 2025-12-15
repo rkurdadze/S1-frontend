@@ -1,7 +1,7 @@
 <div class="visual-panel">
   <div class="visual-panel__thumbs">
     <div class="thumbs__header">
-      <span class="label">Галерея</span>
+      <span class="label">{{ 'item_visual_panel.gallery' | translate }}</span>
       <span class="pill" *ngIf="selectedColor">{{ selectedColor }}</span>
     </div>
     <div class="thumbs__list" role="list">
@@ -11,12 +11,12 @@
         class="thumb"
         [class.thumb--active]="selectedImage?.id === image.id"
         (click)="selectImage.emit(image)"
-        aria-label="Выбрать фото"
+        [attr.aria-label]="'item_visual_panel.aria_select_photo' | translate"
       >
-        <img [src]="image.url + '/256'" alt="Фото изделия" loading="lazy" />
+        <img [src]="image.url + '/256'" [alt]="'item_visual_panel.alt_item_photo' | translate" loading="lazy" />
       </button>
       <div class="thumb thumb--placeholder" *ngIf="!images?.length">
-        <span>Нет фото</span>
+        <span>{{ 'item_visual_panel.no_photo' | translate }}</span>
       </div>
     </div>
   </div>
@@ -24,29 +24,29 @@
   <div class="visual-panel__main">
     <div class="glass">
       <div class="badge-stack">
-        <span class="pill">Премиум</span>
+        <span class="pill">{{ 'item_visual_panel.premium' | translate }}</span>
         <span class="pill pill--outline" *ngIf="selectedColor">{{ selectedColor }}</span>
       </div>
       <div class="main-image__wrapper">
-        <button *ngIf="showImageControls" class="nav prev" (click)="prevImage.emit()" aria-label="Предыдущее фото">
+        <button *ngIf="showImageControls" class="nav prev" (click)="prevImage.emit()" [attr.aria-label]="'item_visual_panel.aria_prev_photo' | translate">
           <span>‹</span>
         </button>
 
-        <img *ngIf="selectedImage" [src]="selectedImage.url + '/1024'" class="main-image" alt="Изображение изделия"/>
+        <img *ngIf="selectedImage" [src]="selectedImage.url + '/1024'" class="main-image" [alt]="'item_visual_panel.alt_item_photo' | translate"/>
         <div class="main-image main-image--empty" *ngIf="!selectedImage">
-          <p>Добавьте визуализацию для этого цвета</p>
+          <p>{{ 'item_visual_panel.add_visualization' | translate }}</p>
         </div>
 
-        <button *ngIf="showImageControls" class="nav next" (click)="nextImage.emit()" aria-label="Следующее фото">
+        <button *ngIf="showImageControls" class="nav next" (click)="nextImage.emit()" [attr.aria-label]="'item_visual_panel.aria_next_photo' | translate">
           <span>›</span>
         </button>
       </div>
       <div class="meta-line">
         <div>
-          <p class="eyebrow">Lookbook Studio101</p>
-          <p class="muted">Снимите мерки: рост модели 178 см, размер M</p>
+          <p class="eyebrow">{{ 'item_visual_panel.lookbook' | translate }}</p>
+          <p class="muted">{{ 'item_visual_panel.model_measurements' | translate }}</p>
         </div>
-        <div class="muted">Полистайте, чтобы увидеть детали</div>
+        <div class="muted">{{ 'item_visual_panel.scroll_for_details' | translate }}</div>
       </div>
     </div>
   </div>

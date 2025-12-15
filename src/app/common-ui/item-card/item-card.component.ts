@@ -6,17 +6,19 @@ import {Router} from "@angular/router";
 import {BASE_API_URL} from "../../app.config";
 import {environment} from "../../../environments/environment";
 import {PhotoService} from "../../data/services/photo.service";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-item-card',
   standalone: true,
-    imports: [
-        JsonPipe,
-        NgStyle,
-        NgClass,
-        NgIf,
-        DecimalPipe
-    ],
+  imports: [
+    JsonPipe,
+    NgStyle,
+    NgClass,
+    NgIf,
+    DecimalPipe,
+    TranslateModule
+  ],
   templateUrl: './item-card.component.html',
   styleUrl: './item-card.component.scss'
 })

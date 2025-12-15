@@ -9,6 +9,7 @@ import {ItemService} from "../../data/services/item.service";
 import {SizeService} from "../../data/services/size.service";
 import {InventoryService} from "../../data/services/inventory.service";
 import {Item} from "../../data/interfaces/item.interface";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-item-sizes',
@@ -16,7 +17,8 @@ import {Item} from "../../data/interfaces/item.interface";
     imports: [
         NgForOf,
         NgIf,
-        EditModalComponent
+        EditModalComponent,
+        TranslateModule
     ],
   templateUrl: './item-sizes.component.html',
   styleUrl: './item-sizes.component.scss'

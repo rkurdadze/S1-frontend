@@ -1,8 +1,9 @@
-import { Component, AfterViewInit } from '@angular/core';
+import {Component, AfterViewInit, inject} from '@angular/core';
 import { GoogleAuthService } from '../../data/services/google-auth.service';
 import { Observable } from 'rxjs';
 import { AsyncPipe, NgIf } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
   imports: [
     AsyncPipe,
-    NgIf
+    NgIf,
+    TranslateModule
   ],
   standalone: true
 })

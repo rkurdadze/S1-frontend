@@ -2,20 +2,20 @@
     <div class="item-page__colors-edit-wrapper">
         <app-color-picker [(ngModel)]="currentlyPickedColor"></app-color-picker>
         <button type="button" class="btn add-icon item-page__sz_btn"
-                title="Add Color"
+                [title]="'item_colors.addColor' | translate"
                 (click)="addColor()"
         >
             <i class="fas fa-plus"></i>
         </button>
         @if (colors?.length ?? 0 > 0) {
             <button type="button" class="btn add-icon item-page__sz_btn"
-                    title="Remove Color"
+                    [title]="'item_colors.removeColor' | translate"
                     (click)="removeColor()"
             >
                 <i class="fas fa-minus"></i>
             </button>
             <button type="button" class="btn item-page__sz_btn"
-                    title="Edit Color"
+                    [title]="'item_colors.editColor' | translate"
                     (click)="editColor()"
             >
                 <i class="fas fa-pen"></i>

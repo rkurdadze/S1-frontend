@@ -35,9 +35,9 @@
     </div>
     <p class="item-card__desc">{{ item.description }}</p>
     <div class="item-card__meta">
-      <span class="pill">{{ item.colors.length }} цвета</span>
+      <span class="pill">{{ 'item_card.colors' | translate:{ count: item.colors.length } }}</span>
       <span class="pill" [ngClass]="{'pill--warn': totalStock(item) === 0}">
-        {{ totalStock(item) === 0 ? 'Нет в наличии' : totalStock(item) + ' шт.' }}
+        {{ totalStock(item) === 0 ? ('item_card.outOfStock' | translate) : ('item_card.stock' | translate:{ count: totalStock(item) }) }}
       </span>
     </div>
   </div>

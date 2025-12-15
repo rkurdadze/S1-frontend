@@ -12,11 +12,12 @@ import {Subscription} from 'rxjs';
 import {GooglePayService} from '../../data/services/google-pay.service';
 import {DeliveryOption} from '../../data/interfaces/delivery-option.interface';
 import {ToastService} from "../../common-ui/toast-container/toast.service";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })

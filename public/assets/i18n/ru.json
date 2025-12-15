@@ -17,7 +17,11 @@
   "aria": {
     "toggleMenu": "Переключить меню",
     "favorites": "Избранное",
-    "cart": "Корзина"
+    "cart": "Корзина",
+    "close": "Закрыть",
+    "alt_logo": "Логотип Studio101",
+    "alt_profile": "Профиль",
+    "alt_item_image": "Изображение товара"
   },
   "dropdown": {
     "addItem": "Добавить товар",
@@ -38,7 +42,9 @@
     },
     "publish": {
       "label": "Опубликовать"
-    }
+    },
+    "ok": "ОК",
+    "cancel": "Отмена"
   },
   "outwear": {
     "hero": {
@@ -151,5 +157,270 @@
         "cta": "Открыть подборку"
       }
     ]
+  },
+  "banner": {
+    "studio101": "студия 101",
+    "madeIn": "сделано в Грузии",
+    "shopNow": "Купить сейчас",
+    "copyright": "© Copyright {{ currentYear }} by Studio 101"
+  },
+  "item_card": {
+    "colors": "{{count}} цветов",
+    "outOfStock": "Нет в наличии",
+    "stock": "{{count}} шт."
+  },
+  "item_colors": {
+    "addColor": "Добавить цвет",
+    "removeColor": "Удалить цвет",
+    "editColor": "Изменить цвет"
+  },
+  "item_sizes": {
+    "addSize": "Добавить размер"
+  },
+  "item_suggestion_rail": {
+    "eyebrow": "Рекомендации",
+    "seeAll": "Смотреть все →",
+    "empty": "Нет подборок для отображения",
+    "aria_open_collection": "Открыть коллекцию"
+  },
+  "item_visual_panel": {
+    "gallery": "Галерея",
+    "aria_select_photo": "Выбрать фото",
+    "alt_item_photo": "Фото товара",
+    "no_photo": "Нет фото",
+    "premium": "Премиум",
+    "aria_prev_photo": "Предыдущее фото",
+    "add_visualization": "Добавить визуализацию для этого цвета",
+    "aria_next_photo": "Следующее фото",
+    "lookbook": "Lookbook Studio101",
+    "model_measurements": "Параметры модели: рост 178 см, размер M",
+    "scroll_for_details": "Прокрутите, чтобы увидеть детали"
+  },
+  "footer": {
+    "brand": {
+      "eyebrow": "АТЕЛЬЕ STUDIO101",
+      "title": "Премиальная верхняя одежда, созданная для жизни в движении.",
+      "subtitle": "Тактильные ткани, архитектурные силуэты и сезонные оттенки — всё, что нужно для современного гардероба."
+    },
+    "collections": {
+      "title": "Коллекции",
+      "all": "Коллекции",
+      "new": "Новинки",
+      "lookbook": "Lookbook FW",
+      "stories": "Истории"
+    },
+    "service": {
+      "title": "Сервис",
+      "personal_shopping": "Персональный шопинг",
+      "worldwide_delivery": "Доставка по всему миру",
+      "product_care": "Уход за изделиями",
+      "returns": "Возвраты"
+    },
+    "contacts": {
+      "title": "Контакты",
+      "phone": "+995 (555) 101-101",
+      "email": "hello@studio101.ge",
+      "address": "Тбилиси, Руставели 12"
+    },
+    "copyright": "© {{ currentYear }} Studio101. Сделано с заботой.",
+    "socials": {
+      "instagram": "Instagram",
+      "pinterest": "Pinterest",
+      "telegram": "Telegram"
+    }
+  },
+  "login_button": {
+    "login": "Войти"
+  },
+  "cart": {
+    "hero": {
+      "eyebrow": "Корзина и оформление заказа",
+      "title": "Ваши товары",
+      "subtitle": "Выберите доставку, оставьте контактные данные и оплатите через Google Pay или после подтверждения заказа.",
+      "chip_items": "{{count}} товаров",
+      "chip_taxes": "Налоги и стоимость доставки уточняются при подтверждении",
+      "summary_title": "Итого по заказу",
+      "summary_subtitle": "Итоговая стоимость будет уточнена менеджером",
+      "clear_cart": "Очистить корзину"
+    },
+    "card": {
+      "aria_remove_item": "Удалить товар",
+      "price": "Цена",
+      "quantity": "Кол-во",
+      "total": "Итого"
+    },
+    "empty": {
+      "title": "Ваша корзина пока пуста",
+      "subtitle": "Добавьте товары из каталога, чтобы оформить заказ."
+    },
+    "form": {
+      "contacts": {
+        "eyebrow": "Контакты",
+        "subtitle": "Мы отправим подтверждение и статус заказа на указанные контакты.",
+        "first_name_label": "Имя",
+        "first_name_placeholder": "Иван",
+        "last_name_label": "Фамилия",
+        "last_name_placeholder": "Иванов",
+        "email_label": "Email",
+        "email_placeholder": "you@example.com",
+        "phone_label": "Телефон",
+        "phone_placeholder": "+995 5xx xxx xxx"
+      },
+      "delivery": {
+        "eyebrow": "Доставка",
+        "subtitle": "Выберите удобный способ и укажите адрес.",
+        "address_label": "Адрес",
+        "address_placeholder": "Улица, дом",
+        "apartment_label": "Квартира / офис",
+        "apartment_placeholder": "Кв., подъезд",
+        "city_label": "Город",
+        "city_placeholder": "Тбилиси",
+        "region_label": "Регион",
+        "region_placeholder": "Кахетия",
+        "zip_label": "Почтовый индекс",
+        "zip_placeholder": "0100",
+        "country_label": "Страна",
+        "notes_label": "Комментарии",
+        "notes_placeholder": "Уточнения по доставке"
+      }
+    },
+    "payment": {
+      "title": "Итого к оплате",
+      "login_status": "Войдите через Google, чтобы оплатить и сохранить данные для доставки",
+      "submit_button": "Отправить заказ без оплаты",
+      "google_pay_button": "Оплатить через Google Pay",
+      "hint": "После создания заказа мы отправим письмо с подтверждением."
+    }
+  },
+  "item_page": {
+    "breadcrumbs": {
+      "catalog": "Каталог",
+      "outerwear": "Верхняя одежда"
+    },
+    "status": {
+      "in_stock": "В наличии",
+      "draft": "Черновик"
+    },
+    "gallery": {
+      "collection": "Коллекция · Studio101",
+      "shades": "{{count}} оттенков",
+      "showroom_samples": "Образцы в шоуруме",
+      "stylist_selection": "Подборка стилиста"
+    },
+    "edit": {
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "title_block": {
+      "eyebrow": "Капсула верхней одежды · Studio101",
+      "in_catalog": "В каталоге",
+      "draft": "Черновик",
+      "payment_info": "Оплата и доставка оформляются в корзине"
+    },
+    "info_cards": {
+      "delivery": {
+        "eyebrow": "Доставка",
+        "title": "1–3 дня по России",
+        "subtitle": "Примерка и бесплатный возврат"
+      },
+      "materials": {
+        "eyebrow": "Материалы",
+        "title": "Мембрана, утеплитель Primaloft®",
+        "subtitle": "Тестируем на влагу и ветер"
+      },
+      "cut": {
+        "eyebrow": "Крой",
+        "title": "Парка · Куртка · Пуховик",
+        "subtitle": "Регулируемые утяжки и капюшон"
+      }
+    },
+    "badge_row": {
+      "colors": "{{count}} цветов в палитре",
+      "limited_edition": "Лимитированная серия",
+      "assembled_in_showroom": "Собрано в шоуруме"
+    },
+    "selector_grid": {
+      "color_palette": "Палитра цветов",
+      "sizes_and_availability": "Размеры и наличие"
+    },
+    "upload_card": {
+      "title": "Фото для выбранного цвета",
+      "subtitle": "Добавьте изображения для витрины и лукбука",
+      "button": "Загрузить фото"
+    },
+    "cta_row": {
+      "quantity": "Количество",
+      "add_to_cart": "Добавить в корзину"
+    },
+    "share_actions": {
+      "facebook": "Поделиться в Facebook",
+      "instagram": "Поделиться в Instagram"
+    },
+    "capsule_panels": {
+      "header": {
+        "eyebrow": "Капсула верхней одежды",
+        "subtitle": "Проверьте посадку, утеплитель и варианты многослойности — мы собрали всю служебную информацию рядом с карточкой товара."
+      },
+      "micro_grid": {
+        "fitting": {
+          "title": "Примерка",
+          "subtitle": "В шоуруме или у вас дома"
+        },
+        "delivery": {
+          "title": "Доставка",
+          "subtitle": "1–3 дня, бесплатный возврат"
+        },
+        "warranty": {
+          "title": "Гарантия",
+          "subtitle": "12 месяцев обслуживания"
+        },
+        "materials": {
+          "title": "Материалы",
+          "subtitle": "Водоотталкивающая мембрана"
+        }
+      },
+      "lookbook": {
+        "eyebrow": "Lookbook",
+        "subtitle": "Создайте свой образ: капюшон со скрытыми утяжками, объёмные рукава, атласная подкладка и тёплый слой.",
+        "badge1": "Тестируем на влагу и ветер",
+        "badge2": "Съемный пуховой слой"
+      }
+    },
+    "story_board": {
+      "eyebrow": "Детали и крой",
+      "title": "Умные карманы, скрытые швы, регулируемые утяжки",
+      "subtitle": "Работаем с итальянскими фабриками: плотная ткань с водоотталкивающей пропиткой, утеплитель Primaloft® и атласная подкладка."
+    },
+    "suggestions": {
+      "similar_title": "Похожие модели",
+      "similar_subtitle": "Подборка по силуэту, длине и фактуре",
+      "style_with_title": "Сочетать с",
+      "style_with_subtitle": "Стилизация с аксессуарами и базовыми слоями"
+    },
+    "share_modal": {
+      "title": "Поделиться товаром",
+      "close_button": "Закрыть",
+      "preview": {
+        "alt": "Предпросмотр",
+        "empty_title": "Нет изображений для выбранного цвета",
+        "hint": "Все фото выбранного цвета будут отправлены в виде {{destination}}."
+      },
+      "form": {
+        "platform": "Платформа",
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "format": "Формат публикации",
+        "feed": "Лента",
+        "story": "История",
+        "caption": "Текст поста",
+        "caption_placeholder": "Отредактируйте перед публикацией",
+        "hint": "После нажатия мы скопируем текст и ссылку в буфер обмена, затем откроем окно композитора Facebook или Instagram. Если поле в композиторе пустое, просто вставьте скопированный текст перед отправкой."
+      },
+      "actions": {
+        "cancel": "Отмена",
+        "publishing": "Публикация...",
+        "share": "Поделиться"
+      }
+    }
   }
 }

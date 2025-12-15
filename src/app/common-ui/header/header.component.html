@@ -2,7 +2,7 @@
     <div class="header__bar">
         <div class="brand">
             <div class="brand__logo">
-                <img src="assets/imgs/studio101-logo.png" alt="Логотип Studio101"/>
+                <img src="assets/imgs/studio101-logo.png" [alt]="'aria.alt_logo' | translate"/>
             </div>
             <div class="brand__text">
                 <span class="brand__mark">Studio101</span>
@@ -72,7 +72,7 @@
                         <div class="dropdown">
                             <img
                                     [src]="userIcon"
-                                    alt="Профиль"
+                                    [alt]="'aria.alt_profile' | translate"
                                     class="user-avatar dropdown-toggle"
                                     id="userDropdown"
                                     data-bs-toggle="dropdown"

@@ -17,7 +17,11 @@
   "aria": {
     "toggleMenu": "მენიუს გახსნა",
     "favorites": "რჩეულებში დამატება",
-    "cart": "კალათა"
+    "cart": "კალათა",
+    "close": "დახურვა",
+    "alt_logo": "Studio101-ის ლოგო",
+    "alt_profile": "პროფილი",
+    "alt_item_image": "ნივთის სურათი"
   },
   "dropdown": {
     "addItem": "საქონლის დამატება",
@@ -38,7 +42,9 @@
     },
     "publish": {
       "label": "გამოქვეყნება"
-    }
+    },
+    "ok": "კარგი",
+    "cancel": "გაუქმება"
   },
   "outwear": {
     "hero": {
@@ -151,5 +157,270 @@
         "cta": "კოლექციის გახსნა"
       }
     ]
+  },
+  "banner": {
+    "studio101": "სტუდია 101",
+    "madeIn": "დამზადებულია საქართველოში",
+    "shopNow": "შეიძინეთ ახლა",
+    "copyright": "© საავტორო უფლებები {{ currentYear }} Studio 101-ის მიერ"
+  },
+  "item_card": {
+    "colors": "{{count}} ფერი",
+    "outOfStock": "არ არის მარაგში",
+    "stock": "{{count}} ცალი."
+  },
+  "item_colors": {
+    "addColor": "ფერის დამატება",
+    "removeColor": "ფერის წაშლა",
+    "editColor": "ფერის რედაქტირება"
+  },
+  "item_sizes": {
+    "addSize": "ზომის დამატება"
+  },
+  "item_suggestion_rail": {
+    "eyebrow": "რეკომენდაციები",
+    "seeAll": "ყველას ნახვა →",
+    "empty": "არ არის ნაჩვენები არჩევანი",
+    "aria_open_collection": "კოლექციის გახსნა"
+  },
+  "item_visual_panel": {
+    "gallery": "გალერეა",
+    "aria_select_photo": "ფოტოს არჩევა",
+    "alt_item_photo": "ნივთის ფოტო",
+    "no_photo": "ფოტო არ არის",
+    "premium": "პრემიუმი",
+    "aria_prev_photo": "წინა ფოტო",
+    "add_visualization": "ამ ფერისთვის ვიზუალიზაციის დამატება",
+    "aria_next_photo": "შემდეგი ფოტო",
+    "lookbook": "Studio101 ლუქბუქი",
+    "model_measurements": "მოდელის ზომები: სიმაღლე 178 სმ, ზომა M",
+    "scroll_for_details": "გადაახვიეთ დეტალების სანახავად"
+  },
+  "footer": {
+    "brand": {
+      "eyebrow": "STUDIO101 ატელიე",
+      "title": "პრემიუმ გარე ტანსაცმელი, შექმნილია მოძრაობაში ცხოვრებისთვის.",
+      "subtitle": "ტაქტილური ქსოვილები, არქიტექტურული სილუეტები და სეზონური ჩრდილები — ყველაფერი, რაც გჭირდებათ თანამედროვე გარდერობისთვის."
+    },
+    "collections": {
+      "title": "კოლექციები",
+      "all": "კოლექციები",
+      "new": "ახალი ჩამოსული",
+      "lookbook": "FW ლუქბუქი",
+      "stories": "ისტორიები"
+    },
+    "service": {
+      "title": "სერვისი",
+      "personal_shopping": "პირადი შოპინგი",
+      "worldwide_delivery": "მსოფლიო მიწოდება",
+      "product_care": "პროდუქტის მოვლა",
+      "returns": "დაბრუნება"
+    },
+    "contacts": {
+      "title": "კონტაქტები",
+      "phone": "+995 (555) 101-101",
+      "email": "hello@studio101.ge",
+      "address": "თბილისი, რუსთაველის 12"
+    },
+    "copyright": "© {{ currentYear }} Studio101. შექმნილია ზრუნვით.",
+    "socials": {
+      "instagram": "ინსტაგრამი",
+      "pinterest": "პინტერესტი",
+      "telegram": "ტელეგრამი"
+    }
+  },
+  "login_button": {
+    "login": "შესვლა"
+  },
+  "cart": {
+    "hero": {
+      "eyebrow": "კალათა და შეკვეთა",
+      "title": "თქვენი ნივთები",
+      "subtitle": "აირჩიეთ მიწოდება, დატოვეთ თქვენი საკონტაქტო ინფორმაცია და გადაიხადეთ Google Pay-ით ან შეკვეთის დადასტურებისას.",
+      "chip_items": "{{count}} ნივთი",
+      "chip_taxes": "გადასახადები და მიწოდების ღირებულება დაზუსტდება დადასტურებისას",
+      "summary_title": "შეკვეთის ჯამი",
+      "summary_subtitle": "საბოლოო ღირებულებას დააზუსტებს მენეჯერი",
+      "clear_cart": "კალათის გასუფთავება"
+    },
+    "card": {
+      "aria_remove_item": "ნივთის წაშლა",
+      "price": "ფასი",
+      "quantity": "რაოდ.",
+      "total": "სულ"
+    },
+    "empty": {
+      "title": "თქვენი კალათა ჯერ ცარიელია",
+      "subtitle": "დაამატეთ ნივთები კატალოგიდან შეკვეთის გასაფორმებლად."
+    },
+    "form": {
+      "contacts": {
+        "eyebrow": "კონტაქტები",
+        "subtitle": "დადასტურებას და შეკვეთის სტატუსს გამოგიგზავნით მითითებულ კონტაქტებზე.",
+        "first_name_label": "სახელი",
+        "first_name_placeholder": "გიორგი",
+        "last_name_label": "გვარი",
+        "last_name_placeholder": "ბერიძე",
+        "email_label": "ელ.ფოსტა",
+        "email_placeholder": "you@example.com",
+        "phone_label": "ტელეფონი",
+        "phone_placeholder": "+995 5xx xxx xxx"
+      },
+      "delivery": {
+        "eyebrow": "მიწოდება",
+        "subtitle": "აირჩიეთ მოსახერხებელი მეთოდი და მიუთითეთ მისამართი.",
+        "address_label": "მისამართი",
+        "address_placeholder": "ქუჩა, სახლი",
+        "apartment_label": "ბინა / ოფისი",
+        "apartment_placeholder": "ბინა, სადარბაზო",
+        "city_label": "ქალაქი",
+        "city_placeholder": "თბილისი",
+        "region_label": "რეგიონი",
+        "region_placeholder": "კახეთი",
+        "zip_label": "საფოსტო კოდი",
+        "zip_placeholder": "0100",
+        "country_label": "ქვეყანა",
+        "notes_label": "კომენტარები",
+        "notes_placeholder": "მიწოდების დაზუსტებები"
+      }
+    },
+    "payment": {
+      "title": "გადასახდელი თანხა",
+      "login_status": "შედით Google-ით, რომ გადაიხადოთ და შეინახოთ მიწოდების მონაცემები",
+      "submit_button": "შეკვეთის გაგზავნა გადახდის გარეშე",
+      "google_pay_button": "გადაიხადეთ Google Pay-ით",
+      "hint": "შეკვეთის შექმნის შემდეგ გამოგიგზავნით დამადასტურებელ ელ.წერილს."
+    }
+  },
+  "item_page": {
+    "breadcrumbs": {
+      "catalog": "კატალოგი",
+      "outerwear": "გარე ტანსაცმელი"
+    },
+    "status": {
+      "in_stock": "მარაგშია",
+      "draft": "მონახაზი"
+    },
+    "gallery": {
+      "collection": "კოლექცია · Studio101",
+      "shades": "{{count}} ჩრდილი",
+      "showroom_samples": "ნიმუშები შოურუმში",
+      "stylist_selection": "სტილისტის არჩევანი"
+    },
+    "edit": {
+      "edit": "რედაქტირება",
+      "delete": "წაშლა"
+    },
+    "title_block": {
+      "eyebrow": "გარე ტანსაცმლის კაფსულა · Studio101",
+      "in_catalog": "კატალოგში",
+      "draft": "მონახაზი",
+      "payment_info": "გადახდა და მიწოდება ხდება კალათაში"
+    },
+    "info_cards": {
+      "delivery": {
+        "eyebrow": "მიწოდება",
+        "title": "1–3 დღე საქართველოში",
+        "subtitle": "მოსინჯვა და უფასო დაბრუნება"
+      },
+      "materials": {
+        "eyebrow": "მასალები",
+        "title": "მემბრანა, Primaloft® იზოლაცია",
+        "subtitle": "ვტესტავთ ტენიანობაზე და ქარზე"
+      },
+      "cut": {
+        "eyebrow": "თარგი",
+        "title": "პარკა · ქურთუკი · პუფერი",
+        "subtitle": "რეგულირებადი თასმები და კაპიუშონი"
+      }
+    },
+    "badge_row": {
+      "colors": "{{count}} ფერი პალიტრაში",
+      "limited_edition": "შეზღუდული გამოშვება",
+      "assembled_in_showroom": "აწყობილია შოურუმში"
+    },
+    "selector_grid": {
+      "color_palette": "ფერების პალიტრა",
+      "sizes_and_availability": "ზომები და ხელმისაწვდომობა"
+    },
+    "upload_card": {
+      "title": "ფოტოები არჩეული ფერისთვის",
+      "subtitle": "დაამატეთ სურათები ვიტრინისა და ლუქბუქისთვის",
+      "button": "ფოტოების ატვირთვა"
+    },
+    "cta_row": {
+      "quantity": "რაოდენობა",
+      "add_to_cart": "კალათაში დამატება"
+    },
+    "share_actions": {
+      "facebook": "Facebook-ზე გაზიარება",
+      "instagram": "Instagram-ზე გაზიარება"
+    },
+    "capsule_panels": {
+      "header": {
+        "eyebrow": "გარე ტანსაცმლის კაფსულა",
+        "subtitle": "შეამოწმეთ მორგება, იზოლაცია და ფენების შესაძლებლობები — ჩვენ შევაგროვეთ ყველა მომსახურების ინფორმაცია პროდუქტის ბარათის გვერდით."
+      },
+      "micro_grid": {
+        "fitting": {
+          "title": "მოსინჯვა",
+          "subtitle": "შოურუმში ან თქვენს სახლში"
+        },
+        "delivery": {
+          "title": "მიწოდება",
+          "subtitle": "1–3 დღე, უფასო დაბრუნება"
+        },
+        "warranty": {
+          "title": "გარანტია",
+          "subtitle": "12 თვიანი მომსახურება"
+        },
+        "materials": {
+          "title": "მასალები",
+          "subtitle": "წყალგაუმტარი მემბრანა"
+        }
+      },
+      "lookbook": {
+        "eyebrow": "ლუქბუქი",
+        "subtitle": "შექმენით თქვენი ლუქი: კაპიუშონი დამალული თასმებით, მოცულობითი სახელოები, ატლასის უგულებელყოფა და თბილი ფენა.",
+        "badge1": "ვტესტავთ ტენიანობაზე და ქარზე",
+        "badge2": "მოსახსნელი პუხის ფენა"
+      }
+    },
+    "story_board": {
+      "eyebrow": "დეტალები და თარგი",
+      "title": "ჭკვიანი ჯიბეები, დამალული ნაკერები, რეგულირებადი თასმები",
+      "subtitle": "ვმუშაობთ იტალიურ ქარხნებთან: მკვრივი ქსოვილი წყალგაუმტარი დამუშავებით, Primaloft® იზოლაციით და ატლასის უგულებელყოფით."
+    },
+    "suggestions": {
+      "similar_title": "მსგავსი მოდელები",
+      "similar_subtitle": "შერჩევა სილუეტის, სიგრძისა და ტექსტურის მიხედვით",
+      "style_with_title": "შეუხამეთ",
+      "style_with_subtitle": "სტილიზაცია აქსესუარებით და საბაზისო ფენებით"
+    },
+    "share_modal": {
+      "title": "გააზიარეთ ნივთი",
+      "close_button": "დახურვა",
+      "preview": {
+        "alt": "წინასწარი გადახედვა",
+        "empty_title": "არჩეული ფერისთვის სურათები არ არის",
+        "hint": "არჩეული ფერის ყველა ფოტო გაიგზავნება როგორც {{destination}}."
+      },
+      "form": {
+        "platform": "პლატფორმა",
+        "facebook": "ფეისბუქი",
+        "instagram": "ინსტაგრამი",
+        "format": "გამოქვეყნების ფორმატი",
+        "feed": "სიახლეების ლენტი",
+        "story": "სთორი",
+        "caption": "პოსტის ტექსტი",
+        "caption_placeholder": "გამოქვეყნებამდე დაარედაქტირეთ",
+        "hint": "დაწკაპუნების შემდეგ, ჩვენ დავაკოპირებთ ტექსტს და ბმულს ბუფერში, შემდეგ გავხსნით Facebook-ის ან Instagram-ის კომპოზიტორის ფანჯარას. თუ კომპოზიტორში ველი ცარიელია, უბრალოდ ჩასვით კოპირებული ტექსტი გაგზავნამდე."
+      },
+      "actions": {
+        "cancel": "გაუქმება",
+        "publishing": "ქვეყნდება...",
+        "share": "გაზიარება"
+      }
+    }
   }
 }

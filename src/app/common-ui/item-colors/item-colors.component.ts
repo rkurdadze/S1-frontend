@@ -6,6 +6,7 @@ import {Color} from "../../data/interfaces/color.interface";
 import {EventService} from "../../data/services/event.service";
 import {ItemService} from "../../data/services/item.service";
 import {ToastService} from "../toast-container/toast.service";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
     selector: 'app-item-colors',
@@ -14,7 +15,8 @@ import {ToastService} from "../toast-container/toast.service";
         ColorPickerComponent,
         NgForOf,
         FormsModule,
-        AsyncPipe
+        AsyncPipe,
+        TranslateModule
     ],
     templateUrl: './item-colors.component.html',
     styleUrl: './item-colors.component.scss'

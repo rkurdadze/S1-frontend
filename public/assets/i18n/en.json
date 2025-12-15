@@ -17,7 +17,11 @@
   "aria": {
     "toggleMenu": "Toggle menu",
     "favorites": "Add to favorites",
-    "cart": "Cart"
+    "cart": "Cart",
+    "close": "Close",
+    "alt_logo": "Studio101 Logo",
+    "alt_profile": "Profile",
+    "alt_item_image": "Item image"
   },
   "dropdown": {
     "addItem": "Add item",
@@ -38,7 +42,9 @@
     },
     "publish": {
       "label": "Publish"
-    }
+    },
+    "ok": "OK",
+    "cancel": "Cancel"
   },
   "outwear": {
     "hero": {
@@ -151,5 +157,270 @@
         "cta": "Open collection"
       }
     ]
+  },
+  "banner": {
+    "studio101": "studio 101",
+    "madeIn": "made in Georgia",
+    "shopNow": "Shop now",
+    "copyright": "© Copyright {{ currentYear }} by Studio 101"
+  },
+  "item_card": {
+    "colors": "{{count}} colors",
+    "outOfStock": "Out of stock",
+    "stock": "{{count}} pcs."
+  },
+  "item_colors": {
+    "addColor": "Add Color",
+    "removeColor": "Remove Color",
+    "editColor": "Edit Color"
+  },
+  "item_sizes": {
+    "addSize": "Add Size"
+  },
+  "item_suggestion_rail": {
+    "eyebrow": "Recommendations",
+    "seeAll": "See all →",
+    "empty": "No selections to show",
+    "aria_open_collection": "Open collection"
+  },
+  "item_visual_panel": {
+    "gallery": "Gallery",
+    "aria_select_photo": "Select photo",
+    "alt_item_photo": "Item photo",
+    "no_photo": "No photo",
+    "premium": "Premium",
+    "aria_prev_photo": "Previous photo",
+    "add_visualization": "Add visualization for this color",
+    "aria_next_photo": "Next photo",
+    "lookbook": "Lookbook Studio101",
+    "model_measurements": "Measurements: model height 178 cm, size M",
+    "scroll_for_details": "Scroll to see details"
+  },
+  "footer": {
+    "brand": {
+      "eyebrow": "STUDIO101 ATELIER",
+      "title": "Premium outerwear designed for life in motion.",
+      "subtitle": "Tactile fabrics, architectural silhouettes, and seasonal shades—everything you need for a modern wardrobe."
+    },
+    "collections": {
+      "title": "Collections",
+      "all": "Collections",
+      "new": "New arrivals",
+      "lookbook": "Lookbook FW",
+      "stories": "Stories"
+    },
+    "service": {
+      "title": "Service",
+      "personal_shopping": "Personal shopping",
+      "worldwide_delivery": "Worldwide delivery",
+      "product_care": "Product care",
+      "returns": "Returns"
+    },
+    "contacts": {
+      "title": "Contacts",
+      "phone": "+995 (555) 101-101",
+      "email": "hello@studio101.ge",
+      "address": "Tbilisi, Rustaveli 12"
+    },
+    "copyright": "© {{ currentYear }} Studio101. Crafted with care.",
+    "socials": {
+      "instagram": "Instagram",
+      "pinterest": "Pinterest",
+      "telegram": "Telegram"
+    }
+  },
+  "login_button": {
+    "login": "Login"
+  },
+  "cart": {
+    "hero": {
+      "eyebrow": "Cart and Checkout",
+      "title": "Your Items",
+      "subtitle": "Select delivery, leave your contact details, and pay via Google Pay or upon order confirmation.",
+      "chip_items": "{{count}} items",
+      "chip_taxes": "Taxes and shipping costs are clarified upon confirmation",
+      "summary_title": "Order total",
+      "summary_subtitle": "The final cost will be clarified by the manager",
+      "clear_cart": "Clear cart"
+    },
+    "card": {
+      "aria_remove_item": "Remove item",
+      "price": "Price",
+      "quantity": "Qty",
+      "total": "Total"
+    },
+    "empty": {
+      "title": "Your cart is empty for now",
+      "subtitle": "Add items from the catalog to place an order."
+    },
+    "form": {
+      "contacts": {
+        "eyebrow": "Contacts",
+        "subtitle": "We will send a confirmation and order status to the provided contacts.",
+        "first_name_label": "First Name",
+        "first_name_placeholder": "John",
+        "last_name_label": "Last Name",
+        "last_name_placeholder": "Doe",
+        "email_label": "Email",
+        "email_placeholder": "you@example.com",
+        "phone_label": "Phone",
+        "phone_placeholder": "+995 5xx xxx xxx"
+      },
+      "delivery": {
+        "eyebrow": "Delivery",
+        "subtitle": "Choose a convenient method and specify the address.",
+        "address_label": "Address",
+        "address_placeholder": "Street, house",
+        "apartment_label": "Apartment / office",
+        "apartment_placeholder": "Apt., entrance",
+        "city_label": "City",
+        "city_placeholder": "Tbilisi",
+        "region_label": "Region",
+        "region_placeholder": "Kakheti",
+        "zip_label": "Postal code",
+        "zip_placeholder": "0100",
+        "country_label": "Country",
+        "notes_label": "Comments",
+        "notes_placeholder": "Delivery clarifications"
+      }
+    },
+    "payment": {
+      "title": "Total to pay",
+      "login_status": "Log in via Google to pay and save delivery data",
+      "submit_button": "Submit order without payment",
+      "google_pay_button": "Pay with Google Pay",
+      "hint": "After creating the order, we will send a confirmation email."
+    }
+  },
+  "item_page": {
+    "breadcrumbs": {
+      "catalog": "Catalog",
+      "outerwear": "Outerwear"
+    },
+    "status": {
+      "in_stock": "In stock",
+      "draft": "Draft"
+    },
+    "gallery": {
+      "collection": "Collection · Studio101",
+      "shades": "{{count}} shades",
+      "showroom_samples": "Showroom samples",
+      "stylist_selection": "Stylist selection"
+    },
+    "edit": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "title_block": {
+      "eyebrow": "Outerwear capsule · Studio101",
+      "in_catalog": "In catalog",
+      "draft": "Draft",
+      "payment_info": "Payment and delivery are processed in the cart"
+    },
+    "info_cards": {
+      "delivery": {
+        "eyebrow": "Delivery",
+        "title": "1–3 days in Russia",
+        "subtitle": "Fitting and free returns"
+      },
+      "materials": {
+        "eyebrow": "Materials",
+        "title": "Membrane, Primaloft® insulation",
+        "subtitle": "We test for moisture and wind"
+      },
+      "cut": {
+        "eyebrow": "Cut",
+        "title": "Parka · Jacket · Puffer",
+        "subtitle": "Adjustable drawstrings and hood"
+      }
+    },
+    "badge_row": {
+      "colors": "{{count}} colors in the palette",
+      "limited_edition": "Limited edition",
+      "assembled_in_showroom": "Assembled in the showroom"
+    },
+    "selector_grid": {
+      "color_palette": "Color palette",
+      "sizes_and_availability": "Sizes and availability"
+    },
+    "upload_card": {
+      "title": "Photos for the selected color",
+      "subtitle": "Add images for the storefront and lookbook",
+      "button": "Upload photos"
+    },
+    "cta_row": {
+      "quantity": "Quantity",
+      "add_to_cart": "Add to cart"
+    },
+    "share_actions": {
+      "facebook": "Share on Facebook",
+      "instagram": "Share on Instagram"
+    },
+    "capsule_panels": {
+      "header": {
+        "eyebrow": "Outerwear capsule",
+        "subtitle": "Check the fit, insulation, and layering options—we've gathered all the service information next to the product card."
+      },
+      "micro_grid": {
+        "fitting": {
+          "title": "Fitting",
+          "subtitle": "In the showroom or at your home"
+        },
+        "delivery": {
+          "title": "Delivery",
+          "subtitle": "1–3 days, free returns"
+        },
+        "warranty": {
+          "title": "Warranty",
+          "subtitle": "12 months of service"
+        },
+        "materials": {
+          "title": "Materials",
+          "subtitle": "Water-repellent membrane"
+        }
+      },
+      "lookbook": {
+        "eyebrow": "Lookbook",
+        "subtitle": "Create your look: a hood with hidden drawstrings, voluminous sleeves, satin lining, and a warm layer.",
+        "badge1": "We test for moisture and wind",
+        "badge2": "Removable down layer"
+      }
+    },
+    "story_board": {
+      "eyebrow": "Details and cut",
+      "title": "Smart pockets, hidden seams, adjustable drawstrings",
+      "subtitle": "We work with Italian factories: dense fabric with water-repellent treatment, Primaloft® insulation, and satin lining."
+    },
+    "suggestions": {
+      "similar_title": "Similar models",
+      "similar_subtitle": "Selection based on silhouette, length, and texture",
+      "style_with_title": "Style with",
+      "style_with_subtitle": "Styling with accessories and base layers"
+    },
+    "share_modal": {
+      "title": "Share item",
+      "close_button": "Close",
+      "preview": {
+        "alt": "Preview",
+        "empty_title": "No images for the selected color",
+        "hint": "All photos of the selected color will be sent as a {{destination}}."
+      },
+      "form": {
+        "platform": "Platform",
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "format": "Publication format",
+        "feed": "Feed",
+        "story": "Story",
+        "caption": "Post text",
+        "caption_placeholder": "Edit before publishing",
+        "hint": "After clicking, we will copy the text and link to the clipboard, then open the Facebook or Instagram composer window. If the field in the composer is empty, just paste the copied text before sending."
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "publishing": "Publishing…",
+        "share": "Share"
+      }
+    }
   }
 }

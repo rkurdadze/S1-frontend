@@ -1,10 +1,11 @@
 import {CommonModule} from '@angular/common';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-item-visual-panel',
   standalone: true,
-  imports: [CommonModule],
+    imports: [CommonModule, TranslateModule],
   templateUrl: './item-visual-panel.component.html',
   styleUrls: ['./item-visual-panel.component.scss']
 })

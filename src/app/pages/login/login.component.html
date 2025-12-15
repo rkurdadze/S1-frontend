@@ -1,25 +1,25 @@
 <div class="login-page">
   <div class="login-hero">
     <div class="logo-badge">
-      <img src="assets/imgs/studio101-logo.png" alt="Логотип Studio101" />
+      <img src="assets/imgs/studio101-logo.png" [alt]="'login_page.alt_logo' | translate" />
     </div>
     <div class="login-hero__text">
-      <p class="eyebrow">Studio101 · Outerwear House</p>
-      <h1>Доступ в личный кабинет</h1>
-      <p class="muted">Войдите через Google, чтобы оформить заказы и сохранять данные доставки.</p>
+      <p class="eyebrow">{{ 'login_page.eyebrow' | translate }}</p>
+      <h1>{{ 'login_page.title' | translate }}</h1>
+      <p class="muted">{{ 'login_page.subtitle' | translate }}</p>
     </div>
   </div>
 
   <div class="login-card">
-    <h2 *ngIf="!(isLoggedIn$ | async)">Регистрация или вход</h2>
-    <h2 *ngIf="isLoggedIn$ | async">Вы вошли в систему</h2>
-    <p>Используйте Google для {{ (isLoggedIn$ | async) ? 'выхода' : 'входа' }}</p>
+    <h2 *ngIf="!(isLoggedIn$ | async)">{{ 'login_page.card_title_login' | translate }}</h2>
+    <h2 *ngIf="isLoggedIn$ | async">{{ 'login_page.card_title_loggedin' | translate }}</h2>
+    <p>{{ (isLoggedIn$ | async) ? ('login_page.card_subtitle_logout' | translate) : ('login_page.card_subtitle_login' | translate) }}</p>
 
     <div id="google-signin-button" *ngIf="!(isLoggedIn$ | async)"></div>
 
     <button *ngIf="isLoggedIn$ | async" (click)="logout()" class="google-signout-button">
-      <img src="assets/google-icon.svg" alt="Google Logo" class="google-icon" />
-      Выйти
+      <img src="assets/google-icon.svg" [alt]="'login_page.alt_google_logo' | translate" class="google-icon" />
+      {{ 'login_page.logout_button' | translate }}
     </button>
   </div>
 </div>

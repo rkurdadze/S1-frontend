@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {TranslateModule} from "@ngx-translate/core";
 /**
  * Интерфейс поля редактирования.
  * Здесь можно добавлять любые дополнительные настройки.
@@ -43,7 +44,8 @@ export interface EditModalField {
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule
+        FormsModule,
+        TranslateModule
     ],
     templateUrl: './edit-modal.component.html',
     styleUrls: ['./edit-modal.component.scss']

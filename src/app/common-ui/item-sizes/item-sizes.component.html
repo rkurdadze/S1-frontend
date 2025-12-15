@@ -28,7 +28,7 @@
                 class="btn add-icon item-page__sz_btn"
                 (click)="openSizesModal()"
                 [disabled]="forColor == null"
-                title="Add Size"
+                [title]="'item_sizes.addSize' | translate"
         >
             <i class="fas fa-plus"></i>
         </button>
