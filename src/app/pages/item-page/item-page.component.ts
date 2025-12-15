@@ -24,6 +24,7 @@ import {ItemSuggestionRailComponent} from "../../common-ui/item-suggestion-rail/
 import {CartService} from "../../data/services/cart.service";
 import {ShareService} from "../../data/services/share.service";
 import {ShareRequest} from "../../data/interfaces/share.interface";
+import {ToastService} from "../../helpers/toast.service";
 
 @Component({
     selector: 'app-item-page',
@@ -46,6 +47,7 @@ import {ShareRequest} from "../../data/interfaces/share.interface";
 export class ItemPageComponent implements OnInit {
     isLoggedIn$: Observable<any>;
     private refreshSubscription!: Subscription;
+    private toastService = inject(ToastService);
 
     baseApiUrl = inject(BASE_API_URL);
     private router = inject(Router);
@@ -311,7 +313,10 @@ export class ItemPageComponent implements OnInit {
             },
             error: (err: any) => {
                 console.error('Ошибка загрузки изображений:', err);
-                alert('Ошибка загрузки изображений');
+                this.toastService.error(
+                    `Ошибка загрузки изображений`,
+                    { autoClose: true, duration: 4000 }
+                );
             }
         });
     }
@@ -376,11 +381,17 @@ export class ItemPageComponent implements OnInit {
     addToCart(): void {
         if (!this.item || !this.item.id) return;
         if (!this.selectedColor) {
-            alert('Выберите цвет перед добавлением в корзину.');
+            this.toastService.warning(
+                `Выберите цвет перед добавлением в корзину.`,
+                { autoClose: true, duration: 4000 }
+            );
             return;
         }
         if (!this.selectedSize) {
-            alert('Выберите размер перед добавлением в корзину.');
+            this.toastService.warning(
+                `Выберите размер перед добавлением в корзину.`,
+                { autoClose: true, duration: 4000 }
+            );
             return;
         }
 
@@ -395,7 +406,10 @@ export class ItemPageComponent implements OnInit {
             item: this.item
         });
 
-        alert('Товар добавлен в корзину. Перейдите в корзину для оформления.');
+        this.toastService.success(
+            `Товар добавлен в корзину. Перейдите в корзину для оформления.`,
+            { autoClose: true, duration: 4000 }
+        );
     }
 
     openShareModal(platform: 'facebook' | 'instagram'): void {

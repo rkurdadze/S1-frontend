@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CartService} from '../../data/services/cart.service';
@@ -11,6 +11,7 @@ import {GoogleAuthService} from '../../data/services/google-auth.service';
 import {Subscription} from 'rxjs';
 import {GooglePayService} from '../../data/services/google-pay.service';
 import {DeliveryOption} from '../../data/interfaces/delivery-option.interface';
+import {ToastService} from "../../helpers/toast.service";
 
 @Component({
   selector: 'app-cart',
@@ -31,6 +32,7 @@ export class CartComponent implements OnInit, OnDestroy {
   paymentError: string | null = null;
   user: any = null;
   private subscription = new Subscription();
+  private toastService = inject(ToastService);
 
   constructor(
     private fb: FormBuilder,
@@ -149,7 +151,10 @@ export class CartComponent implements OnInit, OnDestroy {
       next: () => {
         this.cartService.clear();
         this.contactForm.reset({country: 'Georgia', deliveryOption: this.deliveryOptions[0].id});
-        alert('Заказ создан! Мы отправили уведомление на почту и свяжемся с вами.');
+        this.toastService.success(
+            `Заказ создан! Мы отправили уведомление на почту и свяжемся с вами.`,
+            { autoClose: true, duration: 4000 }
+        );
       },
       error: (error) => {
         console.error('Ошибка при создании заказа', error);

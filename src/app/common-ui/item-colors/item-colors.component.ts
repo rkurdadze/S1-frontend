@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ColorPickerComponent} from "../color-picker/color-picker.component";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {Color} from "../../data/interfaces/color.interface";
 import {EventService} from "../../data/services/event.service";
 import {ItemService} from "../../data/services/item.service";
+import {ToastService} from "../../helpers/toast.service";
 
 @Component({
     selector: 'app-item-colors',
@@ -23,6 +24,8 @@ export class ItemColorsComponent implements OnChanges {
     @Input() itemId!: number;
     @Input() isAdmin: boolean = false;
     @Output() selectedColorEmitter = new EventEmitter<string>();
+
+    private toastService = inject(ToastService);
 
     currentlyPickedColor: string = "#e300ff";
     selectedColor: string | null = null;
@@ -67,7 +70,10 @@ export class ItemColorsComponent implements OnChanges {
                 },
                 error: (err) => {
                     console.error('Ошибка при сохранении цветов:', err);
-                    alert('Ошибка при сохранении цветов');
+                    this.toastService.error(
+                        `Ошибка при сохранении цветов`,
+                        { autoClose: true, duration: 4000 }
+                    );
                 }
             });
         }
@@ -92,7 +98,10 @@ export class ItemColorsComponent implements OnChanges {
                         },
                         error: (err) => {
                             console.error('Ошибка при сохранении цветов:', err);
-                            alert('Ошибка при сохранении цветов');
+                            this.toastService.error(
+                                `Ошибка при сохранении цветов`,
+                                { autoClose: true, duration: 4000 }
+                            );
                         }
                     });
                 }

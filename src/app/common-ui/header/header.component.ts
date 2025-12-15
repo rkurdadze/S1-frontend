@@ -11,6 +11,8 @@ import {BASE_API_URL} from "../../app.config";
 import {CartService} from "../../data/services/cart.service";
 import {map} from "rxjs/operators";
 import {RouterLink} from "@angular/router";
+import {ToastService} from "../../helpers/toast.service";
+
 
 declare var bootstrap: any;
 
@@ -38,6 +40,8 @@ export class HeaderComponent {
   @ViewChild('editModalRef') editModalRef!: EditModalComponent;
   private itemService = inject(ItemService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
+
 
   constructor(private googleAuth: GoogleAuthService) {
     this.isLoggedIn$ = this.googleAuth.user$;
@@ -106,6 +110,18 @@ export class HeaderComponent {
     const dropdown = new bootstrap.Dropdown(event.target);
     dropdown.toggle();
   }
+
+
+  addToFavorites(): void {
+    const isMac = /Mac/i.test(navigator.userAgent);
+    const shortcut = isMac ? '⌘ Cmd + D' : 'Ctrl + D';
+
+    this.toastService.info(
+        `Добавить страницу в избранное: нажмите ${shortcut}`,
+        { autoClose: true, duration: 5000 }
+    );
+  }
+
 
 
 }
