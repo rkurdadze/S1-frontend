@@ -38,6 +38,7 @@ export class OutwearComponent implements OnDestroy {
   itemService = inject(ItemService);
   items: Item[] = [];
   private itemAddedSubscription!: Subscription;
+  private translationSubscription!: Subscription;
 
   highlightCollections: CollectionCard[] = [];
   lookbookFrames: any[] = [];
@@ -58,22 +59,26 @@ export class OutwearComponent implements OnDestroy {
       this.refreshItems();
     });
 
-    this.translate.get('outwear').subscribe(outwear => {
-      this.highlightCollections = outwear.highlightCollections.map((item: any) => ({
-        ...item,
-        image: this.getHighlightCollectionImage(item.id),
-        anchor: this.getHighlightCollectionAnchor(item.id)
-      }));
-      this.lookbookFrames = outwear.lookbookFrames.map((item: any) => ({
-        ...item,
-        image: this.getLookbookFrameImage(item.id)
-      }));
-      this.perks = outwear.perks;
-      this.editorials = outwear.editorials.map((item: any) => ({
-        ...item,
-        image: this.getEditorialImage(item.id)
-      }));
+    this.translationSubscription = this.translate.stream('outwear').subscribe(outwear => {
+      this.updateTranslatedSections(outwear);
     });
+  }
+
+  private updateTranslatedSections(outwear: any) {
+    this.highlightCollections = outwear.highlightCollections.map((item: any) => ({
+      ...item,
+      image: this.getHighlightCollectionImage(item.id),
+      anchor: this.getHighlightCollectionAnchor(item.id)
+    }));
+    this.lookbookFrames = outwear.lookbookFrames.map((item: any) => ({
+      ...item,
+      image: this.getLookbookFrameImage(item.id)
+    }));
+    this.perks = outwear.perks;
+    this.editorials = outwear.editorials.map((item: any) => ({
+      ...item,
+      image: this.getEditorialImage(item.id)
+    }));
   }
 
   private getHighlightCollectionImage(id: string): string {
@@ -134,6 +139,9 @@ export class OutwearComponent implements OnDestroy {
   ngOnDestroy() {
     if (this.itemAddedSubscription) {
       this.itemAddedSubscription.unsubscribe();
+    }
+    if (this.translationSubscription) {
+      this.translationSubscription.unsubscribe();
     }
   }
 }
