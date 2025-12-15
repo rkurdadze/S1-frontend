@@ -7,11 +7,8 @@
   grid-template-columns: 280px 1fr;
   gap: 16px;
   align-items: stretch;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
 }
+
 
 .visual-panel__thumbs {
   background: linear-gradient(145deg, #0f172a, #111827);
@@ -29,11 +26,14 @@
 }
 
 .thumbs__list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
+
 .thumb {
+  display: block;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
@@ -45,8 +45,8 @@
 
   img {
     width: 100%;
-    height: 96px;
     border-radius: 10px;
+    aspect-ratio: 3 / 4;
     object-fit: cover;
     display: block;
   }
@@ -196,4 +196,47 @@
 .muted {
   color: #9ca3af;
   margin: 0;
+}
+
+
+
+
+@media (max-width: 1024px) {
+  .visual-panel {
+    grid-template-columns: 1fr;   // одна колонка
+  }
+
+  .visual-panel__main {
+    order: 1;                     // сначала главное превью
+  }
+
+  .visual-panel__thumbs {
+    order: 2;                     // thumbnails ПОД превью
+    margin-top: 12px;
+  }
+
+  .thumbs__list {
+    display: flex;
+    flex-direction: row;          // горизонтально
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .thumb {
+    flex: 0 0 auto;
+    width: 96px;
+    max-width: 96px;
+  }
+}
+
+
+
+@media (max-width: 1440px) {
+  .thumb {
+    flex: 0 0 auto;
+    width: 100%;
+  }
 }
