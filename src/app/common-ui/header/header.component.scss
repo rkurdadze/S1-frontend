@@ -137,7 +137,8 @@
 
 .search {
   position: relative;
-  display: grid;
+  //display: grid;
+  display: none;
   gap: 6px;
 }
 
@@ -267,13 +268,13 @@
 }
 
 
-@media (max-width: 1080px) {
+
+@media (max-width: 1200px) {
   .header__bar {
     grid-template-columns: 1fr;
   }
 
   .nav {
-    justify-content: flex-start;
     flex-wrap: wrap;
   }
 
@@ -307,7 +308,6 @@
   }
 
   .actions-tray {
-    justify-content: space-between;
     gap: 10px;
   }
 
@@ -318,9 +318,6 @@
 
 
 @media (max-width: 400px) {
-  .header__bar {
-    grid-template-columns: 1fr; // ⬅️ ВАЖНО
-  }
 
   .header__actions {
     width: 100%;
@@ -335,8 +332,11 @@
     grid-column: 1 / -1;
     width: 100%;
     flex-direction: column;
-    align-items: flex-start;
     padding-top: 8px;
+
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .nav.collapse {
@@ -347,13 +347,6 @@
     display: flex;
   }
 
-  .icons {
-    width: 100%;
-    justify-content: center;
-  }
 
-  .actions-tray {
-    width: 100%;
-    justify-content: center;
-  }
+
 }
