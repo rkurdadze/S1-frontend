@@ -36,6 +36,7 @@ export class HeaderComponent {
   baseApiUrl = inject(BASE_API_URL);
   userIcon: string | null = null;
   isAdmin: boolean = false;
+  isMenuOpen = false;
 
   @ViewChild('editModalRef') editModalRef!: EditModalComponent;
   private itemService = inject(ItemService);
@@ -105,6 +106,10 @@ export class HeaderComponent {
   }
 
 
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   toggleDropdown(event: Event) {
     event.stopPropagation();
     const dropdown = new bootstrap.Dropdown(event.target);
@@ -121,6 +126,41 @@ export class HeaderComponent {
         { autoClose: true, duration: 5000 }
     );
   }
+
+
+  onNavClick(event: MouseEvent, targetId: string): void {
+    event.preventDefault();
+
+    const wasOpen = this.isMenuOpen;
+    this.isMenuOpen = false;
+
+    // если меню было открыто — ждём схлопывания (чтобы не было скачков)
+    const runScroll = () => {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      // обновляем hash без нативного "прыжка"
+      history.pushState(null, '', `#${targetId}`);
+
+      const targetTop = target.getBoundingClientRect().top + window.scrollY;
+
+      window.scrollTo({
+        top: targetTop - 10, // ✅ твой оффсет
+        behavior: 'smooth'
+      });
+    };
+
+    if (wasOpen) {
+      requestAnimationFrame(runScroll);
+    } else {
+      // когда меню и так закрыто — можно без ожидания
+      runScroll();
+    }
+  }
+
+
+
+
 
 
 
