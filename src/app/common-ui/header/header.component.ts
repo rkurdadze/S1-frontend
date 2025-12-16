@@ -1,5 +1,5 @@
-import { Component, DestroyRef, ViewChild, inject } from '@angular/core';
-import { Router, RouterLink } from "@angular/router";
+import { Component, DestroyRef, ViewChild, inject, NgZone } from '@angular/core';
+import { Router, RouterLink, NavigationEnd } from "@angular/router";
 import { AsyncPipe, NgFor, NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
@@ -57,6 +57,7 @@ export class HeaderComponent {
   private toastService = inject(ToastService);
   private translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
+  private zone = inject(NgZone);
 
 
   constructor(private googleAuth: GoogleAuthService) {
@@ -182,28 +183,41 @@ export class HeaderComponent {
     const wasOpen = this.isMenuOpen;
     this.isMenuOpen = false;
 
-    // если меню было открыто — ждём схлопывания (чтобы не было скачков)
-    const runScroll = () => {
-      const target = document.getElementById(targetId);
-      if (!target) return;
+    const runScroll = () => this.scrollToAnchor(targetId);
 
-      // обновляем hash без нативного "прыжка"
-      history.pushState(null, '', `#${targetId}`);
-
-      const targetTop = target.getBoundingClientRect().top + window.scrollY;
-
-      window.scrollTo({
-        top: targetTop - 10, // ✅ твой оффсет
-        behavior: 'smooth'
-      });
-    };
-
-    if (wasOpen) {
-      requestAnimationFrame(runScroll);
-    } else {
-      // когда меню и так закрыто — можно без ожидания
-      runScroll();
+    // если мы уже на главной — просто скроллим
+    if (this.router.url.startsWith('/#') || this.router.url === '/' || this.router.url.includes('#')) {
+      if (wasOpen) {
+        requestAnimationFrame(runScroll);
+      } else {
+        runScroll();
+      }
+      return;
     }
+
+    // если мы НЕ на странице с якорями — сначала переходим, потом скроллим
+    this.router.navigate(['/'], { fragment: targetId }).then(() => {
+      this.zone.onStable
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => {
+          // Angular полностью стабилизировался — DOM гарантированно готов
+          this.scrollToAnchor(targetId);
+        });
+    });
+  }
+
+  private scrollToAnchor(targetId: string): void {
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    history.pushState(null, '', `#${targetId}`);
+
+    const targetTop = target.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: targetTop - 10,
+      behavior: 'smooth'
+    });
   }
 
   private loadLanguage(): SupportedLanguage {
