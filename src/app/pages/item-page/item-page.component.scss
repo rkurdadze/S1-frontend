@@ -304,7 +304,7 @@ h1 {
 
 .cta-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: 1fr 2fr;
   gap: 10px;
 }
 
@@ -623,6 +623,7 @@ textarea {
   .gallery-meta {
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 7px;
   }
 }
 
@@ -678,15 +679,16 @@ textarea {
   }
 
   h1 {
-    font-size: 1rem;
+    font-size: 1.4rem;
   }
 
   .lead {
-    font-size: .85rem;
+    margin: 16px 5px;
+    font-size: .95rem;
   }
 
   .price{
-    font-size: .85rem;
+    font-size: 1.35rem;
   }
 
   .price-row {
@@ -733,6 +735,10 @@ textarea {
   .badge-stack {
     max-width: calc(100% - 20px);
     justify-content: flex-end;
+  }
+
+  .btn-dark {
+    font-size: .9rem;
   }
 
 }

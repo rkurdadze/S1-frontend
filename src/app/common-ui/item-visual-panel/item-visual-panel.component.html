@@ -1,10 +1,10 @@
 <div class="visual-panel"
      [class.visual-panel--single]="!images || images.length <= 1">
   <div class="visual-panel__thumbs" *ngIf="images && images.length > 1">
-    <div class="thumbs__header">
-      <span class="label">{{ 'item_visual_panel.gallery' | translate }}</span>
-      <span class="pill" *ngIf="selectedColor">{{ selectedColor }}</span>
-    </div>
+<!--    <div class="thumbs__header">-->
+<!--      <span class="label">{{ 'item_visual_panel.gallery' | translate }}</span>-->
+<!--      <span class="pill" *ngIf="selectedColor">{{ selectedColor }}</span>-->
+<!--    </div>-->
     <div class="thumbs__list" role="list">
       <button
         *ngFor="let image of images; trackBy: trackById"
@@ -43,11 +43,7 @@
         </button>
       </div>
       <div class="meta-line">
-        <div>
           <p class="eyebrow">{{ 'item_visual_panel.lookbook' | translate }}</p>
-          <p class="muted">{{ 'item_visual_panel.model_measurements' | translate }}</p>
-        </div>
-        <div class="muted">{{ 'item_visual_panel.scroll_for_details' | translate }}</div>
       </div>
     </div>
   </div>

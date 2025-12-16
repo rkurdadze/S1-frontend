@@ -1,37 +1,61 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --dark-color: #0a0a0f;
-  --light-color: #f5f5f7;
+  /* важно: говорим браузеру, что тема тёмная */
+  color-scheme: dark;
+
+  /* ❗ Android-safe base colors */
+  --dark-color: #12141a;   /* было #0a0a0f — СЛИШКОМ тёмный */
+  --light-color: #e8ebf1;
+
+  /* ===== HERO / MAIN BACKGROUND ===== */
   --item-hero-bg:
           radial-gradient(
                           circle at 12% 10%,
-                          rgba(255, 255, 255, 0.17),
+                          rgba(255, 255, 255, 0.09),
                           rgba(255, 255, 255, 0)
           ),
           linear-gradient(
                           180deg,
-                          rgba(28, 43, 78, 0.96),
-                          rgba(22, 33, 60, 0.82)
+                          rgba(43, 40, 39, 0.62),
+                          rgba(21, 27, 35, 0.41)
           );
+
+  /* ===== GLASS / CARDS ===== */
   --glass-bg:
           radial-gradient(
-                          circle at 10% 20%, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0)),
-          linear-gradient(145deg, #121d35, #1c2a4c);
+                          circle at 10% 20%,
+                          rgba(64, 59, 53, 0.23),
+                          rgba(255, 255, 255, 0)
+          ),
+          linear-gradient(
+                          145deg,
+                          rgba(36, 37, 43, 0.48),
+                          rgba(61, 66, 76, 0.45)
+          );
+
+  /* ===== PILLS / CAPSULES ===== */
   --capsule-bg:
           linear-gradient(
-                  160deg,
-                          rgba(20, 28, 51, 0.95),
-                          rgba(14, 21, 39, 0.92));
-  --item-card-bg: rgba(255, 255, 255, 0.05);
-  --header__bar-bg: rgba(255, 255, 255, 0.05);
+                          160deg,
+                          rgba(58, 49, 36, 0.92),
+                          rgba(35, 31, 28, 0.88)
+          );
+
+  /* ===== SURFACES ===== */
+  --item-card-bg: rgba(34, 29, 23, 0.48);
+  --header__bar-bg: rgba(30, 27, 25, 0.68);
+
   --item-toolbar-bg:
           linear-gradient(
-                  120deg,
-                  rgba(255, 255, 255, 0.09),
-                  rgba(255, 255, 255, 0))
-
+                          120deg,
+                          rgba(66, 72, 78, 0.51),
+                          rgba(35, 31, 31, 0.52)
+          );
 }
+
+
+
 
 * {
   box-sizing: border-box;

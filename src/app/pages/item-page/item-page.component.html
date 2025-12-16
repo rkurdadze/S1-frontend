@@ -1,311 +1,344 @@
 <app-loading></app-loading>
 
 <section class="item-page">
-  <div class="item-shell">
-    <div class="item-topbar">
-      <div class="crumbs">{{ 'item_page.breadcrumbs.catalog' | translate }} · {{ 'item_page.breadcrumbs.outerwear' | translate }} · {{ item?.name || 'Товар' }}</div>
-      <div class="status-chip" [class.status-chip--draft]="!item?.publish">{{ item?.publish ? ('item_page.status.in_stock' | translate) : ('item_page.status.draft' | translate) }}</div>
+    <div class="item-shell">
+        <div class="item-topbar">
+            <div class="crumbs">{{ 'item_page.breadcrumbs.catalog' | translate }}
+                · {{ 'item_page.breadcrumbs.outerwear' | translate }} · {{ item?.name || 'Товар' }}
+            </div>
+            <div class="status-chip"
+                 [class.status-chip--draft]="!item?.publish">{{ item?.publish ? ('item_page.status.in_stock' | translate) : ('item_page.status.draft' | translate) }}
+            </div>
+        </div>
+
+        <div class="item-hero">
+            <div class="item-hero__gallery">
+                <app-item-visual-panel
+                        [images]="images"
+                        [selectedImage]="selectedImage"
+                        [selectedColor]="selectedColor"
+                        [showImageControls]="showImageControls"
+                        [isAdmin]="isAdmin"
+                        (selectImage)="selectImage($event)"
+                        (prevImage)="prevImage()"
+                        (nextImage)="nextImage()"
+                ></app-item-visual-panel>
+
+
+            </div>
+
+            <div class="item-hero__info">
+                @if (isAdmin) {
+                    <div class="item-page__edit_item-wrapper">
+                        <button type="button" class="btn item-page__edit_btn" (click)="openModal()"
+                                [attr.aria-label]="'item_page.edit.edit' | translate">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button type="button" class="btn item-page__edit_btn" (click)="deleteItem()"
+                                [attr.aria-label]="'item_page.edit.delete' | translate">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                }
+
+                @if (item) {
+                    <div class="title-block">
+                        <p class="eyebrow">{{ 'item_page.title_block.eyebrow' | translate }}</p>
+                        <div class="title-row">
+                            <h1>{{ item.name }}</h1>
+
+
+                            <!--              <span class="pill" [class.pill&#45;&#45;success]="item.publish">{{ item.publish ? ('item_page.title_block.in_catalog' | translate) : ('item_page.title_block.draft' | translate) }}</span>-->
+                        </div>
+
+                        <div class="price-row">
+                            <div class="price">{{ itemPrice | number:'1.2-2' }} ₸</div>
+                            <span class="muted">{{ 'item_page.title_block.payment_info' | translate }}</span>
+                        </div>
+
+                        <div class="selector-grid">
+                            <div class="selector-block">
+                                <p class="selector-label">{{ 'item_page.selector_grid.color_palette' | translate }}</p>
+                                <app-item-colors
+                                        [isAdmin]="isAdmin"
+                                        [colors]="item.colors!"
+                                        [itemId]="item.id!"
+                                        (selectedColorEmitter)="selectColor($event)"
+                                ></app-item-colors>
+                            </div>
+
+                            <div class="selector-block">
+                                <p class="selector-label">{{ 'item_page.selector_grid.sizes_and_availability' | translate }}</p>
+                                <app-item-sizes
+                                        [item]="item"
+                                        [forColor]="selectedColor"
+                                        [isAdmin]="isAdmin"
+                                        [selectedSize]="selectedSize"
+                                        (sizeSelected)="onSizeSelected($event)"
+                                ></app-item-sizes>
+                            </div>
+                        </div>
+
+                        <div class="cta-row">
+                            <div class="quantity-control">
+                                <label>{{ 'item_page.cta_row.quantity' | translate }}</label>
+                                <input type="number" min="1" [(ngModel)]="quantity"
+                                       (change)="onQuantityChange(quantity)"/>
+                            </div>
+                            <button class="btn btn-dark" (click)="addToCart()">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                {{ 'item_page.cta_row.add_to_cart' | translate }}
+                            </button>
+                        </div>
+
+
+                        <p class="lead">{{ item.description }}</p>
+
+                    </div>
+
+
+                    <div class="badge-row">
+                        <span class="pill pill--soft">{{ 'item_page.badge_row.colors' | translate: {count: item.colors.length} }}</span>
+                        <span class="pill pill--outline">{{ 'item_page.badge_row.limited_edition' | translate }}</span>
+                        <span class="pill pill--outline">{{ 'item_page.badge_row.assembled_in_showroom' | translate }}</span>
+                    </div>
+
+
+                }
+
+                @if (isAdmin) {
+                    <div class="upload-card">
+                        <div>
+                            <p class="strong">{{ 'item_page.upload_card.title' | translate }}</p>
+                            <p class="muted">{{ 'item_page.upload_card.subtitle' | translate }}</p>
+                        </div>
+                        <div class="upload-actions">
+                            <input
+                                    type="file"
+                                    #fileInput
+                                    multiple
+                                    accept="image/jpeg, image/jpg"
+                                    class="d-none"
+                                    (change)="onImageSelected($event)"
+                            />
+                            <button type="button" class="btn btn-primary" (click)="fileInput.click()"
+                                    [disabled]="!selectedColor">
+                                <i class="fas fa-upload"></i>
+                                {{ 'item_page.upload_card.button' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                }
+
+
+
+
+
+                <div class="info-cards">
+                    <div class="info-card">
+                        <p class="eyebrow">{{ 'item_page.info_cards.delivery.eyebrow' | translate }}</p>
+                        <p class="strong">{{ 'item_page.info_cards.delivery.title' | translate }}</p>
+                        <p class="muted">{{ 'item_page.info_cards.delivery.subtitle' | translate }}</p>
+                    </div>
+                    <div class="info-card">
+                        <p class="eyebrow">{{ 'item_page.info_cards.materials.eyebrow' | translate }}</p>
+                        <p class="strong">{{ 'item_page.info_cards.materials.title' | translate }}</p>
+                        <p class="muted">{{ 'item_page.info_cards.materials.subtitle' | translate }}</p>
+                    </div>
+                    <div class="info-card">
+                        <p class="eyebrow">{{ 'item_page.info_cards.cut.eyebrow' | translate }}</p>
+                        <p class="strong">{{ 'item_page.info_cards.cut.title' | translate }}</p>
+                        <p class="muted">{{ 'item_page.info_cards.cut.subtitle' | translate }}</p>
+                    </div>
+                </div>
+
+                <div class="share-actions" *ngIf="item">
+                    <button type="button" class="btn btn-social btn-facebook" (click)="openShareModal('facebook')">
+                        <i class="fab fa-facebook-f"></i>
+                        {{ 'item_page.share_actions.facebook' | translate }}
+                    </button>
+                    <button disabled type="button" class="disabled btn btn-social btn-instagram"
+                            (click)="openShareModal('instagram')">
+                        <i class="fab fa-instagram"></i>
+                        {{ 'item_page.share_actions.instagram' | translate }}
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="gallery-meta" *ngIf="item">
+                <div class="gallery-meta__tag">{{ 'item_page.gallery.collection' | translate }}</div>
+                <div class="gallery-meta__chips">
+                    <span class="pill pill--outline">{{ 'item_page.gallery.shades' | translate: {count: item.colors.length} }}</span>
+                    <span class="pill pill--soft">{{ 'item_page.gallery.showroom_samples' | translate }}</span>
+                    <span class="pill pill--outline">{{ 'item_page.gallery.stylist_selection' | translate }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="capsule-panels">
+            <div class="capsule-card">
+                <div class="capsule-card__header">
+                    <p class="eyebrow">{{ 'item_page.capsule_panels.header.eyebrow' | translate }}</p>
+                    <p class="muted">{{ 'item_page.capsule_panels.header.subtitle' | translate }}</p>
+                </div>
+                <div class="micro-grid">
+                    <div>
+                        <p class="muted">{{ 'item_page.capsule_panels.micro_grid.fitting.title' | translate }}</p>
+                        <p class="strong">{{ 'item_page.capsule_panels.micro_grid.fitting.subtitle' | translate }}</p>
+                    </div>
+                    <div>
+                        <p class="muted">{{ 'item_page.capsule_panels.micro_grid.delivery.title' | translate }}</p>
+                        <p class="strong">{{ 'item_page.capsule_panels.micro_grid.delivery.subtitle' | translate }}</p>
+                    </div>
+                    <div>
+                        <p class="muted">{{ 'item_page.capsule_panels.micro_grid.warranty.title' | translate }}</p>
+                        <p class="strong">{{ 'item_page.capsule_panels.micro_grid.warranty.subtitle' | translate }}</p>
+                    </div>
+                    <div>
+                        <p class="muted">{{ 'item_page.capsule_panels.micro_grid.materials.title' | translate }}</p>
+                        <p class="strong">{{ 'item_page.capsule_panels.micro_grid.materials.subtitle' | translate }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="capsule-lookbook" role="presentation">
+                <div class="capsule-lookbook__copy">
+                    <p class="eyebrow">{{ 'item_page.capsule_panels.lookbook.eyebrow' | translate }}</p>
+                    <p class="muted">{{ 'item_page.capsule_panels.lookbook.subtitle' | translate }}</p>
+                    <div class="badge-row">
+                        <span class="pill pill--soft">{{ 'item_page.capsule_panels.lookbook.badge1' | translate }}</span>
+                        <span class="pill pill--outline">{{ 'item_page.capsule_panels.lookbook.badge2' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="meta-and-stories">
+            <div class="meta-section">
+                <app-item-meta-panel></app-item-meta-panel>
+            </div>
+
+            <div class="story-board">
+                <div class="story-card">
+                    <p class="eyebrow">{{ 'item_page.story_board.eyebrow' | translate }}</p>
+                    <h3>{{ 'item_page.story_board.title' | translate }}</h3>
+                    <p class="muted">{{ 'item_page.story_board.subtitle' | translate }}</p>
+                </div>
+                <div class="story-card story-card--image" role="presentation"></div>
+            </div>
+        </div>
+
+        <div class="suggestions">
+            <app-item-suggestion-rail
+                    [title]="'item_page.suggestions.similar_title' | translate"
+                    [subtitle]="'item_page.suggestions.similar_subtitle' | translate"
+                    [items]="similarItems"
+            ></app-item-suggestion-rail>
+
+            <app-item-suggestion-rail
+                    [title]="'item_page.suggestions.style_with_title' | translate"
+                    [subtitle]="'item_page.suggestions.style_with_subtitle' | translate"
+                    [items]="styledItems"
+            ></app-item-suggestion-rail>
+        </div>
     </div>
-
-    <div class="item-hero">
-      <div class="item-hero__gallery">
-        <app-item-visual-panel
-          [images]="images"
-          [selectedImage]="selectedImage"
-          [selectedColor]="selectedColor"
-          [showImageControls]="showImageControls"
-          [isAdmin]="isAdmin"
-          (selectImage)="selectImage($event)"
-          (prevImage)="prevImage()"
-          (nextImage)="nextImage()"
-        ></app-item-visual-panel>
-
-        <div class="gallery-meta" *ngIf="item">
-          <div class="gallery-meta__tag">{{ 'item_page.gallery.collection' | translate }}</div>
-          <div class="gallery-meta__chips">
-            <span class="pill pill--outline">{{ 'item_page.gallery.shades' | translate: { count: item.colors.length } }}</span>
-            <span class="pill pill--soft">{{ 'item_page.gallery.showroom_samples' | translate }}</span>
-            <span class="pill pill--outline">{{ 'item_page.gallery.stylist_selection' | translate }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="item-hero__info">
-        @if (isAdmin) {
-          <div class="item-page__edit_item-wrapper">
-            <button type="button" class="btn item-page__edit_btn" (click)="openModal()" [attr.aria-label]="'item_page.edit.edit' | translate">
-              <i class="fas fa-pen"></i>
-            </button>
-            <button type="button" class="btn item-page__edit_btn" (click)="deleteItem()" [attr.aria-label]="'item_page.edit.delete' | translate">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        }
-
-        @if (item) {
-          <div class="title-block">
-            <p class="eyebrow">{{ 'item_page.title_block.eyebrow' | translate }}</p>
-            <div class="title-row">
-              <h1>{{ item.name }}</h1>
-              <span class="pill" [class.pill--success]="item.publish">{{ item.publish ? ('item_page.title_block.in_catalog' | translate) : ('item_page.title_block.draft' | translate) }}</span>
-            </div>
-            <p class="lead">{{ item.description }}</p>
-            <div class="price-row">
-              <div class="price">{{ itemPrice | number:'1.2-2' }} ₸</div>
-              <span class="muted">{{ 'item_page.title_block.payment_info' | translate }}</span>
-            </div>
-          </div>
-
-          <div class="info-cards">
-            <div class="info-card">
-              <p class="eyebrow">{{ 'item_page.info_cards.delivery.eyebrow' | translate }}</p>
-              <p class="strong">{{ 'item_page.info_cards.delivery.title' | translate }}</p>
-              <p class="muted">{{ 'item_page.info_cards.delivery.subtitle' | translate }}</p>
-            </div>
-            <div class="info-card">
-              <p class="eyebrow">{{ 'item_page.info_cards.materials.eyebrow' | translate }}</p>
-              <p class="strong">{{ 'item_page.info_cards.materials.title' | translate }}</p>
-              <p class="muted">{{ 'item_page.info_cards.materials.subtitle' | translate }}</p>
-            </div>
-            <div class="info-card">
-              <p class="eyebrow">{{ 'item_page.info_cards.cut.eyebrow' | translate }}</p>
-              <p class="strong">{{ 'item_page.info_cards.cut.title' | translate }}</p>
-              <p class="muted">{{ 'item_page.info_cards.cut.subtitle' | translate }}</p>
-            </div>
-          </div>
-
-          <div class="badge-row">
-            <span class="pill pill--soft">{{ 'item_page.badge_row.colors' | translate: { count: item.colors.length } }}</span>
-            <span class="pill pill--outline">{{ 'item_page.badge_row.limited_edition' | translate }}</span>
-            <span class="pill pill--outline">{{ 'item_page.badge_row.assembled_in_showroom' | translate }}</span>
-          </div>
-
-          <div class="selector-grid">
-            <div class="selector-block">
-              <p class="selector-label">{{ 'item_page.selector_grid.color_palette' | translate }}</p>
-              <app-item-colors
-                [isAdmin]="isAdmin"
-                [colors]="item.colors!"
-                [itemId]="item.id!"
-                (selectedColorEmitter)="selectColor($event)"
-              ></app-item-colors>
-            </div>
-
-            <div class="selector-block">
-              <p class="selector-label">{{ 'item_page.selector_grid.sizes_and_availability' | translate }}</p>
-              <app-item-sizes
-                [item]="item"
-                [forColor]="selectedColor"
-                [isAdmin]="isAdmin"
-                [selectedSize]="selectedSize"
-                (sizeSelected)="onSizeSelected($event)"
-              ></app-item-sizes>
-            </div>
-          </div>
-        }
-
-        @if (isAdmin) {
-          <div class="upload-card">
-            <div>
-              <p class="strong">{{ 'item_page.upload_card.title' | translate }}</p>
-              <p class="muted">{{ 'item_page.upload_card.subtitle' | translate }}</p>
-            </div>
-            <div class="upload-actions">
-              <input
-                type="file"
-                #fileInput
-                multiple
-                accept="image/jpeg, image/jpg"
-                class="d-none"
-                (change)="onImageSelected($event)"
-              />
-              <button type="button" class="btn btn-primary" (click)="fileInput.click()" [disabled]="!selectedColor">
-                <i class="fas fa-upload"></i>
-                {{ 'item_page.upload_card.button' | translate }}
-              </button>
-            </div>
-          </div>
-        }
-
-        <div class="cta-row">
-          <div class="quantity-control">
-            <label>{{ 'item_page.cta_row.quantity' | translate }}</label>
-            <input type="number" min="1" [(ngModel)]="quantity" (change)="onQuantityChange(quantity)" />
-          </div>
-          <button class="btn btn-dark" (click)="addToCart()">
-              <i class="fa-solid fa-cart-plus"></i>
-              {{ 'item_page.cta_row.add_to_cart' | translate }}
-          </button>
-        </div>
-
-        <div class="share-actions" *ngIf="item">
-          <button type="button" class="btn btn-social btn-facebook" (click)="openShareModal('facebook')">
-            <i class="fab fa-facebook-f"></i>
-            {{ 'item_page.share_actions.facebook' | translate }}
-          </button>
-          <button disabled type="button" class="disabled btn btn-social btn-instagram" (click)="openShareModal('instagram')">
-            <i class="fab fa-instagram"></i>
-            {{ 'item_page.share_actions.instagram' | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="capsule-panels">
-      <div class="capsule-card">
-        <div class="capsule-card__header">
-          <p class="eyebrow">{{ 'item_page.capsule_panels.header.eyebrow' | translate }}</p>
-          <p class="muted">{{ 'item_page.capsule_panels.header.subtitle' | translate }}</p>
-        </div>
-        <div class="micro-grid">
-          <div>
-            <p class="muted">{{ 'item_page.capsule_panels.micro_grid.fitting.title' | translate }}</p>
-            <p class="strong">{{ 'item_page.capsule_panels.micro_grid.fitting.subtitle' | translate }}</p>
-          </div>
-          <div>
-            <p class="muted">{{ 'item_page.capsule_panels.micro_grid.delivery.title' | translate }}</p>
-            <p class="strong">{{ 'item_page.capsule_panels.micro_grid.delivery.subtitle' | translate }}</p>
-          </div>
-          <div>
-            <p class="muted">{{ 'item_page.capsule_panels.micro_grid.warranty.title' | translate }}</p>
-            <p class="strong">{{ 'item_page.capsule_panels.micro_grid.warranty.subtitle' | translate }}</p>
-          </div>
-          <div>
-            <p class="muted">{{ 'item_page.capsule_panels.micro_grid.materials.title' | translate }}</p>
-            <p class="strong">{{ 'item_page.capsule_panels.micro_grid.materials.subtitle' | translate }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="capsule-lookbook" role="presentation">
-        <div class="capsule-lookbook__copy">
-          <p class="eyebrow">{{ 'item_page.capsule_panels.lookbook.eyebrow' | translate }}</p>
-          <p class="muted">{{ 'item_page.capsule_panels.lookbook.subtitle' | translate }}</p>
-          <div class="badge-row">
-            <span class="pill pill--soft">{{ 'item_page.capsule_panels.lookbook.badge1' | translate }}</span>
-            <span class="pill pill--outline">{{ 'item_page.capsule_panels.lookbook.badge2' | translate }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="meta-and-stories">
-      <div class="meta-section">
-        <app-item-meta-panel></app-item-meta-panel>
-      </div>
-
-      <div class="story-board">
-        <div class="story-card">
-          <p class="eyebrow">{{ 'item_page.story_board.eyebrow' | translate }}</p>
-          <h3>{{ 'item_page.story_board.title' | translate }}</h3>
-          <p class="muted">{{ 'item_page.story_board.subtitle' | translate }}</p>
-        </div>
-        <div class="story-card story-card--image" role="presentation"></div>
-      </div>
-    </div>
-
-    <div class="suggestions">
-      <app-item-suggestion-rail
-        [title]="'item_page.suggestions.similar_title' | translate"
-        [subtitle]="'item_page.suggestions.similar_subtitle' | translate"
-        [items]="similarItems"
-      ></app-item-suggestion-rail>
-
-      <app-item-suggestion-rail
-        [title]="'item_page.suggestions.style_with_title' | translate"
-        [subtitle]="'item_page.suggestions.style_with_subtitle' | translate"
-        [items]="styledItems"
-      ></app-item-suggestion-rail>
-    </div>
-  </div>
 </section>
 
 <app-edit-modal
-  #editModalRef
-  [title]="modalTitle"
-  [fields]="modalFields"
-  [initialData]="modalData"
-  (modalResult)="onModalResult($event)"
+    #editModalRef
+    [title]="modalTitle"
+    [fields]="modalFields"
+    [initialData]="modalData"
+    (modalResult)="onModalResult($event)"
 ></app-edit-modal>
 
 <div class="share-modal__backdrop" *ngIf="shareModalOpen">
-  <div class="share-modal" role="dialog" aria-modal="true">
-    <div class="share-modal__header">
-      <div>
-        <p class="eyebrow">{{ 'item_page.share_modal.title' | translate }}</p>
-        <h3>{{ item?.name }}</h3>
-      </div>
-      <button class="btn btn-ghost btn-icon" type="button" (click)="closeShareModal()" [attr.aria-label]="'item_page.share_modal.close_button' | translate">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div class="share-modal__content">
-      <div class="share-preview">
-        <div class="share-preview__grid" *ngIf="sharePreviewImages.length; else emptyPreview">
-          <img
-            *ngFor="let image of sharePreviewImages; trackBy: trackByIndex"
-            [src]="image"
-            [alt]="item?.name || ('item_page.share_modal.preview.alt' | translate)"
-          />
-        </div>
-        <ng-template #emptyPreview>
-          <div class="share-preview__empty">
-            <i class="fas fa-image"></i>
-            <p>{{ 'item_page.share_modal.preview.empty_title' | translate }}</p>
-          </div>
-        </ng-template>
-        <p class="muted">{{ 'item_page.share_modal.preview.hint' | translate: { destination: shareDestination === 'story' ? 'story' : 'post' } }}</p>
-      </div>
-
-      <div class="share-form">
-        <label class="form-label">{{ 'item_page.share_modal.form.platform' | translate }}</label>
-        <div class="chip-group">
-          <button type="button" class="chip" [class.active]="sharePlatform === 'facebook'" (click)="sharePlatform = 'facebook'">
-            <i class="fab fa-facebook-f"></i>
-            {{ 'item_page.share_modal.form.facebook' | translate }}
-          </button>
-          <button disabled type="button" class="chip disabled" [class.active]="sharePlatform === 'instagram'" (click)="sharePlatform = 'instagram'">
-            <i class="fab fa-instagram"></i>
-            {{ 'item_page.share_modal.form.instagram' | translate }}
-          </button>
-        </div>
-
-        <label class="form-label">{{ 'item_page.share_modal.form.format' | translate }}</label>
-        <div class="chip-group">
-          <button type="button" class="chip" [class.active]="shareDestination === 'feed'" (click)="shareDestination = 'feed'">
-            <i class="fas fa-stream"></i>
-            {{ 'item_page.share_modal.form.feed' | translate }}
-          </button>
-          <button disabled type="button" class="chip disabled" [class.active]="shareDestination === 'story'" (click)="shareDestination = 'story'">
-            <i class="fas fa-history"></i>
-            {{ 'item_page.share_modal.form.story' | translate }}
-          </button>
-        </div>
-
-        <label class="form-label">{{ 'item_page.share_modal.form.caption' | translate }}</label>
-        <textarea [(ngModel)]="shareCaption" rows="5" [placeholder]="'item_page.share_modal.form.caption_placeholder' | translate"></textarea>
-        <p class="share-hint">{{ 'item_page.share_modal.form.hint' | translate }}</p>
-        <p class="share-error" *ngIf="shareError">{{ shareError }}</p>
-
-        <div class="share-modal__actions">
-          <button type="button" class="btn btn-ghost" (click)="closeShareModal()">{{ 'item_page.share_modal.actions.cancel' | translate }}</button>
-
-            <button
-                    type="button"
-                    class="btn btn-dark"
-                    [disabled]="shareBusy || !sharePlatform"
-                    (click)="shareItem()"
-            >
-                <i class="fas"
-                   [class.fa-spinner]="shareBusy"
-                   [class.fa-share]="!shareBusy"
-                   [class.fa-spin]="shareBusy"></i>
-                {{ shareBusy ? ('item_page.share_modal.actions.publishing' | translate) : ('item_page.share_modal.actions.share' | translate) }}
+    <div class="share-modal" role="dialog" aria-modal="true">
+        <div class="share-modal__header">
+            <div>
+                <p class="eyebrow">{{ 'item_page.share_modal.title' | translate }}</p>
+                <h3>{{ item?.name }}</h3>
+            </div>
+            <button class="btn btn-ghost btn-icon" type="button" (click)="closeShareModal()"
+                    [attr.aria-label]="'item_page.share_modal.close_button' | translate">
+                <i class="fas fa-times"></i>
             </button>
-
         </div>
-      </div>
+
+        <div class="share-modal__content">
+            <div class="share-preview">
+                <div class="share-preview__grid" *ngIf="sharePreviewImages.length; else emptyPreview">
+                    <img
+                            *ngFor="let image of sharePreviewImages; trackBy: trackByIndex"
+                            [src]="image"
+                            [alt]="item?.name || ('item_page.share_modal.preview.alt' | translate)"
+                    />
+                </div>
+                <ng-template #emptyPreview>
+                    <div class="share-preview__empty">
+                        <i class="fas fa-image"></i>
+                        <p>{{ 'item_page.share_modal.preview.empty_title' | translate }}</p>
+                    </div>
+                </ng-template>
+                <p class="muted">{{ 'item_page.share_modal.preview.hint' | translate: {destination: shareDestination === 'story' ? 'story' : 'post'} }}</p>
+            </div>
+
+            <div class="share-form">
+                <label class="form-label">{{ 'item_page.share_modal.form.platform' | translate }}</label>
+                <div class="chip-group">
+                    <button type="button" class="chip" [class.active]="sharePlatform === 'facebook'"
+                            (click)="sharePlatform = 'facebook'">
+                        <i class="fab fa-facebook-f"></i>
+                        {{ 'item_page.share_modal.form.facebook' | translate }}
+                    </button>
+                    <button disabled type="button" class="chip disabled" [class.active]="sharePlatform === 'instagram'"
+                            (click)="sharePlatform = 'instagram'">
+                        <i class="fab fa-instagram"></i>
+                        {{ 'item_page.share_modal.form.instagram' | translate }}
+                    </button>
+                </div>
+
+                <label class="form-label">{{ 'item_page.share_modal.form.format' | translate }}</label>
+                <div class="chip-group">
+                    <button type="button" class="chip" [class.active]="shareDestination === 'feed'"
+                            (click)="shareDestination = 'feed'">
+                        <i class="fas fa-stream"></i>
+                        {{ 'item_page.share_modal.form.feed' | translate }}
+                    </button>
+                    <button disabled type="button" class="chip disabled" [class.active]="shareDestination === 'story'"
+                            (click)="shareDestination = 'story'">
+                        <i class="fas fa-history"></i>
+                        {{ 'item_page.share_modal.form.story' | translate }}
+                    </button>
+                </div>
+
+                <label class="form-label">{{ 'item_page.share_modal.form.caption' | translate }}</label>
+                <textarea [(ngModel)]="shareCaption" rows="5"
+                          [placeholder]="'item_page.share_modal.form.caption_placeholder' | translate"></textarea>
+                <p class="share-hint">{{ 'item_page.share_modal.form.hint' | translate }}</p>
+                <p class="share-error" *ngIf="shareError">{{ shareError }}</p>
+
+                <div class="share-modal__actions">
+                    <button type="button" class="btn btn-ghost"
+                            (click)="closeShareModal()">{{ 'item_page.share_modal.actions.cancel' | translate }}
+                    </button>
+
+                    <button
+                            type="button"
+                            class="btn btn-dark"
+                            [disabled]="shareBusy || !sharePlatform"
+                            (click)="shareItem()"
+                    >
+                        <i class="fas"
+                           [class.fa-spinner]="shareBusy"
+                           [class.fa-share]="!shareBusy"
+                           [class.fa-spin]="shareBusy"></i>
+                        {{ shareBusy ? ('item_page.share_modal.actions.publishing' | translate) : ('item_page.share_modal.actions.share' | translate) }}
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

@@ -281,8 +281,10 @@
   }
 
   .meta-line {
-    flex-direction: column;
-    padding: 5px;
-    align-items: flex-start;
+    padding-left: 5px;
+  }
+
+  .visual-panel {
+    gap: unset;
   }
 }
