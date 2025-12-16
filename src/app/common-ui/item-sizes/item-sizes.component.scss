@@ -2,6 +2,10 @@
   display: flex;
   gap: 6px;
   margin-top: 10px;
+
+  @media (max-width: 640px) {
+    margin-top: unset;
+  }
 }
 
 .item-page__sz_btn {

@@ -2,7 +2,7 @@
   display: grid;
   border-radius: 18px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--item-card-bg);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   transition: transform .25s ease, box-shadow .25s ease, border .25s ease;

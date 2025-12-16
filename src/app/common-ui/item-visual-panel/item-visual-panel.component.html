@@ -1,5 +1,6 @@
-<div class="visual-panel">
-  <div class="visual-panel__thumbs">
+<div class="visual-panel"
+     [class.visual-panel--single]="!images || images.length <= 1">
+  <div class="visual-panel__thumbs" *ngIf="images && images.length > 1">
     <div class="thumbs__header">
       <span class="label">{{ 'item_visual_panel.gallery' | translate }}</span>
       <span class="pill" *ngIf="selectedColor">{{ selectedColor }}</span>
