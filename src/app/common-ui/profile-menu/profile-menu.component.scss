@@ -1,0 +1,58 @@
+@use '_variables' as *;
+
+.profile-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.profile-menu__link {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.profile-menu__link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(var(--color-primary-rgb), 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.profile-menu__link--button {
+  cursor: pointer;
+}
+
+.profile-menu__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+
+.profile-menu__label {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+@include media-md {
+  .profile-menu__link {
+    padding: 12px 14px;
+  }
+
+  .profile-menu__label {
+    font-size: 15px;
+  }
+}

@@ -10,6 +10,13 @@
     "stories": "Stories",
     "subscribe": "Newsletter"
   },
+  "mobileNav": {
+    "home": "Home",
+    "cart": "Cart",
+    "catalog": "Catalog",
+    "profile": "Profile",
+    "login": "Sign in"
+  },
   "search": {
     "placeholder": "Search for models",
     "hint": "#puffer jackets #trenches #capsules"
@@ -26,6 +33,9 @@
   "dropdown": {
     "addItem": "Add item",
     "logout": "Log out"
+  },
+  "profileMenu": {
+    "title": "Account menu"
   },
   "toast": {
     "favorites": "Add the page to favorites: press {{shortcut}}"

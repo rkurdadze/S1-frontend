@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "../header/header.component";
 import {TranslateModule} from "@ngx-translate/core";
+import { MobileBottomMenuComponent } from "../mobile-bottom-menu/mobile-bottom-menu.component";
 
 @Component({
   selector: 'app-layout',
@@ -9,7 +10,8 @@ import {TranslateModule} from "@ngx-translate/core";
     imports: [
         RouterOutlet,
         HeaderComponent,
-        TranslateModule
+        TranslateModule,
+        MobileBottomMenuComponent
     ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'

@@ -1,0 +1,39 @@
+<div class="mobile-bottom-menu">
+  <ng-container *ngFor="let item of navItems; let last = last">
+    <app-mobile-bottom-menu-item
+      [labelKey]="item.labelKey"
+      [icon]="item.icon"
+      [routerLink]="item.routerLink"
+      [active]="isActive(item.routerLink, !!item.exact)"
+      [badge]="item.hasBadge ? (cartCount$ | async) : null">
+    </app-mobile-bottom-menu-item>
+
+    <div
+      class="mobile-bottom-menu__divider"
+      aria-hidden="true"
+      *ngIf="!last">
+    </div>
+  </ng-container>
+
+    <div class="mobile-bottom-menu__divider" aria-hidden="true"></div>
+
+  <app-mobile-bottom-menu-item
+    [labelKey]="profileLabelKey"
+    icon="profile"
+    (itemClick)="onProfileTap()">
+  </app-mobile-bottom-menu-item>
+</div>
+
+<div class="mobile-bottom-menu__backdrop" *ngIf="isProfileMenuOpen" (click)="closeProfileMenu()"></div>
+<div class="mobile-bottom-menu__sheet" *ngIf="isProfileMenuOpen">
+  <div class="mobile-bottom-menu__sheet-header">
+    <span>{{ 'profileMenu.title' | translate }}</span>
+    <button type="button" (click)="closeProfileMenu()" aria-label="Close profile menu">×</button>
+  </div>
+  <app-profile-menu
+    [items]="profileMenuItems"
+    [isLoggedIn]="isLoggedIn"
+    [isAdmin]="isAdmin"
+    (selectItem)="onProfileItemSelect($event)">
+  </app-profile-menu>
+</div>

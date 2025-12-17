@@ -13,7 +13,7 @@
   <div class="login-card">
     <h2 *ngIf="!(isLoggedIn$ | async)">{{ 'login_page.card_title_login' | translate }}</h2>
     <h2 *ngIf="isLoggedIn$ | async">{{ 'login_page.card_title_loggedin' | translate }}</h2>
-<!--    <p>{{ (isLoggedIn$ | async) ? ('login_page.card_subtitle_logout' | translate) : ('login_page.card_subtitle_login' | translate) }}</p>-->
+    <p>{{ (isLoggedIn$ | async) ? ('login_page.card_subtitle_logout' | translate) : ('login_page.card_subtitle_login' | translate) }}</p>
 
     <div id="google-signin-button" *ngIf="!(isLoggedIn$ | async)"></div>
 

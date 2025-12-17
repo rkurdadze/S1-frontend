@@ -1,0 +1,64 @@
+@use '_variables' as *;
+
+.mobile-bottom-menu-item {
+  flex: 1;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 4px;
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.mobile-bottom-menu-item__icon {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+}
+
+.mobile-bottom-menu-item svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+
+.mobile-bottom-menu-item__label {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.mobile-bottom-menu-item__badge {
+  position: absolute;
+  top: -4px;
+  right: -10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #f5f5f5;
+  color: #0a0a0f;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.mobile-bottom-menu-item.is-active {
+  color: var(--color-primary);
+}
+
+@include media-xs {
+  .mobile-bottom-menu-item__label {
+    font-size: 11px;
+  }
+}

@@ -1,5 +1,23 @@
 <header class="header">
     <div class="header__bar">
+
+        <div class="header__controls" (click)="$event.stopPropagation()">
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    [attr.aria-label]="'aria.toggleMenu' | translate"
+                    aria-controls="headerNav"
+                    [attr.aria-expanded]="isMenuOpen"
+                    (click)="toggleMenu()">
+                <span class="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </button>
+        </div>
+
+
         <div class="brand">
             <div class="brand__logo">
                 <img src="assets/imgs/studio101-logo.png" [alt]="'aria.alt_logo' | translate"/>
@@ -10,19 +28,7 @@
             </div>
         </div>
 
-        <button
-                class="navbar-toggler"
-                type="button"
-                [attr.aria-label]="'aria.toggleMenu' | translate"
-                aria-controls="headerNav"
-                [attr.aria-expanded]="isMenuOpen"
-                (click)="toggleMenu()">
-            <span class="burger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
-        </button>
+
 
         <nav id="headerNav" class="nav collapse" [class.show]="isMenuOpen">
             <a
@@ -37,7 +43,40 @@
 
 
 
+
         <div class="header__actions">
+
+            <div class="header__controls" (click)="$event.stopPropagation()">
+                <div class="lang-dropdown" [class.is-open]="languageDropdownOpen">
+                    <button
+                            type="button"
+                            class="lang-dropdown__toggle"
+                            [attr.aria-label]="currentLanguageOption.label"
+                            aria-haspopup="listbox"
+                            [attr.aria-expanded]="languageDropdownOpen"
+                            (click)="toggleLanguageDropdown($event)">
+                        <span class="lang-dropdown__flag">{{ currentLanguageOption.flag }}</span>
+                    </button>
+                    <ul
+                            class="lang-dropdown__menu"
+                            *ngIf="languageDropdownOpen"
+                            role="listbox"
+                            aria-label="Language switcher">
+                        <li *ngFor="let language of languages">
+                            <button
+                                    *ngIf="language.code !== currentLanguage"
+                                    type="button"
+                                    class="lang-dropdown__option"
+                                    role="option"
+                                    (click)="onLanguageSelect(language.code)">
+                                <span class="lang-dropdown__flag">{{ language.flag }}</span>
+                            </button>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
             <div class="search">
                 <input
                   type="text"
@@ -47,20 +86,7 @@
             </div>
 
             <div class="actions-tray">
-                <div class="lang-switcher" role="group" aria-label="Language switcher">
-                    <button
-                      type="button"
-                      class="lang-switcher__btn"
-                      *ngFor="let language of languages"
-                      [class.is-active]="language.code === currentLanguage"
-                      [attr.aria-pressed]="language.code === currentLanguage"
-                      [attr.aria-label]="language.label"
-                      (click)="setLanguage(language.code)">
-                        <span class="lang-switcher__flag">{{ language.flag }}</span>
-                    </button>
-                </div>
-
-                <div class="icons">
+                <div class="icons icons--actions" role="group">
                     <button class="icon-btn" [attr.aria-label]="'aria.favorites' | translate" (click)="addToFavorites()">
                         <span class="material">♡</span>
                     </button>
@@ -81,20 +107,20 @@
                                     (click)="toggleDropdown($event)"
                             />
 
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                @if (isAdmin) {
-                                    <li><a class="dropdown-item dropdown-item--icon" href="#" (click)="openModal()"><span aria-hidden="true">➕</span><span>{{ 'dropdown.addItem' | translate }}</span></a></li>
-                                    <li>
-                                        <hr class="dropdown-divider"/>
-                                    </li>
-                                }
-                                <li><a class="dropdown-item dropdown-item--icon" (click)="logout()"><span aria-hidden="true">🚪</span><span>{{ 'dropdown.logout' | translate }}</span></a></li>
-                            </ul>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu--profile" aria-labelledby="userDropdown">
+                                <app-profile-menu
+                                  [items]="profileMenuItems"
+                                  [isLoggedIn]="isLoggedIn"
+                                  [isAdmin]="isAdmin"
+                                  (selectItem)="onProfileMenuSelect($event)">
+                                </app-profile-menu>
+                            </div>
                         </div>
                     } @else {
                         <app-login-button></app-login-button>
                     }
                 </div>
+
             </div>
         </div>
     </div>

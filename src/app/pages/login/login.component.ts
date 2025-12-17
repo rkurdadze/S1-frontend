@@ -1,6 +1,6 @@
 import {Component, AfterViewInit, inject} from '@angular/core';
 import { GoogleAuthService } from '../../data/services/google-auth.service';
-import { Observable } from 'rxjs';
+import {filter, Observable, take} from 'rxjs';
 import { AsyncPipe, NgIf } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
@@ -41,15 +41,16 @@ export class LoginComponent implements AfterViewInit {
   handleCredentialResponse(response: any): void {
     const token = response.credential;
 
-    // Вход через Google
     this.googleAuth.signInWithGoogle(token);
 
-    // Перенаправляем на returnUrl после входа
-    this.isLoggedIn$.subscribe((isLoggedIn) => {
-      if (isLoggedIn) {
-        this.router.navigateByUrl(this.returnUrl!);
-      }
-    });
+    this.isLoggedIn$
+        .pipe(
+            filter(Boolean),
+            take(1)
+        )
+        .subscribe(() => {
+          this.router.navigateByUrl(this.returnUrl!);
+        });
   }
 
   logout(): void {

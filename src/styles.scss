@@ -1,6 +1,8 @@
+@use '_variables' as *;
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
+  --max-width: 1600px;
   /* важно: говорим браузеру, что тема тёмная */
   color-scheme: dark;
 
@@ -66,12 +68,20 @@
   box-sizing: border-box;
 }
 
-body {
+//body {
+//  margin: 0;
+//  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+//  background: var(--dark-color);
+//  color: var(--light-color);
+//  min-height: 100vh;
+//}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--dark-color);
-  color: var(--light-color);
-  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0f, #121219);
+  color: #f5f5f7;
 }
 
 // Повышаем z-index модального окна и подложки, чтобы они всегда были над контентом страницы

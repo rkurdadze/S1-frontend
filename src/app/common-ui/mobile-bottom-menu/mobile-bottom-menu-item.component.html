@@ -1,0 +1,32 @@
+<a
+  *ngIf="routerLink"
+  class="mobile-bottom-menu-item"
+  [class.is-active]="active"
+  [routerLink]="routerLink"
+  (click)="onClick()">
+  <div class="mobile-bottom-menu-item__icon">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <ng-container *ngFor="let path of icons[icon]">
+        <path [attr.d]="path"></path>
+      </ng-container>
+    </svg>
+    <span *ngIf="badge && badge > 0" class="mobile-bottom-menu-item__badge">{{ badge }}</span>
+  </div>
+  <span class="mobile-bottom-menu-item__label">{{ labelKey | translate }}</span>
+</a>
+
+<button
+  *ngIf="!routerLink"
+  type="button"
+  class="mobile-bottom-menu-item"
+  [class.is-active]="active"
+  (click)="onClick()">
+  <div class="mobile-bottom-menu-item__icon">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <ng-container *ngFor="let path of icons[icon]">
+        <path [attr.d]="path"></path>
+      </ng-container>
+    </svg>
+  </div>
+  <span class="mobile-bottom-menu-item__label">{{ labelKey | translate }}</span>
+</button>

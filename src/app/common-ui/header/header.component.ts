@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ViewChild, inject, NgZone } from '@angular/core';
+import { Component, DestroyRef, HostListener, ViewChild, inject, NgZone } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { AsyncPipe, NgFor, NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
@@ -14,6 +14,9 @@ import { LoginButtonComponent } from "../login-button/login-button.component";
 import { BASE_API_URL } from "../../app.config";
 import { CartService } from "../../data/services/cart.service";
 import { ToastService } from "../toast-container/toast.service";
+import { ProfileMenuComponent } from "../profile-menu/profile-menu.component";
+import { PROFILE_MENU_ITEMS } from "../profile-menu/profile-menu.config";
+import { ProfileMenuItem } from "../profile-menu/profile-menu.types";
 
 
 declare var bootstrap: any;
@@ -30,7 +33,8 @@ type SupportedLanguage = 'ka' | 'en' | 'ru';
     NgIf,
     LoginButtonComponent,
     RouterLink,
-    TranslateModule
+    TranslateModule,
+    ProfileMenuComponent
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -57,6 +61,8 @@ export class HeaderComponent {
     { key: 'nav.stories', fragment: 'editorial' },
     { key: 'nav.subscribe', fragment: 'newsletter' },
   ];
+  profileMenuItems = PROFILE_MENU_ITEMS;
+  isLoggedIn = false;
 
   @ViewChild('editModalRef') editModalRef!: EditModalComponent;
   private itemService = inject(ItemService);
@@ -65,6 +71,7 @@ export class HeaderComponent {
   private translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
   private zone = inject(NgZone);
+  languageDropdownOpen = false;
 
 
   constructor(private googleAuth: GoogleAuthService) {
@@ -82,8 +89,10 @@ export class HeaderComponent {
         if (user && user.id) {
           this.userIcon = `${this.baseApiUrl}auth/${user.id}` || null;
           this.isAdmin = googleAuth.isAdmin;
+          this.isLoggedIn = true;
         } else {
           this.userIcon = null;
+          this.isLoggedIn = false;
         }
       });
 
@@ -105,11 +114,13 @@ export class HeaderComponent {
 
   setLanguage(language: SupportedLanguage): void {
     if (language === this.currentLanguage) {
+      this.languageDropdownOpen = false;
       return;
     }
 
     this.translate.use(language);
     this.persistLanguage(language);
+    this.languageDropdownOpen = false;
   }
 
   private updateModalContent(): void {
@@ -162,6 +173,7 @@ export class HeaderComponent {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.languageDropdownOpen = false;
   }
 
   toggleDropdown(event: Event) {
@@ -254,6 +266,42 @@ export class HeaderComponent {
       localStorage.setItem(this.storageKey, language);
     } catch (error) {
       // ignore storage errors
+    }
+  }
+
+  toggleLanguageDropdown(event: Event): void {
+    event.stopPropagation();
+    this.languageDropdownOpen = !this.languageDropdownOpen;
+  }
+
+  onLanguageSelect(language: SupportedLanguage): void {
+    this.setLanguage(language);
+  }
+
+  get currentLanguageOption(): { code: SupportedLanguage; flag: string; label: string } {
+    return this.languages.find(language => language.code === this.currentLanguage) ?? this.languages[0];
+  }
+
+  @HostListener('document:click')
+  closeLanguageDropdown(): void {
+    this.languageDropdownOpen = false;
+  }
+
+  onProfileMenuSelect(item: ProfileMenuItem): void {
+    this.isMenuOpen = false;
+
+    if (item.action === 'logout') {
+      this.logout();
+      return;
+    }
+
+    if (item.action === 'addItem') {
+      this.openModal();
+      return;
+    }
+
+    if (item.routerLink) {
+      this.router.navigate(Array.isArray(item.routerLink) ? item.routerLink : [item.routerLink]).then();
     }
   }
 }

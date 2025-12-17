@@ -1,3 +1,5 @@
+@use '_variables' as *;
+
 .item-card {
   display: grid;
   border-radius: 18px;
@@ -149,8 +151,14 @@
   color: var(--color-primary-soft);
 }
 
-@media (max-width: 640px) {
+@include media-sm {
   .item-card img {
     height: 280px;
+  }
+}
+
+@include media-xs {
+  .item-card img {
+    height: 200px;
   }
 }

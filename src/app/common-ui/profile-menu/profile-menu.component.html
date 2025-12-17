@@ -1,0 +1,29 @@
+<ul class="profile-menu">
+  <li *ngFor="let item of visibleItems; trackBy: trackByLabel">
+    <a
+      *ngIf="item.routerLink && !item.action"
+      [routerLink]="item.routerLink"
+      class="profile-menu__link"
+      (click)="onItemSelect(item)">
+      <svg class="profile-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <ng-container *ngFor="let path of icons[item.icon]">
+          <path [attr.d]="path"></path>
+        </ng-container>
+      </svg>
+      <span class="profile-menu__label">{{ item.labelKey | translate }}</span>
+    </a>
+
+    <button
+      *ngIf="!item.routerLink || item.action"
+      type="button"
+      class="profile-menu__link profile-menu__link--button"
+      (click)="onItemSelect(item)">
+      <svg class="profile-menu__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <ng-container *ngFor="let path of icons[item.icon]">
+          <path [attr.d]="path"></path>
+        </ng-container>
+      </svg>
+      <span class="profile-menu__label">{{ item.labelKey | translate }}</span>
+    </button>
+  </li>
+</ul>

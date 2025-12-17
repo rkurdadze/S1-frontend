@@ -10,6 +10,13 @@
     "stories": "ისტორიები",
     "subscribe": "გამოწერა"
   },
+  "mobileNav": {
+    "home": "მთავარი",
+    "cart": "კალათა",
+    "catalog": "კატალოგი",
+    "profile": "პროფილი",
+    "login": "შესვლა"
+  },
   "search": {
     "placeholder": "მოდელების ძიება",
     "hint": "#პუხოვიკები #ტრენჩები #კაფსულა"
@@ -26,6 +33,9 @@
   "dropdown": {
     "addItem": "საქონლის დამატება",
     "logout": "გასვლა"
+  },
+  "profileMenu": {
+    "title": "ანგარიშის მენიუ"
   },
   "toast": {
     "favorites": "გვერდის დამატება რჩეულებში: დააჭირეთ {{shortcut}}"

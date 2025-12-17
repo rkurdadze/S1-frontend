@@ -1,7 +1,8 @@
+@use '_variables' as *;
+
 :host {
   display: block;
   min-height: 100vh;
-  min-width: 400px;
 }
 
 .page-shell {
@@ -33,18 +34,33 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.header-wrapper {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
 .main-container {
   position: relative;
   z-index: 1;
   padding: 32px clamp(16px, 6vw, 64px);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
 }
 
 .footer {
   position: relative;
   z-index: 1;
-  padding: 48px clamp(16px, 6vw, 64px) 32px;
   background: rgba(10, 10, 15, 0.9);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footer-wrapper {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+  padding: 48px clamp(16px, 6vw, 64px) 32px;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -127,9 +143,20 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-@media (max-width: 640px) {
+@include media-md {
+  .main-container {
+    padding-bottom: 120px;
+  }
+
+  .footer-wrapper {
+    padding-bottom: 96px;
+  }
+}
+
+@include media-sm {
   .main-container {
     padding: 8px;
+    padding-bottom: 120px;
   }
 
   .footer__bottom {

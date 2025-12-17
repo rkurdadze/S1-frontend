@@ -1,7 +1,9 @@
 <div class="page-shell">
   <div class="background-texture"></div>
   <div class="header-container">
-    <app-header></app-header>
+    <div class="header-wrapper">
+      <app-header></app-header>
+    </div>
   </div>
 
   <main class="main-container">
@@ -9,45 +11,49 @@
   </main>
 
   <footer class="footer">
-    <div class="footer__brand">
-      <p class="eyebrow">{{ 'footer.brand.eyebrow' | translate }}</p>
-      <h3>{{ 'footer.brand.title' | translate }}</h3>
-      <p>{{ 'footer.brand.subtitle' | translate }}</p>
-    </div>
-    <div class="footer__grid">
-      <div>
-        <h4>{{ 'footer.collections.title' | translate }}</h4>
-        <ul>
-          <li><a href="#collections">{{ 'footer.collections.all' | translate }}</a></li>
-          <li><a href="#new-drop">{{ 'footer.collections.new' | translate }}</a></li>
-          <li><a href="#editorial">{{ 'footer.collections.stories' | translate }}</a></li>
-        </ul>
+    <div class="footer-wrapper">
+      <div class="footer__brand">
+        <p class="eyebrow">{{ 'footer.brand.eyebrow' | translate }}</p>
+        <h3>{{ 'footer.brand.title' | translate }}</h3>
+        <p>{{ 'footer.brand.subtitle' | translate }}</p>
       </div>
-      <div>
-        <h4>{{ 'footer.service.title' | translate }}</h4>
-        <ul>
-          <li><a href="#">{{ 'footer.service.personal_shopping' | translate }}</a></li>
-          <li><a href="#">{{ 'footer.service.worldwide_delivery' | translate }}</a></li>
-          <li><a href="#">{{ 'footer.service.product_care' | translate }}</a></li>
-          <li><a href="#">{{ 'footer.service.returns' | translate }}</a></li>
-        </ul>
+      <div class="footer__grid">
+        <div>
+          <h4>{{ 'footer.collections.title' | translate }}</h4>
+          <ul>
+            <li><a href="#collections">{{ 'footer.collections.all' | translate }}</a></li>
+            <li><a href="#new-drop">{{ 'footer.collections.new' | translate }}</a></li>
+            <li><a href="#editorial">{{ 'footer.collections.stories' | translate }}</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>{{ 'footer.service.title' | translate }}</h4>
+          <ul>
+            <li><a href="#">{{ 'footer.service.personal_shopping' | translate }}</a></li>
+            <li><a href="#">{{ 'footer.service.worldwide_delivery' | translate }}</a></li>
+            <li><a href="#">{{ 'footer.service.product_care' | translate }}</a></li>
+            <li><a href="#">{{ 'footer.service.returns' | translate }}</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>{{ 'footer.contacts.title' | translate }}</h4>
+          <ul class="footer__contacts">
+            <li>{{ 'footer.contacts.phone' | translate }}</li>
+            <li>{{ 'footer.contacts.email' | translate }}</li>
+            <li>{{ 'footer.contacts.address' | translate }}</li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4>{{ 'footer.contacts.title' | translate }}</h4>
-        <ul class="footer__contacts">
-          <li>{{ 'footer.contacts.phone' | translate }}</li>
-          <li>{{ 'footer.contacts.email' | translate }}</li>
-          <li>{{ 'footer.contacts.address' | translate }}</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer__bottom">
-      <span>{{ 'footer.copyright' | translate:{ currentYear: currentYear } }}</span>
-      <div class="footer__socials">
-        <a href="#" [attr.aria-label]="'footer.socials.instagram' | translate">{{ 'footer.socials.instagram' | translate }}</a>
-        <a href="#" [attr.aria-label]="'footer.socials.pinterest' | translate">{{ 'footer.socials.pinterest' | translate }}</a>
-        <a href="#" [attr.aria-label]="'footer.socials.telegram' | translate">{{ 'footer.socials.telegram' | translate }}</a>
+      <div class="footer__bottom">
+        <span>{{ 'footer.copyright' | translate:{ currentYear: currentYear } }}</span>
+        <div class="footer__socials">
+          <a href="#" [attr.aria-label]="'footer.socials.instagram' | translate">{{ 'footer.socials.instagram' | translate }}</a>
+          <a href="#" [attr.aria-label]="'footer.socials.pinterest' | translate">{{ 'footer.socials.pinterest' | translate }}</a>
+          <a href="#" [attr.aria-label]="'footer.socials.telegram' | translate">{{ 'footer.socials.telegram' | translate }}</a>
+        </div>
       </div>
     </div>
   </footer>
+
+  <app-mobile-bottom-menu></app-mobile-bottom-menu>
 </div>

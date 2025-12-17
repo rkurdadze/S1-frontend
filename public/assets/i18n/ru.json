@@ -10,6 +10,13 @@
     "stories": "Истории",
     "subscribe": "Подписка"
   },
+  "mobileNav": {
+    "home": "Главная",
+    "cart": "Корзина",
+    "catalog": "Каталог",
+    "profile": "Профиль",
+    "login": "Войти"
+  },
   "search": {
     "placeholder": "Поиск по моделям",
     "hint": "#пуховики #тренчи #капсулы"
@@ -26,6 +33,9 @@
   "dropdown": {
     "addItem": "Добавить товар",
     "logout": "Выйти"
+  },
+  "profileMenu": {
+    "title": "Меню аккаунта"
   },
   "toast": {
     "favorites": "Добавить страницу в избранное: нажмите {{shortcut}}"
