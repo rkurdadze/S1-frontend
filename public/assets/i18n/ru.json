@@ -229,6 +229,18 @@
       "telegram": "Telegram"
     }
   },
+  "login_page": {
+    "alt_logo": "Логотип Studio101",
+    "eyebrow": "Добро пожаловать",
+    "title": "Вход в аккаунт",
+    "subtitle": "Используйте ваш Google-аккаунт для входа в админ-панель и для быстрого оформления заказов.",
+    "card_title_login": "Вход через Google",
+    "card_title_loggedin": "Вы вошли в аккаунт",
+    "card_subtitle_login": "Быстрый доступ к админ-панели и истории заказов.",
+    "card_subtitle_logout": "Теперь вы можете управлять товарами и просматривать историю заказов.",
+    "alt_google_logo": "Логотип Google",
+    "logout_button": "Выйти"
+  },
   "login_button": {
     "login": "Войти"
   },

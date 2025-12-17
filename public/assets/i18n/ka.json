@@ -229,6 +229,18 @@
       "telegram": "ტელეგრამი"
     }
   },
+   "login_page": {
+    "alt_logo": "Studio101-ის ლოგო",
+    "eyebrow": "მოგესალმებით",
+    "title": "შესვლა ანგარიშში",
+    "subtitle": "გამოიყენეთ თქვენი Google-ანგარიში ადმინ-პანელში შესასვლელად და სწრაფი შეკვეთებისთვის.",
+    "card_title_login": "შესვლა Google-ით",
+    "card_title_loggedin": "თქვენ შესული ხართ",
+    "card_subtitle_login": "სწრაფი წვდომა ადმინ-პანელზე და შეკვეთების ისტორიაზე.",
+    "card_subtitle_logout": "ახლა თქვენ შეგიძლიათ მართოთ პროდუქტები და იხილოთ შეკვეთების ისტორია.",
+    "alt_google_logo": "Google-ის ლოგო",
+    "logout_button": "გასვლა"
+  },
   "login_button": {
     "login": "შესვლა"
   },

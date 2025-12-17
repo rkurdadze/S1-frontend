@@ -229,6 +229,18 @@
       "telegram": "Telegram"
     }
   },
+  "login_page": {
+    "alt_logo": "Studio101 Logo",
+    "eyebrow": "Welcome",
+    "title": "Log in to your account",
+    "subtitle": "Use your Google account to log in to the admin panel and for quick checkout.",
+    "card_title_login": "Log in via Google",
+    "card_title_loggedin": "You are logged in",
+    "card_subtitle_login": "Quick access to the admin panel and order history.",
+    "card_subtitle_logout": "You can now manage products and view order history.",
+    "alt_google_logo": "Google logo",
+    "logout_button": "Log out"
+  },
   "login_button": {
     "login": "Login"
   },

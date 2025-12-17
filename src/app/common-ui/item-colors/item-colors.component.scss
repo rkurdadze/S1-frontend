@@ -20,10 +20,6 @@
   grid-area: color;
   display: flex; /* Combined with grid-area */
   margin-top: 20px;
-
-  @media (max-width: 640px) {
-    margin-top: unset;
-  }
 }
 
 .color-square {
