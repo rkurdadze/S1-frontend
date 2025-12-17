@@ -1,0 +1,24 @@
+<section class="product-area" id="catalog-grid">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">{{ 'catalog.grid.eyebrow' | translate }}</p>
+      <h2>{{ 'catalog.grid.title' | translate }}</h2>
+      <p class="lede">{{ 'catalog.grid.lede' | translate }}</p>
+    </div>
+    <div class="filters">
+      <button class="pill active">{{ 'catalog.grid.filter_all' | translate }}</button>
+      <button class="pill">{{ 'catalog.grid.filter_new' | translate }}</button>
+      <button class="pill">{{ 'catalog.grid.filter_custom' | translate }}</button>
+    </div>
+  </div>
+
+  <div class="item-card__wrapper">
+    @if (items.length === 0) {
+      <div class="empty">{{ 'catalog.grid.empty' | translate }}</div>
+    } @else {
+      @for (item of items; track item.id) {
+        <app-item-card [item]="item"></app-item-card>
+      }
+    }
+  </div>
+</section>

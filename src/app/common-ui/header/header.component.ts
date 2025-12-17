@@ -1,5 +1,5 @@
 import { Component, DestroyRef, ViewChild, inject, NgZone } from '@angular/core';
-import { Router, RouterLink, NavigationEnd } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AsyncPipe, NgFor, NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
@@ -50,6 +50,13 @@ export class HeaderComponent {
     { code: 'ru', flag: '🇷🇺', label: 'Русский' }
   ];
   currentLanguage: SupportedLanguage;
+  navItems = [
+    { key: 'nav.collections', fragment: 'collections' },
+    { key: 'nav.catalog', route: '/catalog' },
+    { key: 'nav.new', fragment: 'new-drop' },
+    { key: 'nav.stories', fragment: 'editorial' },
+    { key: 'nav.subscribe', fragment: 'newsletter' },
+  ];
 
   @ViewChild('editModalRef') editModalRef!: EditModalComponent;
   private itemService = inject(ItemService);
@@ -177,13 +184,22 @@ export class HeaderComponent {
   }
 
 
-  onNavClick(event: MouseEvent, targetId: string): void {
+  onNavItemSelect(event: MouseEvent, item: { key: string; fragment?: string; route?: string; }): void {
     event.preventDefault();
 
     const wasOpen = this.isMenuOpen;
     this.isMenuOpen = false;
 
-    const runScroll = () => this.scrollToAnchor(targetId);
+    if (item.route) {
+      this.router.navigate([item.route]).then();
+      return;
+    }
+
+    if (!item.fragment) {
+      return;
+    }
+
+    const runScroll = () => this.scrollToAnchor(item.fragment!);
 
     // если мы уже на главной — просто скроллим
     if (this.router.url.startsWith('/#') || this.router.url === '/' || this.router.url.includes('#')) {
@@ -196,12 +212,12 @@ export class HeaderComponent {
     }
 
     // если мы НЕ на странице с якорями — сначала переходим, потом скроллим
-    this.router.navigate(['/'], { fragment: targetId }).then(() => {
+    this.router.navigate(['/'], { fragment: item.fragment }).then(() => {
       this.zone.onStable
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           // Angular полностью стабилизировался — DOM гарантированно готов
-          this.scrollToAnchor(targetId);
+          this.scrollToAnchor(item.fragment!);
         });
     });
   }

@@ -229,6 +229,17 @@
       "telegram": "Telegram"
     }
   },
+  "catalog": {
+    "grid": {
+      "eyebrow": "Catalog",
+      "title": "Catalog / Items",
+      "lede": "Pick an item to view photos, fabrics, colors, and sizes.",
+      "filter_all": "All",
+      "filter_new": "New in",
+      "filter_custom": "Custom fit",
+      "empty": "The catalog is empty for now. Add items through the admin panel."
+    }
+  },
   "login_page": {
     "alt_logo": "Studio101 Logo",
     "eyebrow": "Welcome",

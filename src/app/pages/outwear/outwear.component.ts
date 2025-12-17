@@ -1,10 +1,11 @@
-import {Component, inject, OnDestroy} from '@angular/core';
+import {Component, ElementRef, inject, OnDestroy, AfterViewInit, HostListener} from '@angular/core';
 import {ItemCardComponent} from '../../common-ui/item-card/item-card.component';
 import {Item} from '../../data/interfaces/item.interface';
 import {ItemService} from '../../data/services/item.service';
 import {JsonPipe, NgFor, NgIf} from '@angular/common';
 import {Subscription} from "rxjs";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {RouterLink} from "@angular/router";
 
 interface CollectionCard {
   title: string;
@@ -29,19 +30,20 @@ interface EditorialStory {
     JsonPipe,
     NgFor,
     NgIf,
+    RouterLink,
     TranslateModule
   ],
   templateUrl: './outwear.component.html',
   styleUrl: './outwear.component.scss'
 })
-export class OutwearComponent implements OnDestroy {
+export class OutwearComponent implements OnDestroy, AfterViewInit {
   itemService = inject(ItemService);
   items: Item[] = [];
+  displayedItems: Item[] = [];
   private itemAddedSubscription!: Subscription;
   private translationSubscription!: Subscription;
 
   highlightCollections: CollectionCard[] = [];
-  lookbookFrames: any[] = [];
   perks: any[] = [];
   editorials: EditorialStory[] = [];
 
@@ -52,7 +54,7 @@ export class OutwearComponent implements OnDestroy {
     'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80'
   ];
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, private elementRef: ElementRef) {
     this.refreshItems();
 
     this.itemAddedSubscription = this.itemService.getItemAddedListener().subscribe(() => {
@@ -64,15 +66,15 @@ export class OutwearComponent implements OnDestroy {
     });
   }
 
+  ngAfterViewInit() {
+    this.updateDisplayedItems();
+  }
+
   private updateTranslatedSections(outwear: any) {
     this.highlightCollections = outwear.highlightCollections.map((item: any) => ({
       ...item,
       image: this.getHighlightCollectionImage(item.id),
       anchor: this.getHighlightCollectionAnchor(item.id)
-    }));
-    this.lookbookFrames = outwear.lookbookFrames.map((item: any) => ({
-      ...item,
-      image: this.getLookbookFrameImage(item.id)
     }));
     this.perks = outwear.perks;
     this.editorials = outwear.editorials.map((item: any) => ({
@@ -102,20 +104,7 @@ export class OutwearComponent implements OnDestroy {
       return '#collections';
     }
     if (id === 'weekend-escape') {
-      return '#lookbook';
-    }
-    return '';
-  }
-
-  private getLookbookFrameImage(id: string): string {
-    if (id === 'monochrome-layering') {
-      return 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80';
-    }
-    if (id === 'nordic-light') {
-      return 'https://images.unsplash.com/photo-1457972729786-0411a3b2b626?auto=format&fit=crop&w=800&q=80';
-    }
-    if (id === 'evening-stroll') {
-      return 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80';
+      return '#editorial';
     }
     return '';
   }
@@ -132,8 +121,44 @@ export class OutwearComponent implements OnDestroy {
 
   refreshItems() {
     this.itemService.getItems().subscribe(
-      val => this.items = val
+      val => {
+        this.items = val;
+        this.updateDisplayedItems();
+      }
     );
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateDisplayedItems();
+  }
+
+  private updateDisplayedItems() {
+    if (!this.items || this.items.length === 0) {
+      this.displayedItems = [];
+      return;
+    }
+
+    const itemCardWrapper = this.elementRef.nativeElement.querySelector('.item-card__wrapper');
+    if (!itemCardWrapper) {
+      return;
+    }
+
+    const wrapperWidth = itemCardWrapper.offsetWidth;
+    const cardMinWidth = 280;
+    const cardGap = 14;
+
+    const itemsPerRow = Math.floor(wrapperWidth / (cardMinWidth + cardGap));
+
+    let maxItemsToShow: number;
+
+    if (itemsPerRow === 1) {
+      maxItemsToShow = 4;
+    } else {
+      maxItemsToShow = itemsPerRow * 2;
+    }
+
+    this.displayedItems = this.items.slice(0, maxItemsToShow);
   }
 
   ngOnDestroy() {

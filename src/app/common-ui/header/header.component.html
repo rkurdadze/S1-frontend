@@ -25,12 +25,13 @@
         </button>
 
         <nav id="headerNav" class="nav collapse" [class.show]="isMenuOpen">
-            <a href="#collections" (click)="onNavClick($event, 'collections')">{{ 'nav.collections' | translate }}</a>
-            <a href="#product-grid" (click)="onNavClick($event, 'product-grid')">{{ 'nav.catalog' | translate }}</a>
-            <a href="#new-drop" (click)="onNavClick($event, 'new-drop')">{{ 'nav.new' | translate }}</a>
-            <a href="#lookbook" (click)="onNavClick($event, 'lookbook')">{{ 'nav.lookbook' | translate }}</a>
-            <a href="#editorial" (click)="onNavClick($event, 'editorial')">{{ 'nav.stories' | translate }}</a>
-            <a href="#newsletter" (click)="onNavClick($event, 'newsletter')">{{ 'nav.subscribe' | translate }}</a>
+            <a
+              *ngFor="let link of navItems"
+              class="nav__link"
+              [href]="link.fragment ? ('#' + link.fragment) : link.route"
+              (click)="onNavItemSelect($event, link)">
+              <span>{{ link.key | translate }}</span>
+            </a>
         </nav>
 
 
@@ -82,12 +83,12 @@
 
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 @if (isAdmin) {
-                                    <li><a class="dropdown-item" href="#" (click)="openModal()">{{ 'dropdown.addItem' | translate }}</a></li>
+                                    <li><a class="dropdown-item dropdown-item--icon" href="#" (click)="openModal()"><span aria-hidden="true">➕</span><span>{{ 'dropdown.addItem' | translate }}</span></a></li>
                                     <li>
                                         <hr class="dropdown-divider"/>
                                     </li>
                                 }
-                                <li><a class="dropdown-item" (click)="logout()">{{ 'dropdown.logout' | translate }}</a></li>
+                                <li><a class="dropdown-item dropdown-item--icon" (click)="logout()"><span aria-hidden="true">🚪</span><span>{{ 'dropdown.logout' | translate }}</span></a></li>
                             </ul>
                         </div>
                     } @else {

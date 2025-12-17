@@ -5,7 +5,7 @@
     <p class="lede">{{ 'outwear.hero.lede' | translate }}</p>
     <div class="hero__cta">
       <a class="btn primary" href="#collections">{{ 'outwear.hero.cta_capsules' | translate }}</a>
-      <a class="btn ghost" href="#product-grid">{{ 'outwear.hero.cta_all' | translate }}</a>
+      <a class="btn ghost" [routerLink]="['/catalog']" fragment="catalog-grid">{{ 'outwear.hero.cta_all' | translate }}</a>
     </div>
     <div class="hero__stats">
       <div><strong>48</strong><span>{{ 'outwear.hero.stat_models' | translate }}</span></div>
@@ -56,38 +56,22 @@
       <button class="pill">{{ 'outwear.product_grid.filter_puffers' | translate }}</button>
       <button class="pill">{{ 'outwear.product_grid.filter_trenches' | translate }}</button>
       <button class="pill">{{ 'outwear.product_grid.filter_vests' | translate }}</button>
+      <a class="text-link text-link--catalog" [routerLink]="['/catalog']">{{ 'outwear.hero.cta_all' | translate }}</a>
     </div>
   </div>
 
   <div class="item-card__wrapper">
-    @if (items.length === 0) {
+    @if (displayedItems.length === 0) {
       <div class="empty">{{ 'outwear.product_grid.empty' | translate }}</div>
     } @else {
-      @for (item of items; track item.id) {
+      @for (item of displayedItems; track item.id) {
         <app-item-card [item]="item"></app-item-card>
       }
     }
   </div>
-</section>
 
-<section class="lookbook" id="lookbook">
-  <div class="section-head">
-    <div>
-      <p class="eyebrow">{{ 'outwear.lookbook.eyebrow' | translate }}</p>
-      <h2>{{ 'outwear.lookbook.title' | translate }}</h2>
-    </div>
-    <a href="#" class="text-link">{{ 'outwear.lookbook.cta' | translate }}</a>
-  </div>
-  <div class="lookbook__grid">
-    @for (frame of lookbookFrames; track frame.title) {
-      <div class="lookbook__card">
-        <img [src]="frame.image" [alt]="frame.title" />
-        <div class="lookbook__overlay">
-          <h4>{{ frame.title }}</h4>
-          <p>{{ frame.caption }}</p>
-        </div>
-      </div>
-    }
+  <div class="section-foot" *ngIf="items.length > displayedItems.length">
+    <a class="btn ghost" [routerLink]="['/catalog']">{{ 'outwear.hero.cta_all' | translate }}</a>
   </div>
 </section>
 

@@ -252,8 +252,7 @@ h1 {
   align-items: stretch;
 }
 
-.capsule-card,
-.capsule-lookbook {
+.capsule-card {
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: var(--capsule-bg);
@@ -270,24 +269,6 @@ h1 {
 .capsule-card__header {
   display: grid;
   gap: 6px;
-}
-
-.capsule-lookbook {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-  url('https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-  display: flex;
-  align-items: flex-end;
-  padding: 18px;
-}
-
-.capsule-lookbook__copy {
-  background: rgba(5, 8, 20, 0.75);
-  backdrop-filter: blur(8px);
-  border-radius: 14px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: grid;
-  gap: 8px;
 }
 
 .price-row {
@@ -742,5 +723,4 @@ textarea {
   }
 
 }
-
 

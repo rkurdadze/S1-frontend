@@ -14,7 +14,7 @@
   padding: clamp(16px, 3vw, 28px);
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 118, 84, 0.08));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(var(--color-primary-rgb), 0.08));
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 
@@ -185,7 +185,7 @@
 }
 
 .delivery-option input {
-  accent-color: #ff7654;
+  accent-color: var(--color-primary);
   width: 18px;
   height: 18px;
 }
@@ -195,7 +195,7 @@
 }
 
 .payment-panel {
-  background: linear-gradient(135deg, rgba(10, 10, 15, 0.9), rgba(255, 118, 84, 0.18));
+  background: linear-gradient(135deg, rgba(10, 10, 15, 0.9), rgba(var(--color-primary-rgb), 0.18));
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 

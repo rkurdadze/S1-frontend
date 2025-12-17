@@ -11,13 +11,13 @@
 
 .item-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 118, 84, 0.6);
-  box-shadow: 0 26px 70px rgba(255, 118, 84, 0.25);
+  border-color: rgba(var(--color-primary-rgb), 0.6);
+  box-shadow: 0 26px 70px rgba(var(--color-primary-rgb), 0.25);
 }
 
 .item-card__media {
   position: relative;
-  background: #0a0a0f;
+  background: var(--dark-color);
 }
 
 .item-card img {
@@ -66,8 +66,8 @@
 }
 
 .color-circle.out-of-stock {
-  border: 1px solid #ff9d6c;
-  box-shadow: 0 0 0 2px rgba(255, 118, 84, 0.3);
+  border: 1px solid var(--color-primary-soft);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3);
 }
 
 .item-card__sizes {
@@ -86,8 +86,8 @@
 }
 
 .size-box.out-of-stock {
-  border-color: rgba(255, 118, 84, 0.8);
-  color: #ffb296;
+  border-color: rgba(var(--color-primary-rgb), 0.8);
+  color: var(--color-primary-muted);
 }
 
 .item-card__body {
@@ -145,8 +145,8 @@
 }
 
 .pill--warn {
-  border-color: rgba(255, 118, 84, 0.7);
-  color: #ff9d6c;
+  border-color: rgba(var(--color-primary-rgb), 0.7);
+  color: var(--color-primary-soft);
 }
 
 @media (max-width: 640px) {
