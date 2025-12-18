@@ -1,11 +1,40 @@
 @use '_variables' as *;
 
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutToBottom {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
 .profile-menu {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
   gap: 8px;
+
+  animation: slideInFromBottom 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.profile-menu--leaving {
+  animation: slideOutToBottom 0.35s ease-in both;
+  pointer-events: none;
 }
 
 .profile-menu__link {
