@@ -357,6 +357,18 @@
   padding: 10px;
   background: var(--header__bar-bg);
   border: 1px solid rgba(255, 255, 255, 0.12);
+  display: block;
+  position: absolute;
+  right: 0;
+  left: auto;
+  top: calc(100% + 8px);
+  min-width: 220px;
+  max-width: min(280px, 90vw);
+  margin: 0;
+}
+
+.actions-tray .dropdown {
+  position: relative;
 }
 
 

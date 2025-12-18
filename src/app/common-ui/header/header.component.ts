@@ -17,9 +17,7 @@ import { ToastService } from "../toast-container/toast.service";
 import { ProfileMenuComponent } from "../profile-menu/profile-menu.component";
 import { PROFILE_MENU_ITEMS } from "../profile-menu/profile-menu.config";
 import { ProfileMenuItem } from "../profile-menu/profile-menu.types";
-
-
-declare var bootstrap: any;
+import { ProfileMenuService } from "../../data/services/profile-menu.service";
 
 type SupportedLanguage = 'ka' | 'en' | 'ru';
 
@@ -63,6 +61,7 @@ export class HeaderComponent {
   ];
   profileMenuItems = PROFILE_MENU_ITEMS;
   isLoggedIn = false;
+  isProfileMenuOpen = false;
 
   @ViewChild('editModalRef') editModalRef!: EditModalComponent;
   private itemService = inject(ItemService);
@@ -71,6 +70,7 @@ export class HeaderComponent {
   private translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
   private zone = inject(NgZone);
+  private profileMenuService = inject(ProfileMenuService);
   languageDropdownOpen = false;
 
 
@@ -105,6 +105,13 @@ export class HeaderComponent {
 
     this.updateModalContent();
 
+    this.profileMenuService.addItemRequested$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (this.isAdmin) {
+          this.openModal();
+        }
+      });
   }
 
   modalTitle = '';
@@ -151,7 +158,9 @@ export class HeaderComponent {
 
 
   openModal(): void {
-    this.editModalRef.openModal();
+    if (this.editModalRef) {
+      this.editModalRef.openModal();
+    }
   }
 
   onModalResult(editedData: any): void {
@@ -174,12 +183,7 @@ export class HeaderComponent {
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
     this.languageDropdownOpen = false;
-  }
-
-  toggleDropdown(event: Event) {
-    event.stopPropagation();
-    const dropdown = new bootstrap.Dropdown(event.target);
-    dropdown.toggle();
+    this.isProfileMenuOpen = false;
   }
 
 
@@ -198,6 +202,8 @@ export class HeaderComponent {
 
   onNavItemSelect(event: MouseEvent, item: { key: string; fragment?: string; route?: string; }): void {
     event.preventDefault();
+    this.isProfileMenuOpen = false;
+    this.languageDropdownOpen = false;
 
     const wasOpen = this.isMenuOpen;
     this.isMenuOpen = false;
@@ -271,6 +277,7 @@ export class HeaderComponent {
 
   toggleLanguageDropdown(event: Event): void {
     event.stopPropagation();
+    this.isProfileMenuOpen = false;
     this.languageDropdownOpen = !this.languageDropdownOpen;
   }
 
@@ -285,9 +292,11 @@ export class HeaderComponent {
   @HostListener('document:click')
   closeLanguageDropdown(): void {
     this.languageDropdownOpen = false;
+    this.isProfileMenuOpen = false;
   }
 
   onProfileMenuSelect(item: ProfileMenuItem): void {
+    this.isProfileMenuOpen = false;
     this.isMenuOpen = false;
 
     if (item.action === 'logout') {
@@ -296,12 +305,19 @@ export class HeaderComponent {
     }
 
     if (item.action === 'addItem') {
-      this.openModal();
+      this.profileMenuService.requestAddItem();
       return;
     }
 
     if (item.routerLink) {
       this.router.navigate(Array.isArray(item.routerLink) ? item.routerLink : [item.routerLink]).then();
     }
+  }
+
+  toggleProfileMenu(event: Event): void {
+    event.stopPropagation();
+    this.languageDropdownOpen = false;
+    this.isMenuOpen = false;
+    this.isProfileMenuOpen = !this.isProfileMenuOpen;
   }
 }

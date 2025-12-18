@@ -1,27 +1,43 @@
-<div class="mobile-bottom-menu">
-  <ng-container *ngFor="let item of navItems; let last = last">
+<div class="mobile-bottom-menu" [class.mobile-bottom-menu--with-bar]="purchaseState?.visible">
+  <div class="mobile-bottom-menu__purchase" *ngIf="purchaseState?.visible" #purchaseRef>
+      <app-item-purchase-bar
+              [price]="purchaseState?.price ?? 0"
+              [compareAtPrice]="purchaseState?.compareAtPrice"
+              [availabilityLabel]="purchaseState?.availabilityLabel ?? ''"
+              [availabilityState]="purchaseState?.availabilityState ?? 'pending'"
+              [quantity]="purchaseState?.quantity ?? 1"
+              [canSubmit]="purchaseState?.canSubmit ?? false"
+              (quantityChange)="purchaseState?.onQuantityChange?.($event)"
+              (addToCart)="purchaseState?.onAddToCart?.()"
+              (buyNow)="purchaseState?.onBuyNow?.()">
+      </app-item-purchase-bar>
+  </div>
+
+  <div class="mobile-bottom-menu__nav" #navRef>
+    <ng-container *ngFor="let item of navItems; let last = last">
+      <app-mobile-bottom-menu-item
+        [labelKey]="item.labelKey"
+        [icon]="item.icon"
+        [routerLink]="item.routerLink"
+        [active]="isActive(item.routerLink, !!item.exact)"
+        [badge]="item.hasBadge ? (cartCount$ | async) : null">
+      </app-mobile-bottom-menu-item>
+
+      <div
+        class="mobile-bottom-menu__divider"
+        aria-hidden="true"
+        *ngIf="!last">
+      </div>
+    </ng-container>
+
+      <div class="mobile-bottom-menu__divider" aria-hidden="true"></div>
+
     <app-mobile-bottom-menu-item
-      [labelKey]="item.labelKey"
-      [icon]="item.icon"
-      [routerLink]="item.routerLink"
-      [active]="isActive(item.routerLink, !!item.exact)"
-      [badge]="item.hasBadge ? (cartCount$ | async) : null">
+      [labelKey]="profileLabelKey"
+      icon="profile"
+      (itemClick)="onProfileTap()">
     </app-mobile-bottom-menu-item>
-
-    <div
-      class="mobile-bottom-menu__divider"
-      aria-hidden="true"
-      *ngIf="!last">
-    </div>
-  </ng-container>
-
-    <div class="mobile-bottom-menu__divider" aria-hidden="true"></div>
-
-  <app-mobile-bottom-menu-item
-    [labelKey]="profileLabelKey"
-    icon="profile"
-    (itemClick)="onProfileTap()">
-  </app-mobile-bottom-menu-item>
+  </div>
 </div>
 
 <div class="mobile-bottom-menu__backdrop" *ngIf="isProfileMenuOpen" (click)="closeProfileMenu()"></div>

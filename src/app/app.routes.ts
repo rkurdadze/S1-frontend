@@ -5,6 +5,7 @@ import {ItemPageComponent} from "./pages/item-page/item-page.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {CartComponent} from "./pages/cart/cart.component";
 import {CatalogComponent} from "./pages/catalog/catalog.component";
+import {ProfileComponent} from "./pages/profile/profile.component";
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent},
@@ -14,6 +15,7 @@ export const routes: Routes = [
             {path: 'catalog', component: CatalogComponent},
             {path: 'items', redirectTo: 'catalog'},
             {path: 'cart', component: CartComponent},
+            {path: 'profile', component: ProfileComponent},
             {path: 'item/:id', component: ItemPageComponent},
             {path: '**', redirectTo: '/'}
         ]

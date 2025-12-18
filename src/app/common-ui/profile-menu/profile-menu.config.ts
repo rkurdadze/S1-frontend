@@ -17,6 +17,12 @@ export const PROFILE_MENU_ITEMS: ProfileMenuItem[] = [
     routerLink: '/cart'
   },
   {
+    labelKey: 'dropdown.profileSettings',
+    icon: 'profile',
+    routerLink: '/profile',
+    requiresAuth: true
+  },
+  {
     labelKey: 'mobileNav.login',
     icon: 'profile',
     routerLink: '/login',

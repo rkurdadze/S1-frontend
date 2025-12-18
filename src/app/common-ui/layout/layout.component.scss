@@ -144,19 +144,15 @@
 }
 
 @include media-md {
-  .main-container {
-    padding-bottom: 120px;
-  }
-
-  .footer-wrapper {
-    padding-bottom: 96px;
+  .footer {
+    padding-bottom: 90px;
   }
 }
 
 @include media-sm {
   .main-container {
-    padding: 8px;
-    padding-bottom: 120px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .footer__bottom {

@@ -1,7 +1,7 @@
 <header class="header">
     <div class="header__bar">
 
-        <div class="header__controls" (click)="$event.stopPropagation()">
+        <div class="header__controls">
             <button
                     class="navbar-toggler"
                     type="button"
@@ -46,7 +46,7 @@
 
         <div class="header__actions">
 
-            <div class="header__controls" (click)="$event.stopPropagation()">
+            <div class="header__controls">
                 <div class="lang-dropdown" [class.is-open]="languageDropdownOpen">
                     <button
                             type="button"
@@ -96,18 +96,21 @@
                     </a>
 
                     @if (isLoggedIn$ | async) {
-                        <div class="dropdown">
+                        <div class="dropdown" (click)="$event.stopPropagation()">
                             <img
                                     [src]="userIcon"
                                     [alt]="'aria.alt_profile' | translate"
                                     class="user-avatar dropdown-toggle"
                                     id="userDropdown"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    (click)="toggleDropdown($event)"
+                                    [attr.aria-expanded]="isProfileMenuOpen"
+                                    (click)="toggleProfileMenu($event)"
                             />
 
-                            <div class="dropdown-menu dropdown-menu-end dropdown-menu--profile" aria-labelledby="userDropdown">
+                            <div
+                              class="dropdown-menu dropdown-menu-end dropdown-menu--profile"
+                              aria-labelledby="userDropdown"
+                              *ngIf="isProfileMenuOpen"
+                            >
                                 <app-profile-menu
                                   [items]="profileMenuItems"
                                   [isLoggedIn]="isLoggedIn"

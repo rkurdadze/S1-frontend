@@ -23,8 +23,13 @@ export class GoogleAuthService {
         return this.userSubject.asObservable();
     }
 
+    get currentUser(): any {
+        return this.userSubject.getValue();
+    }
+
     get isAdmin(): boolean {
-        return this.userSubject.getValue().user.role?.name === 'Administrator';
+        const user = this.userSubject.getValue();
+        return user?.user?.role?.name === 'Administrator';
     }
 
 

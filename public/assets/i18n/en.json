@@ -32,7 +32,8 @@
   },
   "dropdown": {
     "addItem": "Add item",
-    "logout": "Log out"
+    "logout": "Log out",
+    "profileSettings": "Profile settings"
   },
   "profileMenu": {
     "title": "Account menu"
@@ -454,6 +455,58 @@
         "publishing": "Publishing…",
         "share": "Share"
       }
+    }
+  }
+  ,
+  "item_purchase": {
+    "title": "Order details",
+    "add_to_cart": "Add to cart",
+    "buy_now": "Buy now",
+    "select_options": "Select color and size",
+    "pending": "Checking availability",
+    "out": "Out of stock",
+    "low": "Left: {{count}} pcs.",
+    "in": "In stock: {{count}} pcs."
+  },
+  "profile_page": {
+    "hero": {
+      "eyebrow": "Profile",
+      "title": "Edit account details",
+      "subtitle": "Update personal data, delivery address, contacts, and avatar."
+    },
+    "actions": {
+      "save": "Save changes",
+      "reset": "Reset"
+    },
+    "avatar": {
+      "title": "Avatar",
+      "subtitle": "Upload a square image for the profile icon.",
+      "upload": "Upload",
+      "remove": "Remove",
+      "placeholder": "No avatar yet",
+      "alt": "User avatar"
+    },
+    "account": {
+      "title": "Account and contacts",
+      "subtitle": "These details will be used for orders and notifications.",
+      "display_name": "Display name",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "address": {
+      "title": "Address",
+      "subtitle": "Saved for fast checkout.",
+      "line1": "Address line",
+      "line2": "Apartment / entrance",
+      "city": "City",
+      "region": "Region",
+      "postal": "Postal code",
+      "country": "Country"
+    },
+    "toasts": {
+      "saved": "Profile updated"
     }
   }
 }

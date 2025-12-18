@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, DestroyRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
@@ -25,7 +25,11 @@ import {CartService} from "../../data/services/cart.service";
 import {ShareService} from "../../data/services/share.service";
 import {ShareRequest} from "../../data/interfaces/share.interface";
 import {ToastService} from "../../common-ui/toast-container/toast.service";
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {ItemPurchaseBarComponent, AvailabilityState} from "../../common-ui/item-purchase-bar/item-purchase-bar.component";
+import {ItemPurchaseBarService} from "../../common-ui/item-purchase-bar/item-purchase-bar.service";
+import {Inventories} from "../../data/interfaces/inventories.interface";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
     selector: 'app-item-page',
@@ -41,18 +45,22 @@ import {TranslateModule} from "@ngx-translate/core";
         ItemVisualPanelComponent,
         ItemMetaPanelComponent,
         ItemSuggestionRailComponent,
-        TranslateModule
+        TranslateModule,
+        ItemPurchaseBarComponent
     ],
     templateUrl: './item-page.component.html',
     styleUrls: ['./item-page.component.scss']
 })
-export class ItemPageComponent implements OnInit {
+export class ItemPageComponent implements OnInit, OnDestroy {
     isLoggedIn$: Observable<any>;
     private refreshSubscription!: Subscription;
     private toastService = inject(ToastService);
+    private purchaseBarService = inject(ItemPurchaseBarService);
+    private destroyRef = inject(DestroyRef);
 
     baseApiUrl = inject(BASE_API_URL);
     private router = inject(Router);
+    private translate = inject(TranslateService);
     item: Item | null = null;
     images: { id: string, url: string }[] = [];
     selectedImage: { id: string, url: string } | null = null;
@@ -77,6 +85,7 @@ export class ItemPageComponent implements OnInit {
     shareError = '';
     shareBusy = false;
     sharePreviewImages: string[] = [];
+    compareAtPrice: number | null = null;
 
     constructor(
         private eventService: EventService,
@@ -97,6 +106,17 @@ export class ItemPageComponent implements OnInit {
                 this.isAdmin = false;
             }
         });
+
+        this.translate.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.updatePurchaseBarState());
+    }
+
+    ngOnDestroy(): void {
+        if (this.refreshSubscription) {
+            this.refreshSubscription.unsubscribe();
+        }
+        this.purchaseBarService.hide();
     }
 
     //region for edit
@@ -208,6 +228,7 @@ export class ItemPageComponent implements OnInit {
                 this.modalData = data;
                 this.loadImagesByColor(data.colors, forColor, photoIdToSelectAfterLoad);
                 this.loadSuggestions(data.id);
+                this.updatePurchaseBarState();
             },
             error: (error) => {
                 console.error('Ошибка загрузки данных:', error)
@@ -248,6 +269,8 @@ export class ItemPageComponent implements OnInit {
             };
             this.selectImage(img);
         }
+
+        this.updatePurchaseBarState();
     }
 
     private loadSuggestions(currentId?: number): void {
@@ -330,6 +353,7 @@ export class ItemPageComponent implements OnInit {
         }
         this.currentColor = colorName;
         this.selectedSize = null;
+        this.updatePurchaseBarState();
     }
 
     updateImagesForSelectedColor(): void {
@@ -370,31 +394,135 @@ export class ItemPageComponent implements OnInit {
 
     onSizeSelected(sizeName: string): void {
         this.selectedSize = sizeName;
+        this.updatePurchaseBarState();
+    }
+
+    private getSelectedInventory(): Inventories | undefined {
+        const color = this.item?.colors?.find(c => c.name === this.selectedColor);
+        return color?.inventories?.find(inv => inv.size.name === this.selectedSize);
     }
 
     get itemPrice(): number {
         return this.item?.price ?? 0;
     }
 
-    onQuantityChange(value: number): void {
-        this.quantity = value > 0 ? value : 1;
+    get selectedStockCount(): number {
+        const inventory = this.getSelectedInventory();
+        return inventory?.stockCount ?? 0;
     }
 
-    addToCart(): void {
-        if (!this.item || !this.item.id) return;
+    get availabilityLabel(): string {
+        if (!this.selectedColor || !this.selectedSize) {
+            return this.translate.instant('item_purchase.select_options');
+        }
+
+        const inventory = this.getSelectedInventory();
+        if (!inventory) {
+            return this.translate.instant('item_purchase.pending');
+        }
+
+        if (inventory.stockCount === 0) {
+            return this.translate.instant('item_purchase.out');
+        }
+
+        if (inventory.stockCount <= 3) {
+            return this.translate.instant('item_purchase.low', {count: inventory.stockCount});
+        }
+
+        return this.translate.instant('item_purchase.in', {count: inventory.stockCount});
+    }
+
+    private get availabilityLabelKey(): string {
+        if (!this.selectedColor || !this.selectedSize) {
+            return 'item_purchase.select_options';
+        }
+
+        const inventory = this.getSelectedInventory();
+        if (!inventory) {
+            return 'item_purchase.pending';
+        }
+
+        if (inventory.stockCount === 0) {
+            return 'item_purchase.out';
+        }
+
+        if (inventory.stockCount <= 3) {
+            return 'item_purchase.low';
+        }
+
+        return 'item_purchase.in';
+    }
+
+    get availabilityState(): AvailabilityState {
+        if (!this.selectedColor || !this.selectedSize) {
+            return 'pending';
+        }
+
+        const inventory = this.getSelectedInventory();
+        if (!inventory) {
+            return 'pending';
+        }
+
+        if (inventory.stockCount === 0) {
+            return 'out';
+        }
+
+        if (inventory.stockCount <= 3) {
+            return 'low';
+        }
+
+        return 'in';
+    }
+
+    get canAddToCart(): boolean {
+        if (!this.selectedColor || !this.selectedSize) {
+            return false;
+        }
+
+        const inventory = this.getSelectedInventory();
+        if (inventory) {
+            return inventory.stockCount > 0;
+        }
+
+        return true;
+    }
+
+    onQuantityChange(value: number): void {
+        const normalized = Number.isFinite(value) ? Math.floor(value) : 1;
+        const nextValue = normalized > 0 ? normalized : 1;
+        const stockLimit = this.getSelectedInventory()?.stockCount;
+        this.quantity = stockLimit && stockLimit > 0 ? Math.min(nextValue, stockLimit) : nextValue;
+        this.updatePurchaseBarState();
+    }
+
+    addToCart(navigateToCart = false): boolean {
+        if (!this.item || !this.item.id) return false;
         if (!this.selectedColor) {
             this.toastService.warning(
                 `Выберите цвет перед добавлением в корзину.`,
                 { autoClose: true, duration: 4000 }
             );
-            return;
+            return false;
         }
         if (!this.selectedSize) {
             this.toastService.warning(
                 `Выберите размер перед добавлением в корзину.`,
                 { autoClose: true, duration: 4000 }
             );
-            return;
+            return false;
+        }
+
+        const inventory = this.getSelectedInventory();
+        if (inventory && inventory.stockCount === 0) {
+            this.toastService.warning(
+                `Выбранный размер закончился.`,
+                { autoClose: true, duration: 4000 }
+            );
+            return false;
+        }
+
+        if (inventory && inventory.stockCount > 0 && this.quantity > inventory.stockCount) {
+            this.quantity = inventory.stockCount;
         }
 
         this.cartService.addItem({
@@ -412,6 +540,39 @@ export class ItemPageComponent implements OnInit {
             `Товар добавлен в корзину. Перейдите в корзину для оформления.`,
             { autoClose: true, duration: 4000 }
         );
+
+        if (navigateToCart) {
+            this.router.navigate(['/cart']).then();
+        }
+
+        this.updatePurchaseBarState();
+        return true;
+    }
+
+    buyNow(): void {
+        this.addToCart(true);
+    }
+
+    private updatePurchaseBarState(): void {
+        if (!this.item) {
+            this.purchaseBarService.hide();
+            return;
+        }
+
+        const label = this.translate.instant(this.availabilityLabelKey, {count: this.selectedStockCount});
+
+        this.purchaseBarService.setState({
+            visible: !!this.item,
+            price: this.itemPrice,
+            compareAtPrice: this.compareAtPrice,
+            availabilityLabel: label,
+            availabilityState: this.availabilityState,
+            quantity: this.quantity,
+            canSubmit: this.canAddToCart,
+            onQuantityChange: (value: number) => this.onQuantityChange(value),
+            onAddToCart: () => this.addToCart(),
+            onBuyNow: () => this.buyNow()
+        });
     }
 
     openShareModal(platform: 'facebook' | 'instagram'): void {

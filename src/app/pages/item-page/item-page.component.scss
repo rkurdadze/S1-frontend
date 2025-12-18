@@ -180,6 +180,12 @@ h1 {
   gap: 8px;
 }
 
+.desktop-only {
+  @include media-md {
+    display: none !important;
+  }
+}
+
 .info-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -697,6 +703,10 @@ textarea {
 }
 
 @include media-md {
+  .item-page {
+    padding-bottom: 200px;
+  }
+
   .share-modal__content {
     grid-template-columns: 1fr;
   }

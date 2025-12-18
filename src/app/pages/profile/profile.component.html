@@ -1,0 +1,114 @@
+<section class="profile-page">
+  <div class="profile-page__header">
+    <div>
+      <p class="eyebrow">{{ 'profile_page.hero.eyebrow' | translate }}</p>
+      <h1>{{ 'profile_page.hero.title' | translate }}</h1>
+      <p class="muted">{{ 'profile_page.hero.subtitle' | translate }}</p>
+    </div>
+    <div class="profile-page__actions">
+      <button type="button" class="btn btn-outline" (click)="resetToStored()">
+        {{ 'profile_page.actions.reset' | translate }}
+      </button>
+      <button type="button" class="btn btn-dark" (click)="submit()">
+        {{ 'profile_page.actions.save' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-card">
+      <div class="profile-card__header">
+        <div>
+          <p class="eyebrow">{{ 'profile_page.avatar.title' | translate }}</p>
+          <p class="muted">{{ 'profile_page.avatar.subtitle' | translate }}</p>
+        </div>
+        <div class="avatar-upload">
+          <label class="btn btn-ghost" for="avatarInput">
+            {{ 'profile_page.avatar.upload' | translate }}
+          </label>
+          <input id="avatarInput" type="file" accept="image/*" class="sr-only" (change)="onAvatarSelected($event)" />
+          <button type="button" class="btn btn-outline" (click)="clearAvatar()">
+            {{ 'profile_page.avatar.remove' | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="avatar-preview" *ngIf="avatarPreview; else placeholder">
+        <img [src]="avatarPreview" alt="{{ 'profile_page.avatar.alt' | translate }}">
+      </div>
+      <ng-template #placeholder>
+        <div class="avatar-placeholder">
+          <span>👤</span>
+          <p class="muted">{{ 'profile_page.avatar.placeholder' | translate }}</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-card__header">
+        <div>
+          <p class="eyebrow">{{ 'profile_page.account.title' | translate }}</p>
+          <p class="muted">{{ 'profile_page.account.subtitle' | translate }}</p>
+        </div>
+      </div>
+
+      <form [formGroup]="profileForm" class="form-grid">
+        <label class="field">
+          <span>{{ 'profile_page.account.display_name' | translate }}</span>
+          <input type="text" formControlName="displayName" [class.field--error]="hasError('displayName', 'required')" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.account.first_name' | translate }}</span>
+          <input type="text" formControlName="firstName" [class.field--error]="hasError('firstName', 'required')" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.account.last_name' | translate }}</span>
+          <input type="text" formControlName="lastName" [class.field--error]="hasError('lastName', 'required')" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.account.email' | translate }}</span>
+          <input type="email" formControlName="email" [class.field--error]="hasError('email', 'email')" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.account.phone' | translate }}</span>
+          <input type="tel" formControlName="phone" [class.field--error]="hasError('phone', 'required')" />
+        </label>
+      </form>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-card__header">
+        <div>
+          <p class="eyebrow">{{ 'profile_page.address.title' | translate }}</p>
+          <p class="muted">{{ 'profile_page.address.subtitle' | translate }}</p>
+        </div>
+      </div>
+
+      <form [formGroup]="profileForm" class="form-grid form-grid--address">
+        <label class="field">
+          <span>{{ 'profile_page.address.line1' | translate }}</span>
+          <input type="text" formControlName="addressLine1" [class.field--error]="hasError('addressLine1', 'required')" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.address.line2' | translate }}</span>
+          <input type="text" formControlName="addressLine2" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.address.city' | translate }}</span>
+          <input type="text" formControlName="city" [class.field--error]="hasError('city', 'required')" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.address.region' | translate }}</span>
+          <input type="text" formControlName="region" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.address.postal' | translate }}</span>
+          <input type="text" formControlName="postalCode" />
+        </label>
+        <label class="field">
+          <span>{{ 'profile_page.address.country' | translate }}</span>
+          <input type="text" formControlName="country" [class.field--error]="hasError('country', 'required')" />
+        </label>
+      </form>
+    </div>
+  </div>
+</section>
