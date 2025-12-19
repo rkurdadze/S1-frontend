@@ -8,7 +8,7 @@
 .purchase-card {
   background: rgba(223, 212, 196, 0.87);
   border-radius: 16px 16px 0 0;
-  padding: 10px 12px;
+  padding: 8px 14px 8px 14px;
   box-shadow: 0 -8px 18px rgba(0, 0, 0, 0.08);
 
   display: grid;
@@ -23,9 +23,7 @@
   grid-area: controls;
 }
 
-.availability {
-  grid-area: availability;
-}
+
 
 .price-block {
   display: flex;
@@ -41,7 +39,7 @@
 }
 
 .price-current {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 800;
   color: #111827;
 }
@@ -68,19 +66,28 @@
 }
 
 .availability {
+  grid-area: availability;
+
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: #1f2937;
   font-weight: 600;
+
+  &__label {
+    font-size: .5rem;
+    text-wrap: nowrap;
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #9ca3af;
+  }
 }
 
-.availability__dot {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #9ca3af;
-}
+
 
 .availability--in .availability__dot {
   background: #16a34a;
@@ -104,29 +111,27 @@
 .quantity-control {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
-  padding: 8px 6px;
-  border: 2px solid #fa9400;
-  border-radius: 12px;
+  gap: 0 5px;
+  border: 1px solid #474747;
+  border-radius: 8px;
   color: #111827;
-  min-width: 132px;
   justify-content: right;
 
   button {
-    width: 32px;
-    height: 32px;
+    height: 30px;
     border-radius: 10px;
-    border: 0 solid #d1d5db;
-    background: #fff;
+    border: none;
+    background: none;
     color: #111827;
     font-weight: 700;
     cursor: pointer;
   }
 
   span {
-    min-width: 20px;
+    //min-width: 20px;
     text-align: center;
     font-weight: 700;
+    font-size: .8rem;
   }
 }
 
@@ -135,40 +140,43 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
 
-.btn {
-  border-radius: 12px;
-  font-weight: 800;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
-  padding: 12px 14px;
-  //font-size: 14px;
+  .btn {
+    border-radius: 6px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+    font-size: .85rem;
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
   }
 
-  &:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+  .btn-outline {
+    background: #fff;
+    color: #111827;
+    border-color: #e5e7eb;
+  }
+
+  .btn-filled {
+    background: #fea600;
+    color: #111827;
   }
 }
 
-.btn-outline {
-  background: #fff;
-  color: #111827;
-  border-color: #e5e7eb;
-}
 
-.btn-filled {
-  background: #fea600;
-  color: #111827;
-}
+
+
 
 .sr-only {
   position: absolute;

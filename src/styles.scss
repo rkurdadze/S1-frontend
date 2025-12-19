@@ -115,7 +115,7 @@ button, input {
 
 @include media-sm {
   .item-card__wrapper {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
   }
 }
 
