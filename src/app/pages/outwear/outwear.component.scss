@@ -203,13 +203,9 @@ section {
   font-weight: 700;
 }
 
-.item-card__wrapper {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 14px;
-  justify-content: center;
-}
+
+
+
 
 .empty {
   padding: 28px;
@@ -329,6 +325,7 @@ section {
 }
 
 @include media-md {
+
   .hero__card img {
     height: 360px;
   }
@@ -338,7 +335,6 @@ section {
     padding: 6px 10px;
   }
 }
-
 
 
 

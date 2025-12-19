@@ -8,11 +8,13 @@
     <a class="ghost-link" href="/" [attr.aria-label]="'item_suggestion_rail.aria_open_collection' | translate">{{ 'item_suggestion_rail.seeAll' | translate }}</a>
   </div>
 
-  <div class="rail" *ngIf="items?.length; else emptyState">
-    <app-item-card *ngFor="let item of items" [item]="item"></app-item-card>
-  </div>
 
-  <ng-template #emptyState>
-    <div class="empty">{{ 'item_suggestion_rail.empty' | translate }}</div>
-  </ng-template>
 </section>
+
+<div class="rail item-card__wrapper" *ngIf="items?.length; else emptyState">
+    <app-item-card *ngFor="let item of items" [item]="item"></app-item-card>
+</div>
+
+<ng-template #emptyState>
+    <div class="empty">{{ 'item_suggestion_rail.empty' | translate }}</div>
+</ng-template>

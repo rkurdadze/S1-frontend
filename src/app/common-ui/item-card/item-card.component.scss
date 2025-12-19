@@ -133,6 +133,8 @@
   flex-wrap: wrap;
 }
 
+
+
 .pill {
   display: inline-flex;
   align-items: center;
@@ -156,6 +158,8 @@
     height: 280px;
   }
 }
+
+
 
 @include media-xs {
   .item-card img {
