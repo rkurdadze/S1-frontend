@@ -42,6 +42,7 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   displayedItems: Item[] = [];
   private itemAddedSubscription!: Subscription;
   private translationSubscription!: Subscription;
+  private resizeObserver?: ResizeObserver;
 
   highlightCollections: CollectionCard[] = [];
   perks: any[] = [];
@@ -67,6 +68,11 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    const itemCardWrapper = this.getItemCardWrapper();
+    if (itemCardWrapper) {
+      this.resizeObserver = new ResizeObserver(() => this.updateDisplayedItems());
+      this.resizeObserver.observe(itemCardWrapper);
+    }
     this.updateDisplayedItems();
   }
 
@@ -139,25 +145,17 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
       return;
     }
 
-    const itemCardWrapper = this.elementRef.nativeElement.querySelector('.item-card__wrapper');
+    const itemCardWrapper = this.getItemCardWrapper();
     if (!itemCardWrapper) {
       return;
     }
 
-    const wrapperWidth = itemCardWrapper.offsetWidth;
-    const cardMinWidth = 280;
-    const cardGap = 14;
-
-    const itemsPerRow = Math.floor(wrapperWidth / (cardMinWidth + cardGap));
-
-    let maxItemsToShow: number;
-
-    if (itemsPerRow === 1) {
-      maxItemsToShow = 4;
-    } else {
-      maxItemsToShow = itemsPerRow * 2;
-    }
-
+    const templateColumns = window
+      .getComputedStyle(itemCardWrapper)
+      .getPropertyValue('grid-template-columns')
+      .trim();
+    const itemsPerRow = Math.max(1, templateColumns.split(' ').filter(Boolean).length);
+    const maxItemsToShow = itemsPerRow * 2;
     this.displayedItems = this.items.slice(0, maxItemsToShow);
   }
 
@@ -168,5 +166,12 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
     if (this.translationSubscription) {
       this.translationSubscription.unsubscribe();
     }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
+
+  private getItemCardWrapper(): HTMLElement | null {
+    return this.elementRef.nativeElement.querySelector('.item-card__wrapper');
   }
 }
