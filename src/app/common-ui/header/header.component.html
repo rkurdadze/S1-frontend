@@ -7,7 +7,7 @@
                     type="button"
                     [attr.aria-label]="'aria.toggleMenu' | translate"
                     aria-controls="headerNav"
-                    [attr.aria-expanded]="isMenuOpen"
+                    aria-expanded="false"
                     (click)="toggleMenu()">
                 <span class="burger">
                     <span></span>
@@ -28,21 +28,15 @@
             </div>
         </div>
 
-
-
-        <nav id="headerNav" class="nav collapse" [class.show]="isMenuOpen">
+        <nav class="header__nav" aria-label="Main">
             <a
-              *ngFor="let link of navItems"
-              class="nav__link"
-              [href]="link.fragment ? ('#' + link.fragment) : link.route"
-              (click)="onNavItemSelect($event, link)">
-              <span>{{ link.key | translate }}</span>
+              *ngFor="let item of headerNavItems"
+              class="header__nav-link"
+              [attr.href]="item.fragment ? ('#' + item.fragment) : item.route"
+              (click)="onNavItemSelect($event, item)">
+                <span>{{ item.key | translate }}</span>
             </a>
         </nav>
-
-
-
-
 
         <div class="header__actions">
 

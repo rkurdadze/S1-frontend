@@ -18,6 +18,8 @@ import { ProfileMenuComponent } from "../profile-menu/profile-menu.component";
 import { PROFILE_MENU_ITEMS } from "../profile-menu/profile-menu.config";
 import { ProfileMenuItem } from "../profile-menu/profile-menu.types";
 import { ProfileMenuService } from "../../data/services/profile-menu.service";
+import { OverlayService } from '../../data/services/overlay.service';
+import { MAIN_NAV_ITEMS, MainNavItem } from "../navigation/main-nav-items";
 
 type SupportedLanguage = 'ka' | 'en' | 'ru';
 
@@ -44,7 +46,6 @@ export class HeaderComponent {
   baseApiUrl = inject(BASE_API_URL);
   userIcon: string | null = null;
   isAdmin: boolean = false;
-  isMenuOpen = false;
   private readonly storageKey = 'studio101_language';
   languages: Array<{ code: SupportedLanguage; flag: string; label: string }> = [
     { code: 'ka', flag: '🇬🇪', label: 'ქართული' },
@@ -52,13 +53,8 @@ export class HeaderComponent {
     { code: 'ru', flag: '🇷🇺', label: 'Русский' }
   ];
   currentLanguage: SupportedLanguage;
-  navItems = [
-    { key: 'nav.collections', fragment: 'collections' },
-    { key: 'nav.catalog', route: '/catalog' },
-    { key: 'nav.new', fragment: 'new-drop' },
-    { key: 'nav.stories', fragment: 'editorial' },
-    { key: 'nav.subscribe', fragment: 'newsletter' },
-  ];
+  navItems = MAIN_NAV_ITEMS;
+  headerNavItems = MAIN_NAV_ITEMS.filter(item => item.showInHeader !== false);
   profileMenuItems = PROFILE_MENU_ITEMS;
   isLoggedIn = false;
   isProfileMenuOpen = false;
@@ -71,6 +67,7 @@ export class HeaderComponent {
   private destroyRef = inject(DestroyRef);
   private zone = inject(NgZone);
   private profileMenuService = inject(ProfileMenuService);
+  private overlayService = inject(OverlayService);
   languageDropdownOpen = false;
 
 
@@ -181,9 +178,7 @@ export class HeaderComponent {
 
 
   toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
-    this.languageDropdownOpen = false;
-    this.isProfileMenuOpen = false;
+    this.overlayService.toggleMenu();
   }
 
 
@@ -200,13 +195,9 @@ export class HeaderComponent {
   }
 
 
-  onNavItemSelect(event: MouseEvent, item: { key: string; fragment?: string; route?: string; }): void {
+  onNavItemSelect(event: MouseEvent, item: MainNavItem): void {
     event.preventDefault();
     this.isProfileMenuOpen = false;
-    this.languageDropdownOpen = false;
-
-    const wasOpen = this.isMenuOpen;
-    this.isMenuOpen = false;
 
     if (item.route) {
       this.router.navigate([item.route]).then();
@@ -221,23 +212,18 @@ export class HeaderComponent {
 
     // если мы уже на главной — просто скроллим
     if (this.router.url.startsWith('/#') || this.router.url === '/' || this.router.url.includes('#')) {
-      if (wasOpen) {
-        requestAnimationFrame(runScroll);
-      } else {
-        runScroll();
-      }
-      return;
+      runScroll();
+    } else {
+      // если мы НЕ на странице с якорями — сначала переходим, потом скроллим
+      this.router.navigate(['/'], { fragment: item.fragment }).then(() => {
+        this.zone.onStable
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => {
+            // Angular полностью стабилизировался — DOM гарантированно готов
+            this.scrollToAnchor(item.fragment!);
+          });
+      });
     }
-
-    // если мы НЕ на странице с якорями — сначала переходим, потом скроллим
-    this.router.navigate(['/'], { fragment: item.fragment }).then(() => {
-      this.zone.onStable
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          // Angular полностью стабилизировался — DOM гарантированно готов
-          this.scrollToAnchor(item.fragment!);
-        });
-    });
   }
 
   private scrollToAnchor(targetId: string): void {
@@ -297,7 +283,6 @@ export class HeaderComponent {
 
   onProfileMenuSelect(item: ProfileMenuItem): void {
     this.isProfileMenuOpen = false;
-    this.isMenuOpen = false;
 
     if (item.action === 'logout') {
       this.logout();
@@ -317,7 +302,6 @@ export class HeaderComponent {
   toggleProfileMenu(event: Event): void {
     event.stopPropagation();
     this.languageDropdownOpen = false;
-    this.isMenuOpen = false;
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
   }
 }

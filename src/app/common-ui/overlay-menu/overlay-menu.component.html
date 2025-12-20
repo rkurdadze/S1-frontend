@@ -1,0 +1,49 @@
+<div class="overlay-menu" *ngIf="isMenuOpen()">
+  <div class="overlay-menu__header">
+    <div class="overlay-menu__logo-container">
+      <img src="assets/imgs/studio101-logo.png" alt="Studio 101 Logo">
+    </div>
+    <button class="overlay-menu__close-btn" (click)="toggleMenu()">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div class="overlay-menu__content">
+    <a
+      *ngFor="let link of navItems"
+      class="overlay-menu__link"
+      [href]="link.fragment ? ('#' + link.fragment) : link.route"
+      (click)="toggleMenu()">
+      <span>{{ link.key | translate }}</span>
+    </a>
+
+    <div class="lang-dropdown" [class.is-open]="languageDropdownOpen">
+      <button
+              type="button"
+              class="lang-dropdown__toggle"
+              [attr.aria-label]="currentLanguageOption.label"
+              aria-haspopup="listbox"
+              [attr.aria-expanded]="languageDropdownOpen"
+              (click)="toggleLanguageDropdown($event)">
+        <span class="lang-dropdown__flag">{{ currentLanguageOption.flag }}</span>
+        <span class="lang-dropdown__label">{{ currentLanguageOption.label }}</span>
+      </button>
+      <ul
+              class="lang-dropdown__menu"
+              *ngIf="languageDropdownOpen"
+              role="listbox"
+              aria-label="Language switcher">
+        <li *ngFor="let language of languages">
+          <button
+                  *ngIf="language.code !== currentLanguage"
+                  type="button"
+                  class="lang-dropdown__option"
+                  role="option"
+                  (click)="onLanguageSelect(language.code)">
+            <span class="lang-dropdown__flag">{{ language.flag }}</span>
+            <span class="lang-dropdown__text">{{ language.label }}</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

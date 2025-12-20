@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {LoaderService} from "./data/services/loader.service";
 import {ToastContainerComponent} from "./common-ui/toast-container/toast-container.component";
+import { OverlayMenuComponent } from './common-ui/overlay-menu/overlay-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,8 @@ import {ToastContainerComponent} from "./common-ui/toast-container/toast-contain
   styleUrls: ['./app.component.scss'],
     imports: [
         RouterOutlet,
-        ToastContainerComponent
+        ToastContainerComponent,
+        OverlayMenuComponent
     ],
   // Указываем путь к стилям
 })
