@@ -23,6 +23,15 @@
                         (prevImage)="prevImage()"
                         (nextImage)="nextImage()"
                 ></app-item-visual-panel>
+
+                <div class="gallery-meta" *ngIf="item">
+                    <div class="gallery-meta__tag">{{ 'item_page.gallery.collection' | translate }}</div>
+                    <div class="gallery-meta__chips">
+                        <span class="pill pill--outline">{{ 'item_page.gallery.shades' | translate: {count: item.colors.length} }}</span>
+                        <span class="pill pill--soft">{{ 'item_page.gallery.showroom_samples' | translate }}</span>
+                        <span class="pill pill--outline">{{ 'item_page.gallery.stylist_selection' | translate }}</span>
+                    </div>
+                </div>
             </div>
 
             <div class="item-hero__info">
@@ -162,15 +171,6 @@
                     </button>
                 </div>
 
-            </div>
-
-            <div class="gallery-meta" *ngIf="item">
-                <div class="gallery-meta__tag">{{ 'item_page.gallery.collection' | translate }}</div>
-                <div class="gallery-meta__chips">
-                    <span class="pill pill--outline">{{ 'item_page.gallery.shades' | translate: {count: item.colors.length} }}</span>
-                    <span class="pill pill--soft">{{ 'item_page.gallery.showroom_samples' | translate }}</span>
-                    <span class="pill pill--outline">{{ 'item_page.gallery.stylist_selection' | translate }}</span>
-                </div>
             </div>
 
         </div>

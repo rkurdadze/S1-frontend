@@ -2,7 +2,7 @@
 
 :host {
   display: block;
-  background: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.03), transparent 26%), #050814;
+  //background: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.03), transparent 26%), #050814;
   color: #e5e7eb;
 }
 
@@ -12,9 +12,9 @@
 }
 
 .item-shell {
-  max-width: 1340px;
+  //max-width: 1340px;
   margin: 0 auto;
-  padding: 0 clamp(16px, 5vw, 32px);
+  //padding: 0 clamp(16px, 5vw, 32px);
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -59,10 +59,6 @@
 .item-hero {
   display: grid;
   grid-template-columns: minmax(520px, 1.35fr) minmax(380px, 1fr);
-  grid-template-rows: auto min-content;
-  grid-template-areas:
-    "gallery info"
-    "meta    info";
   align-items: start;
   gap: 22px;
 
@@ -76,8 +72,6 @@
 }
 
 .item-hero__gallery {
-  grid-area: gallery;
-
   position: relative;
   min-width: 0;
   display: flex;
@@ -86,8 +80,6 @@
 }
 
 .gallery-meta {
-  grid-area: meta;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -113,8 +105,6 @@
 }
 
 .item-hero__info {
-  grid-area: info;
-
   position: relative;
   background: var(--item-hero-bg);
   border-radius: 18px;

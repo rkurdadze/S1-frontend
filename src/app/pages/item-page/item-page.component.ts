@@ -242,12 +242,15 @@ export class ItemPageComponent implements OnInit, OnDestroy {
     loadImagesByColor(colors: Color[], colorToActivate?: string, photoToActivate?: number): void {
         this.colorImageMap = {};
         colors.forEach(color => {
-            if (color.name && Array.isArray(color.photoIds)) {
-                this.colorImageMap[color.name] = color.photoIds.map(photoId => ({
-                    id: photoId.toString(),
-                    url: this.photoService.getPhotoSrc(photoId),
-                }));
+            if (!color.name) {
+                return;
             }
+
+            const photoIds = Array.isArray(color.photoIds) ? color.photoIds : [];
+            this.colorImageMap[color.name] = photoIds.map(photoId => ({
+                id: photoId.toString(),
+                url: this.photoService.getPhotoSrc(photoId),
+            }));
         });
 
         // Если передан `colorToActivate`, добавляем его в карту цветов, если он отсутствует
@@ -347,10 +350,8 @@ export class ItemPageComponent implements OnInit, OnDestroy {
     }
 
     selectColor(colorName: string): void {
-        if (colorName in this.colorImageMap) {
-            this.selectedColor = colorName;
-            this.updateImagesForSelectedColor();
-        }
+        this.selectedColor = colorName;
+        this.updateImagesForSelectedColor();
         this.currentColor = colorName;
         this.selectedSize = null;
         this.updatePurchaseBarState();
