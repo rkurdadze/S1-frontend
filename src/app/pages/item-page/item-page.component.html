@@ -18,7 +18,6 @@
                         [selectedImage]="selectedImage"
                         [selectedColor]="selectedColor"
                         [showImageControls]="showImageControls"
-                        [isAdmin]="isAdmin"
                         (selectImage)="selectImage($event)"
                         (prevImage)="prevImage()"
                         (nextImage)="nextImage()"
@@ -35,19 +34,6 @@
             </div>
 
             <div class="item-hero__info">
-                @if (isAdmin) {
-                    <div class="item-page__edit_item-wrapper">
-                        <button type="button" class="btn item-page__edit_btn" (click)="openModal()"
-                                [attr.aria-label]="'item_page.edit.edit' | translate">
-                            <i class="fas fa-pen"></i>
-                        </button>
-                        <button type="button" class="btn item-page__edit_btn" (click)="deleteItem()"
-                                [attr.aria-label]="'item_page.edit.delete' | translate">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                }
-
                 @if (item) {
                     <div class="title-block">
                         <p class="eyebrow">{{ 'item_page.title_block.eyebrow' | translate }}</p>
@@ -67,7 +53,6 @@
                             <div class="selector-block">
                                 <p class="selector-label">{{ 'item_page.selector_grid.color_palette' | translate }}</p>
                                 <app-item-colors
-                                        [isAdmin]="isAdmin"
                                         [colors]="item.colors!"
                                         [itemId]="item.id!"
                                         (selectedColorEmitter)="selectColor($event)"
@@ -79,7 +64,6 @@
                                 <app-item-sizes
                                         [item]="item"
                                         [forColor]="selectedColor"
-                                        [isAdmin]="isAdmin"
                                         [selectedSize]="selectedSize"
                                         (sizeSelected)="onSizeSelected($event)"
                                 ></app-item-sizes>
@@ -112,34 +96,6 @@
 
 
                 }
-
-                @if (isAdmin) {
-                    <div class="upload-card">
-                        <div>
-                            <p class="strong">{{ 'item_page.upload_card.title' | translate }}</p>
-                            <p class="muted">{{ 'item_page.upload_card.subtitle' | translate }}</p>
-                        </div>
-                        <div class="upload-actions">
-                            <input
-                                    type="file"
-                                    #fileInput
-                                    multiple
-                                    accept="image/jpeg, image/jpg"
-                                    class="d-none"
-                                    (change)="onImageSelected($event)"
-                            />
-                            <button type="button" class="btn btn-primary" (click)="fileInput.click()"
-                                    [disabled]="!selectedColor">
-                                <i class="fas fa-upload"></i>
-                                {{ 'item_page.upload_card.button' | translate }}
-                            </button>
-                        </div>
-                    </div>
-                }
-
-
-
-
 
                 <div class="info-cards">
                     <div class="info-card">
@@ -232,14 +188,6 @@
         </div>
     </div>
 </section>
-
-<app-edit-modal
-    #editModalRef
-    [title]="modalTitle"
-    [fields]="modalFields"
-    [initialData]="modalData"
-    (modalResult)="onModalResult($event)"
-></app-edit-modal>
 
 <div class="share-modal__backdrop" *ngIf="shareModalOpen">
     <div class="share-modal" role="dialog" aria-modal="true">

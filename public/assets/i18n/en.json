@@ -33,6 +33,7 @@
   },
   "dropdown": {
     "addItem": "Add item",
+    "administration": "Administration",
     "logout": "Log out",
     "profileSettings": "Profile settings"
   },
@@ -509,6 +510,104 @@
     },
     "toasts": {
       "saved": "Profile updated"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "eyebrow": "Studio101 / Administration",
+      "title": "Control Panel",
+      "subtitle": "Manage content, orders and showcase from one place.",
+      "download_report": "Download report",
+      "create_task": "Create task",
+      "nav_title": "Management sections"
+    },
+    "nav": {
+      "items": {
+        "label": "Products",
+        "desc": "Assortment, tags, variability"
+      },
+      "categories": {
+        "label": "Categories",
+        "desc": "Catalog and storefront structure"
+      },
+      "news": {
+        "label": "News",
+        "desc": "Editorial feed and announcements"
+      },
+      "collections": {
+        "label": "Collections",
+        "desc": "Showcases and selections"
+      },
+      "editorials": {
+        "label": "Editorial stories",
+        "desc": "Stories and editorial blocks"
+      },
+      "orders": {
+        "label": "Orders",
+        "desc": "Processing and statuses"
+      },
+      "promotions": {
+        "label": "Promo and actions",
+        "desc": "Discounts and campaigns"
+      },
+      "users": {
+        "label": "Users",
+        "desc": "Roles and access"
+      },
+      "newsletter": {
+        "label": "Newsletter",
+        "desc": "Content and subscribers"
+      },
+      "delivery": {
+        "label": "Delivery",
+        "desc": "Tariff settings"
+      }
+    },
+    "kpis": {
+      "active_items": "Active items",
+      "total_items": "Total items",
+      "orders_today": "Orders today",
+      "subscribers": "Newsletter subscribers",
+      "trend_drafts": "{{count}} in draft"
+    },
+    "items": {
+      "eyebrow": "Catalog management",
+      "title": "Products and variability",
+      "subtitle": "Add items, edit descriptions and manage colors, sizes and stocks.",
+      "show_form": "Show form",
+      "hide_form": "Hide form",
+      "create_item": "Create product",
+      "new_card": "New card",
+      "creating": "Creating",
+      "name": "Name",
+      "price": "Price",
+      "description": "Description",
+      "publish_immediately": "Publish immediately",
+      "list_title": "Product list",
+      "in_database": "{{count}} in database",
+      "loading": "Loading products...",
+      "id": "ID",
+      "published": "Published",
+      "draft": "Draft",
+      "no_photo": "No photo",
+      "in_sale": "In sale",
+      "hidden": "Hidden",
+      "colors_count": "Colors: {{count}}",
+      "edit": "Edit",
+      "delete": "Delete",
+      "editing": "Editing",
+      "save_changes": "Save changes",
+      "color_images": "Images for color",
+      "upload": "Upload",
+      "select_color_hint": "Select color to manage images.",
+      "loading_images": "Loading images...",
+      "delete_image": "Delete",
+      "no_items": "No products. Create your first position.",
+      "tags_title": "General tags",
+      "active_tags": "{{count}} active",
+      "loading_tags": "Loading tags...",
+      "new_tag_placeholder": "New tag",
+      "add_tag": "Add"
     }
   }
 }

@@ -10,7 +10,7 @@
     <router-outlet></router-outlet>
   </main>
 
-  <footer class="footer">
+  <footer class="footer" *ngIf="!isAdminPage">
     <div class="footer-wrapper">
       <div class="footer__brand">
         <p class="eyebrow">{{ 'footer.brand.eyebrow' | translate }}</p>
@@ -18,26 +18,35 @@
         <p>{{ 'footer.brand.subtitle' | translate }}</p>
       </div>
       <div class="footer__grid">
-        <div>
-          <h4>{{ 'footer.collections.title' | translate }}</h4>
-          <ul>
+        <div class="footer__section" [class.is-open]="openFooterSections['collections']">
+          <h4 (click)="toggleFooterSection('collections')">
+            {{ 'footer.collections.title' | translate }}
+            <span class="footer__toggle-icon"></span>
+          </h4>
+          <ul class="footer__list">
             <li><a href="#collections">{{ 'footer.collections.all' | translate }}</a></li>
             <li><a href="#new-drop">{{ 'footer.collections.new' | translate }}</a></li>
             <li><a href="#editorial">{{ 'footer.collections.stories' | translate }}</a></li>
           </ul>
         </div>
-        <div>
-          <h4>{{ 'footer.service.title' | translate }}</h4>
-          <ul>
+        <div class="footer__section" [class.is-open]="openFooterSections['service']">
+          <h4 (click)="toggleFooterSection('service')">
+            {{ 'footer.service.title' | translate }}
+            <span class="footer__toggle-icon"></span>
+          </h4>
+          <ul class="footer__list">
             <li><a href="#">{{ 'footer.service.personal_shopping' | translate }}</a></li>
             <li><a href="#">{{ 'footer.service.worldwide_delivery' | translate }}</a></li>
             <li><a href="#">{{ 'footer.service.product_care' | translate }}</a></li>
             <li><a href="#">{{ 'footer.service.returns' | translate }}</a></li>
           </ul>
         </div>
-        <div>
-          <h4>{{ 'footer.contacts.title' | translate }}</h4>
-          <ul class="footer__contacts">
+        <div class="footer__section" [class.is-open]="openFooterSections['contacts']">
+          <h4 (click)="toggleFooterSection('contacts')">
+            {{ 'footer.contacts.title' | translate }}
+            <span class="footer__toggle-icon"></span>
+          </h4>
+          <ul class="footer__list footer__contacts">
             <li>{{ 'footer.contacts.phone' | translate }}</li>
             <li>{{ 'footer.contacts.email' | translate }}</li>
             <li>{{ 'footer.contacts.address' | translate }}</li>

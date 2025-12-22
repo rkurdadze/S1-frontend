@@ -1,0 +1,94 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <p class="admin-page__eyebrow">Коммуникации</p>
+      <h2>Рассылка</h2>
+      <p class="admin-page__subtitle">Создавайте письма, сегментируйте подписчиков и запускайте кампании.</p>
+    </div>
+    <div class="admin-page__actions">
+      <button class="admin-button admin-button--create" type="button" (click)="toggleDraftForm()">
+        {{ showDraftForm ? 'Скрыть черновик' : 'Редактировать черновик' }}
+      </button>
+      <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="sendCampaign()">Отправить кампанию</button>
+    </div>
+  </header>
+  <p class="admin-empty" *ngIf="isLoading">Загрузка данных...</p>
+  <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <article class="admin-card" *ngIf="showDraftForm">
+    <div class="admin-card__header">
+      <h3>Черновик письма</h3>
+      <span class="admin-pill">Готовность: {{ draft.subject ? '100%' : '0%' }}</span>
+    </div>
+    <form class="admin-form" (ngSubmit)="saveDraft()">
+      <label>
+        Тема письма
+        <input type="text" name="subject" [(ngModel)]="draft.subject" />
+      </label>
+      <label>
+        Сообщение
+        <textarea rows="6" name="message" [(ngModel)]="draft.message"></textarea>
+      </label>
+      <div class="admin-form__actions">
+        <button class="admin-button admin-button--primary" type="submit">Сохранить черновик</button>
+        <button class="admin-button" type="button" (click)="sendCampaign()">Отправить</button>
+      </div>
+    </form>
+  </article>
+
+  <div class="admin-grid">
+    <article class="admin-card">
+      <div class="admin-card__header">
+        <h3>Сегменты подписчиков</h3>
+        <span class="admin-pill">{{ segments.length }} сегмента</span>
+      </div>
+      <div class="segment-list">
+        <p class="admin-empty" *ngIf="isLoading">Загрузка сегментов...</p>
+        <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <div class="segment" *ngFor="let segment of segments">
+          <div>
+            <h4>{{ segment.name }}</h4>
+            <p>{{ segment.description }}</p>
+          </div>
+          <span class="segment__count">{{ segment.count }}</span>
+          <button class="admin-button" type="button" (click)="removeSegment(segment)">Удалить</button>
+        </div>
+      </div>
+      <button class="admin-button admin-button--create" type="button" (click)="toggleSegmentForm()">
+        {{ showSegmentForm ? 'Скрыть форму' : 'Создать сегмент' }}
+      </button>
+      <form class="admin-form" (ngSubmit)="addSegment()" *ngIf="showSegmentForm">
+        <label>
+          Название сегмента
+          <input type="text" name="segmentName" [(ngModel)]="segmentForm.name" />
+        </label>
+        <label>
+          Количество
+          <input type="number" name="segmentCount" [(ngModel)]="segmentForm.count" />
+        </label>
+        <label>
+          Описание
+          <input type="text" name="segmentDescription" [(ngModel)]="segmentForm.description" />
+        </label>
+        <button class="admin-button" type="submit">Сохранить сегмент</button>
+      </form>
+    </article>
+
+    <article class="admin-card">
+      <div class="admin-card__header">
+        <h3>История отправок</h3>
+        <span class="admin-pill">{{ sends.length }} отправок</span>
+      </div>
+      <div class="segment-list">
+        <p class="admin-empty" *ngIf="isLoading && !sends.length">Загрузка отправок...</p>
+        <div class="segment" *ngFor="let send of sends">
+          <div>
+            <h4>{{ send.subject }}</h4>
+            <p>{{ send.sentAt }}</p>
+          </div>
+          <span class="segment__count">{{ send.recipients }}</span>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

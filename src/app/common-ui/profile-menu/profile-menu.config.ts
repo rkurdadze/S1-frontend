@@ -35,9 +35,9 @@ export const PROFILE_MENU_ITEMS: ProfileMenuItem[] = [
     requiresAuth: true
   },
   {
-    labelKey: 'dropdown.addItem',
-    icon: 'add',
-    action: 'addItem',
+    labelKey: 'dropdown.administration',
+    icon: 'admin',
+    routerLink: '/admin',
     requiresAuth: true,
     adminOnly: true
   }

@@ -1,6 +1,6 @@
-<div class="overlay-menu" *ngIf="isMenuOpen()">
+<div class="overlay-menu" *ngIf="isMenuOpen()" [class.overlay-menu--admin]="activeView === 'admin'">
   <div class="overlay-menu__header">
-    <div class="overlay-menu__logo-container">
+    <div class="overlay-menu__logo-container" [class.is-hidden]="activeView !== 'main'">
       <img src="assets/imgs/studio101-logo.png" alt="Studio 101 Logo">
     </div>
     <button class="overlay-menu__close-btn" (click)="toggleMenu()">
@@ -8,42 +8,70 @@
     </button>
   </div>
   <div class="overlay-menu__content">
-    <a
-      *ngFor="let link of navItems"
-      class="overlay-menu__link"
-      [href]="link.fragment ? ('#' + link.fragment) : link.route"
-      (click)="toggleMenu()">
-      <span>{{ link.key | translate }}</span>
-    </a>
+    
+    <!-- Main Menu View -->
+    <div class="overlay-menu__view overlay-menu__view--main" [class.is-hidden]="activeView === 'admin'">
+      <a
+        *ngFor="let link of navItems"
+        class="overlay-menu__link"
+        [href]="link.fragment ? ('#' + link.fragment) : link.route"
+        (click)="toggleMenu()">
+        <span>{{ link.key | translate }}</span>
+      </a>
 
-    <div class="lang-dropdown" [class.is-open]="languageDropdownOpen">
-      <button
-              type="button"
-              class="lang-dropdown__toggle"
-              [attr.aria-label]="currentLanguageOption.label"
-              aria-haspopup="listbox"
-              [attr.aria-expanded]="languageDropdownOpen"
-              (click)="toggleLanguageDropdown($event)">
-        <span class="lang-dropdown__flag">{{ currentLanguageOption.flag }}</span>
-        <span class="lang-dropdown__label">{{ currentLanguageOption.label }}</span>
-      </button>
-      <ul
-              class="lang-dropdown__menu"
-              *ngIf="languageDropdownOpen"
-              role="listbox"
-              aria-label="Language switcher">
-        <li *ngFor="let language of languages">
-          <button
-                  *ngIf="language.code !== currentLanguage"
-                  type="button"
-                  class="lang-dropdown__option"
-                  role="option"
-                  (click)="onLanguageSelect(language.code)">
-            <span class="lang-dropdown__flag">{{ language.flag }}</span>
-            <span class="lang-dropdown__text">{{ language.label }}</span>
-          </button>
-        </li>
-      </ul>
+      <ng-container *ngIf="isAdmin$ | async">
+        <button class="overlay-menu__link overlay-menu__toggle" (click)="showAdminView()">
+          <span>{{ 'dropdown.administration' | translate }}</span>
+          <span class="chevron">▶</span>
+        </button>
+      </ng-container>
+
+      <div class="lang-dropdown" [class.is-open]="languageDropdownOpen">
+        <button
+                type="button"
+                class="lang-dropdown__toggle"
+                [attr.aria-label]="currentLanguageOption.label"
+                aria-haspopup="listbox"
+                [attr.aria-expanded]="languageDropdownOpen"
+                (click)="toggleLanguageDropdown($event)">
+          <span class="lang-dropdown__flag">{{ currentLanguageOption.flag }}</span>
+          <span class="lang-dropdown__label">{{ currentLanguageOption.label }}</span>
+        </button>
+        <ul
+                class="lang-dropdown__menu"
+                *ngIf="languageDropdownOpen"
+                role="listbox"
+                aria-label="Language switcher">
+          <li *ngFor="let language of languages">
+            <button
+                    *ngIf="language.code !== currentLanguage"
+                    type="button"
+                    class="lang-dropdown__option"
+                    role="option"
+                    (click)="onLanguageSelect(language.code)">
+              <span class="lang-dropdown__flag">{{ language.flag }}</span>
+              <span class="lang-dropdown__text">{{ language.label }}</span>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
+
+    <!-- Admin Menu View -->
+    <div class="overlay-menu__view overlay-menu__view--admin" [class.is-active]="activeView === 'admin'">
+      <button class="overlay-menu__back-btn" (click)="showMainView()">
+        <span class="chevron-back">◀</span>
+        <span>{{ 'modal.cancel' | translate }}</span>
+      </button>
+
+      <a *ngFor="let item of adminNavItems"
+         class="overlay-menu__link overlay-menu__link--admin"
+         [routerLink]="item.route"
+         (click)="toggleMenu()">
+        <span class="overlay-menu__link-text">{{ item.label | translate }}</span>
+        <span class="overlay-menu__badge">{{ item.count }}</span>
+      </a>
+    </div>
+
   </div>
 </div>

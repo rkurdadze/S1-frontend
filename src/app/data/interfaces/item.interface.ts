@@ -4,7 +4,8 @@ export interface Item {
   id?: number;
   name: string;
   description: string;
-  price?: number;
+  price: number;
   publish: boolean;
   colors: Color[];
+  tags: string[];
 }

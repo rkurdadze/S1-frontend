@@ -1,27 +1,45 @@
-import { Component, inject, DestroyRef, HostListener } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
+import { Component, inject, DestroyRef, HostListener, OnInit } from '@angular/core';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OverlayService } from '../../data/services/overlay.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MAIN_NAV_ITEMS } from '../navigation/main-nav-items';
+import { GoogleAuthService } from '../../data/services/google-auth.service';
+import { map } from 'rxjs/operators';
+import { ItemService } from '../../data/services/item.service';
+import { AdminApiService } from '../../data/services/admin-api.service';
+import { AdminNewsletterSegment } from '../../data/interfaces/admin/admin.interfaces';
+import { Item } from '../../data/interfaces/item.interface';
+import { ADMIN_NAV_ITEMS, AdminNavItem } from '../../pages/admin/admin-nav.config';
 
 type SupportedLanguage = 'ka' | 'en' | 'ru';
 
 @Component({
   selector: 'app-overlay-menu',
   standalone: true,
-  imports: [NgIf, NgFor, RouterLink, TranslateModule],
+  imports: [NgIf, NgFor, RouterLink, TranslateModule, AsyncPipe],
   templateUrl: './overlay-menu.component.html',
   styleUrls: ['./overlay-menu.component.scss']
 })
-export class OverlayMenuComponent {
+export class OverlayMenuComponent implements OnInit {
   private overlayService = inject(OverlayService);
   private translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
+  private googleAuth = inject(GoogleAuthService);
+  private itemService = inject(ItemService);
+  private adminApi = inject(AdminApiService);
 
   isMenuOpen = this.overlayService.isMenuOpen;
   languageDropdownOpen = false;
+  activeView: 'main' | 'admin' = 'main';
+
+  isAdmin$ = this.googleAuth.user$.pipe(map(() => this.googleAuth.isAdminOrManager));
+
+  adminNavItems: AdminNavItem[] = ADMIN_NAV_ITEMS.map(item => ({
+    ...item,
+    route: `/admin/${item.route}`
+  }));
 
   languages: Array<{ code: SupportedLanguage; flag: string; label: string }> = [
     { code: 'ka', flag: '🇬🇪', label: 'ქართული' },
@@ -47,8 +65,88 @@ export class OverlayMenuComponent {
       });
   }
 
+  ngOnInit(): void {
+    this.googleAuth.user$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (this.googleAuth.isAdminOrManager) {
+          this.loadAdminCounts();
+        }
+      });
+  }
+
+  private loadAdminCounts(): void {
+    this.itemService.getItems()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((items: Item[]) => {
+        this.updateNavCount('/admin/items', items.length);
+      });
+
+    this.adminApi.getCategories()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(categories => {
+        this.updateNavCount('/admin/categories', categories.length);
+      });
+
+    this.adminApi.getNews()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(news => {
+        this.updateNavCount('/admin/news', news.length);
+      });
+
+    this.adminApi.getCollections()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(collections => {
+        this.updateNavCount('/admin/collections', collections.length);
+      });
+
+    this.adminApi.getEditorials()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(editorials => {
+        this.updateNavCount('/admin/editorials', editorials.length);
+      });
+
+    this.adminApi.getPromotions()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(promotions => {
+        this.updateNavCount('/admin/promotions', promotions.length);
+      });
+
+    this.adminApi.getUsers()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(users => {
+        this.updateNavCount('/admin/users', users.length);
+      });
+
+    this.adminApi.getOrders()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(orders => {
+        this.updateNavCount('/admin/orders', orders.length);
+      });
+
+    this.adminApi.getDeliveryZones()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(zones => {
+        this.updateNavCount('/admin/delivery', zones.length);
+      });
+
+    this.adminApi.getNewsletterSegments()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((segments: AdminNewsletterSegment[]) => {
+        this.updateNavCount('/admin/newsletter', segments.length);
+      });
+  }
+
   toggleMenu(): void {
     this.overlayService.toggleMenu();
+  }
+
+  showAdminView(): void {
+    this.activeView = 'admin';
+  }
+
+  showMainView(): void {
+    this.activeView = 'main';
   }
 
   toggleLanguageDropdown(event: Event): void {
@@ -99,5 +197,11 @@ export class OverlayMenuComponent {
     } catch (error) {
       // ignore storage errors
     }
+  }
+
+  private updateNavCount(route: string, count: number): void {
+    this.adminNavItems = this.adminNavItems.map(item =>
+      item.route === route ? { ...item, count } : item
+    );
   }
 }

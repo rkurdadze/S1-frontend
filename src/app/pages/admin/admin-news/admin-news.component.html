@@ -1,0 +1,90 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <p class="admin-page__eyebrow">Контент витрины</p>
+      <h2>Новости и анонсы</h2>
+      <p class="admin-page__subtitle">Редактируйте новости для блока на странице Outwear и обновляйте ключевые инфоповоды.</p>
+    </div>
+    <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Скрыть форму' : 'Новая новость' }}
+    </button>
+  </header>
+
+  <article class="admin-card admin-card--form" *ngIf="showCreateForm">
+    <div class="admin-card__header">
+      <h3>Новая новость</h3>
+      <span class="admin-pill">Черновик</span>
+    </div>
+    <form class="admin-form" (ngSubmit)="saveNews()">
+      <label>
+        Заголовок
+        <input type="text" name="title" [(ngModel)]="form.title" />
+      </label>
+      <label>
+        Дата
+        <input type="text" name="date" [(ngModel)]="form.date" />
+      </label>
+      <label>
+        Короткое описание
+        <textarea rows="4" name="summary" [(ngModel)]="form.summary"></textarea>
+      </label>
+      <label>
+        Ссылка на изображение
+        <input type="text" name="image" [(ngModel)]="form.image" />
+      </label>
+      <div class="admin-form__actions">
+        <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
+        <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+      </div>
+    </form>
+  </article>
+
+  <div class="admin-grid">
+    <p class="admin-empty" *ngIf="isLoading">Загрузка новостей...</p>
+    <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <ng-container *ngFor="let item of news">
+      <article class="news-card">
+        <div class="news-card__image" [style.backgroundImage]="'url(' + item.image + ')'">
+          <span class="news-card__date">{{ item.date }}</span>
+        </div>
+        <div class="news-card__body">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.summary }}</p>
+          <div class="news-card__actions">
+            <button class="admin-button" type="button" (click)="selectNews(item)">Редактировать</button>
+            <button class="admin-button" type="button" (click)="deleteNews(item)">Удалить</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="admin-card admin-card--inline" *ngIf="selectedNews?.id === item.id">
+        <div class="admin-card__header">
+          <h3>Редактор новости</h3>
+          <span class="admin-pill">ID {{ selectedNews?.id }}</span>
+        </div>
+        <form class="admin-form" (ngSubmit)="saveNews()">
+          <label>
+            Заголовок
+            <input type="text" name="editTitle" [(ngModel)]="form.title" />
+          </label>
+          <label>
+            Дата
+            <input type="text" name="editDate" [(ngModel)]="form.date" />
+          </label>
+          <label>
+            Короткое описание
+            <textarea rows="4" name="editSummary" [(ngModel)]="form.summary"></textarea>
+          </label>
+          <label>
+            Ссылка на изображение
+            <input type="text" name="editImage" [(ngModel)]="form.image" />
+          </label>
+          <div class="admin-form__actions">
+            <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
+            <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+          </div>
+        </form>
+      </article>
+    </ng-container>
+  </div>
+</section>

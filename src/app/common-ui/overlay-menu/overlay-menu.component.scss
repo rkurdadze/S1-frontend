@@ -15,6 +15,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
   background: rgba(10, 10, 15, 0.6);
   backdrop-filter: blur(20px);
   z-index: 1000;
@@ -23,13 +24,27 @@
   align-items: stretch;
   padding: 20px;
   animation: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  
+  /* Disable scroll on main menu page if items fit (assuming they fit) */
+  overflow: hidden;
+
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  &--admin {
+    /* Allow scrolling on admin page as it has more items */
+    overflow-y: auto;
+  }
 
   &__header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end; /* Always push close button to the right */
     align-items: flex-start;
     width: 100%;
     margin-bottom: 24px;
+    min-height: 40px;
   }
 
   &__close-btn {
@@ -39,15 +54,64 @@
     font-size: 36px;
     cursor: pointer;
     line-height: 1;
+    z-index: 10;
   }
 
   &__content {
+    flex: 1;                          // занимает всё доступное место
+    overflow-y: auto;                 // scrollbar ТОЛЬКО если нужно
+    overflow-x: hidden;
+
+    scrollbar-width: none;            // Firefox
+  }
+
+  &__content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  &__view {
     display: grid;
     gap: 8px;
     width: 100%;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+    
+    &--main {
+      &.is-hidden {
+        transform: translateX(-20%);
+        opacity: 0;
+        pointer-events: none;
+        position: absolute; /* Take out of flow when hidden */
+        top: 0;
+        left: 0;
+      }
+    }
+
+    &--admin {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+
+      &.is-active {
+        position: relative; /* Put back in flow when active */
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
   }
 
   &__logo-container {
+    margin-right: auto; /* Push logo to the left, close button stays right */
+    
+    &.is-hidden {
+      visibility: hidden; /* Use visibility to keep layout space if needed, or display: none if not */
+      display: none;
+    }
+    
     img {
       max-width: 100px;
       height: auto;
@@ -68,15 +132,73 @@
     transition: all 0.2s ease;
     font-size: 16px;
     letter-spacing: 0.04em;
+    position: relative;
 
     &:hover {
       background: rgba(255, 255, 255, 0.08);
       border-color: rgba(var(--color-primary-rgb), 0.4);
       transform: translateY(-1px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      z-index: 2;
+    }
+
+    &--admin {
+      justify-content: space-between;
     }
   }
+
+  &__link-text {
+    flex: 1;
+  }
+
+  &__badge {
+    min-width: 28px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  &__toggle {
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  
+  &__back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    transition: color 0.2s ease;
+    width: 100%;
+    justify-content: flex-start;
+
+    &:hover {
+      color: #fff;
+    }
+    
+    .chevron-back {
+      font-size: 10px;
+    }
+  }
+
+  .chevron {
+    font-size: 10px;
+  }
 }
+
 
 .lang-dropdown {
   position: relative;

@@ -1,0 +1,247 @@
+@use '_variables' as *;
+@use '../admin.scss' as *;
+
+.admin-page__header {
+  margin-bottom: 28px;
+}
+
+.admin-page__subtitle {
+  max-width: 540px;
+  line-height: 1.6;
+}
+
+.admin-card {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.22);
+}
+
+.admin-card__header {
+  margin-bottom: 18px;
+}
+
+.admin-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-list__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 20, 26, 0.6);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.admin-list__main {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-list__row.is-active {
+  border-color: rgba(255, 118, 84, 0.6);
+  transform: translateY(-1px);
+}
+
+.admin-list__row h4 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.admin-list__meta {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.admin-list__stats {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+}
+
+.admin-list__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.admin-list__previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-preview {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-preview img {
+  width: 54px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.admin-preview__swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.admin-preview__placeholder {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-chip {
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 118, 84, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.admin-list__price {
+  font-weight: 600;
+}
+
+.admin-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.admin-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.admin-tag {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-tag.is-active {
+  border-color: rgba(255, 118, 84, 0.6);
+  background: rgba(255, 118, 84, 0.2);
+}
+
+.admin-tag__close {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.admin-tag-input {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-tag-input input {
+  flex: 1 1 200px;
+}
+
+.admin-inventory-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-inline-panel {
+  margin: 12px 0 20px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(18, 20, 26, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-image-panel {
+  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.admin-image-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-image-panel__header input[type='file'] {
+  display: none;
+}
+
+.admin-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.admin-image-card {
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 8px;
+  place-items: center;
+
+  img {
+    width: 100%;
+    max-width: 140px;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    aspect-ratio: 3 / 4;
+  }
+}
+
+
+@include media-md {
+  .admin-list__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-list__stats {
+    justify-items: start;
+  }
+
+  .admin-list__actions {
+    justify-content: flex-start;
+  }
+
+  .admin-preview img {
+    width: 46px;
+    height: 34px;
+  }
+}
+
+@include media-sm {
+  .admin-card {
+    padding: 18px;
+  }
+}

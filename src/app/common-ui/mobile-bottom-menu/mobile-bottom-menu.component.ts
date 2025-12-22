@@ -10,7 +10,6 @@ import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 import { PROFILE_MENU_ITEMS } from '../profile-menu/profile-menu.config';
 import { ProfileMenuItem } from '../profile-menu/profile-menu.types';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ProfileMenuService } from '../../data/services/profile-menu.service';
 import { ItemPurchaseBarComponent } from '../item-purchase-bar/item-purchase-bar.component';
 import { ItemPurchaseBarService, PurchaseBarState } from '../item-purchase-bar/item-purchase-bar.service';
 
@@ -45,7 +44,6 @@ export class MobileBottomMenuComponent implements AfterViewInit, OnDestroy {
   private googleAuth = inject(GoogleAuthService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
-  private profileMenuService = inject(ProfileMenuService);
   private purchaseBarService = inject(ItemPurchaseBarService);
 
   @ViewChild('navRef') navRef!: ElementRef<HTMLDivElement>;
@@ -74,7 +72,7 @@ export class MobileBottomMenuComponent implements AfterViewInit, OnDestroy {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(user => {
         this.isLoggedIn = !!user;
-        this.isAdmin = this.googleAuth.isAdmin;
+        this.isAdmin = this.googleAuth.isAdminOrManager;
       });
 
     this.router.events
@@ -125,17 +123,21 @@ export class MobileBottomMenuComponent implements AfterViewInit, OnDestroy {
 
     if (item.action === 'logout') {
       this.googleAuth.logout();
-      return;
-    }
-
-    if (item.action === 'addItem') {
-      this.profileMenuService.requestAddItem();
+      this.router.navigate(['/']).then(() => {
+        window.scrollTo(0, 0);
+      });
       return;
     }
 
     if (item.routerLink) {
-      this.router.navigate(Array.isArray(item.routerLink) ? item.routerLink : [item.routerLink]).then();
+      this.router.navigate(Array.isArray(item.routerLink) ? item.routerLink : [item.routerLink]).then(() => {
+        window.scrollTo(0, 0);
+      });
     }
+  }
+
+  onNavItemClick(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   isActive(route: string | any[], exact = false): boolean {

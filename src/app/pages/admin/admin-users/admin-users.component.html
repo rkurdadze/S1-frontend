@@ -1,0 +1,101 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <p class="admin-page__eyebrow">Управление доступами</p>
+      <h2>Пользователи</h2>
+      <p class="admin-page__subtitle">Назначайте роли администратора и менеджера, обновляйте доступы к разделам.</p>
+    </div>
+    <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Скрыть форму' : 'Добавить пользователя' }}
+    </button>
+  </header>
+
+  <div class="admin-card" *ngIf="showCreateForm">
+    <div class="admin-card__header">
+      <h3>Приглашение</h3>
+      <span class="admin-pill">Новый доступ</span>
+    </div>
+    <form class="admin-form" (ngSubmit)="saveUser()">
+      <label>
+        Имя
+        <input type="text" name="name" [(ngModel)]="form.name" />
+      </label>
+      <label>
+        Email
+        <input type="email" name="email" [(ngModel)]="form.email" />
+      </label>
+      <div class="admin-form__row">
+        <label>
+          Роль
+          <input type="text" name="role" [(ngModel)]="form.role" />
+        </label>
+        <label>
+          Статус
+          <input type="text" name="status" [(ngModel)]="form.status" />
+        </label>
+      </div>
+      <div class="admin-form__actions">
+        <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
+        <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card__header">
+      <h3>Команда Studio101</h3>
+      <span class="admin-pill">{{ users.length }} активных</span>
+    </div>
+    <div class="user-list">
+      <p class="admin-empty" *ngIf="isLoading">Загрузка пользователей...</p>
+      <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <ng-container *ngFor="let user of users">
+        <article class="user-row">
+          <div>
+            <h4>{{ user.name }}</h4>
+            <p>{{ user.email }} • {{ user.lastActive }}</p>
+          </div>
+          <div class="user-row__meta">
+            <span class="user-row__role">{{ user.role }}</span>
+            <span class="user-row__status">{{ user.status }}</span>
+          </div>
+          <div class="user-row__actions">
+            <button class="admin-button" type="button" (click)="selectUser(user)">Редактировать</button>
+            <button class="admin-button" type="button" (click)="deleteUser(user)">Отключить</button>
+          </div>
+        </article>
+
+        <article class="admin-card admin-card--inline" *ngIf="selectedUser?.id === user.id">
+          <div class="admin-card__header">
+            <h3>Редактирование</h3>
+            <span class="admin-pill">ID {{ selectedUser?.id }}</span>
+          </div>
+          <form class="admin-form" (ngSubmit)="saveUser()">
+            <label>
+              Имя
+              <input type="text" name="editName" [(ngModel)]="form.name" />
+            </label>
+            <label>
+              Email
+              <input type="email" name="editEmail" [(ngModel)]="form.email" />
+            </label>
+            <div class="admin-form__row">
+              <label>
+                Роль
+                <input type="text" name="editRole" [(ngModel)]="form.role" />
+              </label>
+              <label>
+                Статус
+                <input type="text" name="editStatus" [(ngModel)]="form.status" />
+              </label>
+            </div>
+            <div class="admin-form__actions">
+              <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
+              <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+            </div>
+          </form>
+        </article>
+      </ng-container>
+    </div>
+  </div>
+</section>

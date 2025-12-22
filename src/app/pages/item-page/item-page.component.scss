@@ -118,29 +118,6 @@
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.32);
 }
 
-.item-page__edit_item-wrapper {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: grid;
-  grid-template-columns: repeat(2, 42px);
-  gap: 8px;
-
-  .item-page__edit_btn {
-    width: 42px !important;
-    height: 42px !important;
-    background: rgba(255, 255, 255, 0.08);
-    color: #e5e7eb;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.18);
-      color: white;
-    }
-  }
-}
-
 .title-block {
   display: grid;
   gap: 6px;
@@ -370,23 +347,6 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.upload-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-  flex-wrap: wrap;
-}
-
-.upload-actions {
-  display: flex;
-  gap: 8px;
-}
-
 .meta-and-stories {
   display: grid;
   grid-template-columns: 420px 1fr;
@@ -611,14 +571,6 @@ textarea {
   .item-shell {
     padding: 0;
     gap: 5px;
-  }
-
-  .upload-actions {
-    width: 100%;
-
-    button {
-      flex: 1;
-    }
   }
 
   .gallery-meta__tag {

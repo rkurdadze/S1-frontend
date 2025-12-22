@@ -1,0 +1,98 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <p class="admin-page__eyebrow">Витрина коллекций</p>
+      <h2>Коллекции</h2>
+      <p class="admin-page__subtitle">Настраивайте подборки для главной страницы и промо-кампаний.</p>
+    </div>
+    <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Скрыть форму' : 'Новая коллекция' }}
+    </button>
+  </header>
+
+  <article class="admin-card" *ngIf="showCreateForm">
+    <div class="admin-card__header">
+      <h3>Новая коллекция</h3>
+      <span class="admin-pill">Черновик</span>
+    </div>
+    <form class="admin-form" (ngSubmit)="saveCollection()">
+      <label>
+        Заголовок
+        <input type="text" name="title" [(ngModel)]="form.title" />
+      </label>
+      <label>
+        Короткое описание
+        <textarea rows="4" name="description" [(ngModel)]="form.description"></textarea>
+      </label>
+      <label>
+        Тег
+        <input type="text" name="tag" [(ngModel)]="form.tag" />
+      </label>
+      <label>
+        Изображение
+        <input type="text" name="image" [(ngModel)]="form.image" />
+      </label>
+      <label>
+        Якорь
+        <input type="text" name="anchor" [(ngModel)]="form.anchor" />
+      </label>
+      <div class="admin-form__actions">
+        <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
+        <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+      </div>
+    </form>
+  </article>
+
+  <div class="collection-grid">
+    <p class="admin-empty" *ngIf="isLoading">Загрузка коллекций...</p>
+    <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <ng-container *ngFor="let collection of collections">
+      <article class="collection-card">
+        <div class="collection-card__media" [style.backgroundImage]="'url(' + collection.image + ')'">
+          <span class="collection-card__tag">{{ collection.tag }}</span>
+        </div>
+        <div class="collection-card__body">
+          <h3>{{ collection.title }}</h3>
+          <p>{{ collection.description }}</p>
+          <div class="collection-card__actions">
+            <button class="admin-button" type="button" (click)="selectCollection(collection)">Редактировать</button>
+            <button class="admin-button" type="button" (click)="deleteCollection(collection)">Удалить</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="admin-card admin-card--inline" *ngIf="selectedCollection?.id === collection.id">
+        <div class="admin-card__header">
+          <h3>Редактирование коллекции</h3>
+        <span class="admin-pill">ID {{ selectedCollection?.id }}</span>
+        </div>
+        <form class="admin-form" (ngSubmit)="saveCollection()">
+          <label>
+            Заголовок
+            <input type="text" name="editTitle" [(ngModel)]="form.title" />
+          </label>
+          <label>
+            Короткое описание
+            <textarea rows="4" name="editDescription" [(ngModel)]="form.description"></textarea>
+          </label>
+          <label>
+            Тег
+            <input type="text" name="editTag" [(ngModel)]="form.tag" />
+          </label>
+          <label>
+            Изображение
+            <input type="text" name="editImage" [(ngModel)]="form.image" />
+          </label>
+          <label>
+            Якорь
+            <input type="text" name="editAnchor" [(ngModel)]="form.anchor" />
+          </label>
+          <div class="admin-form__actions">
+            <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
+            <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+          </div>
+        </form>
+      </article>
+    </ng-container>
+  </div>
+</section>

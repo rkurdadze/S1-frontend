@@ -1,0 +1,75 @@
+@use '_variables' as *;
+@use '../admin.scss' as *;
+
+.admin-card {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-card--form {
+  margin-bottom: 0;
+}
+
+.admin-card--inline {
+  margin-top: 16px;
+}
+
+.order-list {
+  display: grid;
+  gap: 16px;
+}
+
+.order-row {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(18, 20, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.order-row h4 {
+  margin: 0 0 6px;
+}
+
+.order-row p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+.order-row__meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.order-row__status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 118, 84, 0.2);
+  font-size: 12px;
+}
+
+.order-row__total {
+  font-weight: 600;
+}
+
+.order-row__delivery {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+}
+
+.order-row__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@include media-sm {
+  .admin-card {
+    padding: 18px;
+  }
+}

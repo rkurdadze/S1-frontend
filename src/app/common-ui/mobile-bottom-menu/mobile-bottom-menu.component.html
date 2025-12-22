@@ -20,7 +20,8 @@
         [icon]="item.icon"
         [routerLink]="item.routerLink"
         [active]="isActive(item.routerLink, !!item.exact)"
-        [badge]="item.hasBadge ? (cartCount$ | async) : null">
+        [badge]="item.hasBadge ? (cartCount$ | async) : null"
+        (itemClick)="onNavItemClick()">
       </app-mobile-bottom-menu-item>
 
       <div

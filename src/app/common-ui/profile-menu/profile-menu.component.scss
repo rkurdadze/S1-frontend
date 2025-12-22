@@ -76,6 +76,13 @@
   letter-spacing: 0.04em;
 }
 
+
+@include media-xxl{
+  .admin-item {
+    display: none;
+  }
+}
+
 @include media-md {
   .profile-menu__link {
     padding: 12px 14px;
@@ -85,3 +92,5 @@
     font-size: 15px;
   }
 }
+
+

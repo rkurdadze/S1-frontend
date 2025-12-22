@@ -1,5 +1,5 @@
 import {ApplicationConfig, InjectionToken, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
-import {provideRouter, withHashLocation} from '@angular/router';
+import {provideRouter, withHashLocation, withInMemoryScrolling} from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
@@ -15,7 +15,7 @@ export function httpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
     // provideRouter(routes, withHashLocation()),
     // provideClientHydration(),
     provideHttpClient(withFetch()),

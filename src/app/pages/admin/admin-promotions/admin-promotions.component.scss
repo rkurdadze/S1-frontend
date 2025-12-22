@@ -1,0 +1,71 @@
+@use '_variables' as *;
+@use '../admin.scss' as *;
+
+.admin-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.promo-card {
+  padding: 22px;
+  border-radius: 22px;
+  background: var(--glass-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 12px;
+}
+
+.promo-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.promo-card__status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 118, 84, 0.2);
+  font-size: 12px;
+}
+
+.promo-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.promo-card__meta {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.promo-card__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-card {
+  display: grid;
+  gap: 16px;
+  background: rgba(18, 20, 26, 0.8);
+}
+
+.admin-card--form {
+  grid-column: span 2;
+}
+
+.admin-card--inline {
+  grid-column: 1 / -1;
+}
+
+@include media-md {
+  .admin-card--form {
+    grid-column: span 1;
+  }
+}
+
+@include media-sm {
+  .promo-card {
+    padding: 18px;
+  }
+}

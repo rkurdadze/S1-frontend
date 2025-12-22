@@ -1,4 +1,4 @@
-import { Component, DestroyRef, HostListener, ViewChild, inject, NgZone } from '@angular/core';
+import { Component, DestroyRef, HostListener, inject, NgZone } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { AsyncPipe, NgFor, NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
@@ -6,9 +6,6 @@ import { Observable } from "rxjs";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { EditModalComponent, EditModalField } from "../edit-modal/edit-modal.component";
-import { ItemService } from "../../data/services/item.service";
-import { Item } from "../../data/interfaces/item.interface";
 import { GoogleAuthService } from '../../data/services/google-auth.service';
 import { LoginButtonComponent } from "../login-button/login-button.component";
 import { BASE_API_URL } from "../../app.config";
@@ -17,7 +14,6 @@ import { ToastService } from "../toast-container/toast.service";
 import { ProfileMenuComponent } from "../profile-menu/profile-menu.component";
 import { PROFILE_MENU_ITEMS } from "../profile-menu/profile-menu.config";
 import { ProfileMenuItem } from "../profile-menu/profile-menu.types";
-import { ProfileMenuService } from "../../data/services/profile-menu.service";
 import { OverlayService } from '../../data/services/overlay.service';
 import { MAIN_NAV_ITEMS, MainNavItem } from "../navigation/main-nav-items";
 
@@ -27,7 +23,6 @@ type SupportedLanguage = 'ka' | 'en' | 'ru';
   selector: 'app-header',
   standalone: true,
   imports: [
-    EditModalComponent,
     AsyncPipe,
     NgFor,
     NgIf,
@@ -59,14 +54,11 @@ export class HeaderComponent {
   isLoggedIn = false;
   isProfileMenuOpen = false;
 
-  @ViewChild('editModalRef') editModalRef!: EditModalComponent;
-  private itemService = inject(ItemService);
   private router = inject(Router);
   private toastService = inject(ToastService);
   private translate = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
   private zone = inject(NgZone);
-  private profileMenuService = inject(ProfileMenuService);
   private overlayService = inject(OverlayService);
   languageDropdownOpen = false;
 
@@ -85,7 +77,7 @@ export class HeaderComponent {
       .subscribe(user => {
         if (user && user.id) {
           this.userIcon = `${this.baseApiUrl}auth/${user.id}` || null;
-          this.isAdmin = googleAuth.isAdmin;
+          this.isAdmin = googleAuth.isAdminOrManager;
           this.isLoggedIn = true;
         } else {
           this.userIcon = null;
@@ -97,23 +89,8 @@ export class HeaderComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(event => {
         this.currentLanguage = event.lang as SupportedLanguage;
-        this.updateModalContent();
-      });
-
-    this.updateModalContent();
-
-    this.profileMenuService.addItemRequested$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        if (this.isAdmin) {
-          this.openModal();
-        }
       });
   }
-
-  modalTitle = '';
-  modalFields: EditModalField[] = [];
-  modalData = {};
 
 
   setLanguage(language: SupportedLanguage): void {
@@ -127,53 +104,9 @@ export class HeaderComponent {
     this.languageDropdownOpen = false;
   }
 
-  private updateModalContent(): void {
-    this.modalTitle = this.translate.instant('modal.title');
-    this.modalFields = [
-      {
-        name: 'name',
-        label: this.translate.instant('modal.name.label'),
-        type: 'text',
-        required: true,
-        placeholder: this.translate.instant('modal.name.placeholder'),
-        maxLength: 200,
-      },
-      {
-        name: 'description',
-        label: this.translate.instant('modal.description.label'),
-        type: 'text',
-        placeholder: this.translate.instant('modal.description.placeholder'),
-        maxLength: 1000,
-      },
-      {
-        name: 'publish',
-        label: this.translate.instant('modal.publish.label'),
-        type: 'checkbox',
-      }
-    ];
-  }
-
-
-  openModal(): void {
-    if (this.editModalRef) {
-      this.editModalRef.openModal();
-    }
-  }
-
-  onModalResult(editedData: any): void {
-    this.itemService.addItem(editedData).subscribe({
-      next: (response: Item) => {
-        this.router.navigate(['/item', response.id]); // Navigate to item-page with item ID
-      },
-      error: (error: any) => {
-
-      }
-    })
-  }
-
-
   logout(): void {
     this.googleAuth.logout();
+    this.router.navigate(['/']).then();
   }
 
 
@@ -286,11 +219,6 @@ export class HeaderComponent {
 
     if (item.action === 'logout') {
       this.logout();
-      return;
-    }
-
-    if (item.action === 'addItem') {
-      this.profileMenuService.requestAddItem();
       return;
     }
 

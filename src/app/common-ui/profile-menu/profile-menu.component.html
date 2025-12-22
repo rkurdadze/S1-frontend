@@ -1,5 +1,5 @@
 <ul class="profile-menu">
-  <li *ngFor="let item of visibleItems; trackBy: trackByLabel">
+  <li *ngFor="let item of visibleItems; trackBy: trackByLabel" [class.admin-item]="item.adminOnly">
     <a
       *ngIf="item.routerLink && !item.action"
       [routerLink]="item.routerLink"

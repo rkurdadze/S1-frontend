@@ -1,0 +1,63 @@
+@use '_variables' as *;
+@use '../admin.scss' as *;
+
+.admin-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.admin-card {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-card--inline {
+  margin-top: 16px;
+}
+
+.zone-list {
+  display: grid;
+  gap: 12px;
+}
+
+.zone {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(18, 20, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zone h4 {
+  margin: 0 0 4px;
+}
+
+.zone p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+.zone__price {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.zone__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@include media-sm {
+  .admin-card {
+    padding: 18px;
+  }
+
+  .zone {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

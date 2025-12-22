@@ -1,0 +1,70 @@
+@use '_variables' as *;
+@use '../admin.scss' as *;
+
+.collection-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.collection-card {
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 20, 26, 0.8);
+  display: grid;
+}
+
+.collection-card__media {
+  min-height: 180px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.collection-card__tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(10, 10, 15, 0.65);
+  font-size: 12px;
+}
+
+.collection-card__body {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.collection-card__body h3 {
+  margin: 0;
+}
+
+.collection-card__body p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+}
+
+.collection-card__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-card {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-card--inline {
+  grid-column: 1 / -1;
+}
+
+@include media-sm {
+  .collection-card__body {
+    padding: 16px;
+  }
+}

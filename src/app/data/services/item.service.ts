@@ -1,10 +1,11 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Item} from '../interfaces/item.interface';
 import {Observable, Subject} from "rxjs";
 import {Color} from "../interfaces/color.interface";
 import {Photo} from "../interfaces/photo.interface";
 import {BASE_API_URL} from "../../app.config";
+import {GoogleAuthService} from "./google-auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,9 +13,19 @@ import {BASE_API_URL} from "../../app.config";
 export class ItemService {
     http = inject(HttpClient);
     baseApiUrl = inject(BASE_API_URL);
+    auth = inject(GoogleAuthService);
     private itemAddedSubject = new Subject<void>(); // 🔹 Глобальный EventEmitter
 
     constructor() {
+    }
+
+    private authHeaders(extraHeaders: Record<string, string> = {}): { headers: HttpHeaders } {
+        const token = this.auth.token;
+        const headers: Record<string, string> = { ...extraHeaders };
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        return { headers: new HttpHeaders(headers) };
     }
 
     // Метод для подписки на события добавления элементов
@@ -42,23 +53,19 @@ export class ItemService {
             colors: JSON.stringify(item.colors) as unknown as Color[] // Приведение к Color[]
         };
 
-        return this.http.post<Item>(`${this.baseApiUrl}items`, itemToSubmit);
+        return this.http.post<Item>(`${this.baseApiUrl}items`, itemToSubmit, this.authHeaders());
     }
 
 
     addColors(colors: { name: string; item_id: number }[]): Observable<any> {
         const itemToSubmit = JSON.stringify(colors);
-        return this.http.post<any>(`${this.baseApiUrl}colors`, itemToSubmit, {
-            headers: {'Content-Type': 'application/json'}
-        });
+        return this.http.post<any>(`${this.baseApiUrl}colors`, itemToSubmit, this.authHeaders({'Content-Type': 'application/json'}));
     }
 
     editColor(color_id: number, color: { item_id: number; name: string }): Observable<any> {
         console.log('Сохраняем цвет:', color);
         const itemToSubmit = JSON.stringify(color);
-        return this.http.put<any>(`${this.baseApiUrl}colors/${color_id}`, itemToSubmit, {
-            headers: {'Content-Type': 'application/json'}
-        });
+        return this.http.put<any>(`${this.baseApiUrl}colors/${color_id}`, itemToSubmit, this.authHeaders({'Content-Type': 'application/json'}));
     }
 
     saveImages(photos: Photo[], itemId: number) {
@@ -77,14 +84,14 @@ export class ItemService {
         return this.http.post<any>(
             `${this.baseApiUrl}photos`,
             JSON.stringify(itemsToSubmit),
-            {headers: {'Content-Type': 'application/json'}}
+            this.authHeaders({'Content-Type': 'application/json'})
         );
     }
 
 
     removeColor(color: { item_id: number; name: string }) { // Без []
         return this.http.delete<any>(`${this.baseApiUrl}colors`, {
-            headers: {'Content-Type': 'application/json'},
+            ...this.authHeaders({'Content-Type': 'application/json'}),
             body: color // Отправляем объект, а не массив
         });
     }
@@ -94,14 +101,12 @@ export class ItemService {
         return this.http.put<Item>(
             `${this.baseApiUrl}items/${item.id}`,
             JSON.stringify(item),
-            {headers: {'Content-Type': 'application/json'}}
+            this.authHeaders({'Content-Type': 'application/json'})
         );
     }
 
     delete(id: number) {
-        return this.http.delete(`${this.baseApiUrl}items/${id}`, {
-            headers: {'Content-Type': 'application/json'}
-        });
+        return this.http.delete(`${this.baseApiUrl}items/${id}`, this.authHeaders({'Content-Type': 'application/json'}));
     }
 
 }

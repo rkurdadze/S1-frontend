@@ -1,0 +1,79 @@
+@use '_variables' as *;
+@use '../admin.scss' as *;
+
+.admin-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.news-card {
+  display: grid;
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(18, 20, 26, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.news-card__image {
+  min-height: 180px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.news-card__date {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(10, 10, 15, 0.65);
+  font-size: 12px;
+}
+
+.news-card__body {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.news-card__body h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.news-card__body p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+}
+
+.news-card__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-card {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-card--form {
+  grid-column: span 2;
+}
+
+.admin-card--inline {
+  grid-column: 1 / -1;
+}
+
+@include media-md {
+  .admin-card--form {
+    grid-column: span 1;
+  }
+}
+
+@include media-sm {
+  .news-card__body {
+    padding: 16px;
+  }
+}

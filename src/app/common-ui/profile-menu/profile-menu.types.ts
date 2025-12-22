@@ -1,6 +1,6 @@
-export type ProfileMenuAction = 'logout' | 'addItem';
+export type ProfileMenuAction = 'logout';
 
-export type ProfileMenuIcon = 'home' | 'cart' | 'catalog' | 'profile' | 'logout' | 'add';
+export type ProfileMenuIcon = 'home' | 'cart' | 'catalog' | 'profile' | 'logout' | 'admin';
 
 export interface ProfileMenuItem {
   labelKey: string;
@@ -35,7 +35,8 @@ export const PROFILE_MENU_ICON_PATHS: Record<ProfileMenuIcon, string[]> = {
     'M12.5 4.5v3h-4v9h4v3l6-7.5z',
     'M6 6h5v2H8v8h3v2H6z',
   ],
-  add: [
-    'M12 4v7.5H4.5v3H12V22h3v-7.5h7.5v-3H15V4z',
+  admin: [
+    'M12 3l7 3v5c0 4.5-3.1 8.5-7 10-3.9-1.5-7-5.5-7-10V6l7-3z',
+    'M9.5 12.5l1.5 1.5 3.5-3.5',
   ],
 };

@@ -1,0 +1,45 @@
+<section class="admin">
+  <header class="admin__hero">
+    <div class="admin__title-group">
+      <p class="admin__eyebrow">{{ 'admin.dashboard.eyebrow' | translate }}</p>
+      <h1>{{ 'admin.dashboard.title' | translate }}</h1>
+      <p class="admin__subtitle">
+        {{ 'admin.dashboard.subtitle' | translate }}
+      </p>
+    </div>
+    <div class="admin__actions">
+      <button class="admin__button admin__button--ghost admin__button--compact">{{ 'admin.dashboard.download_report' | translate }}</button>
+      <button class="admin__button admin__button--primary admin__button--compact">{{ 'admin.dashboard.create_task' | translate }}</button>
+    </div>
+  </header>
+
+  <div class="admin__kpis">
+    <article class="admin__kpi" *ngFor="let kpi of kpis">
+      <span class="admin__kpi-label">{{ kpi.label | translate }}</span>
+      <span class="admin__kpi-value">{{ kpi.value }}</span>
+      <span class="admin__kpi-trend" *ngIf="kpi.trend">{{ kpi.trend.split('|')[0] | translate: { count: extractTrendCount(kpi.trend) } }}</span>
+    </article>
+  </div>
+
+  <div class="admin__layout">
+    <aside class="admin__nav">
+      <h2 class="admin__nav-title">{{ 'admin.dashboard.nav_title' | translate }}</h2>
+      <a
+        class="admin__nav-link"
+        *ngFor="let item of navItems"
+        [routerLink]="item.route"
+        routerLinkActive="is-active"
+      >
+        <div>
+          <span class="admin__nav-label">{{ item.label | translate }}</span>
+          <span class="admin__nav-desc">{{ item.description | translate }}</span>
+        </div>
+        <span class="admin__nav-badge">{{ item.count }}</span>
+      </a>
+    </aside>
+
+    <div class="admin__panel">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</section>

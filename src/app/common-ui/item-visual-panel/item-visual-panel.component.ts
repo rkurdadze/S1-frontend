@@ -14,7 +14,6 @@ export class ItemVisualPanelComponent {
   @Input() selectedImage: { id: string; url: string } | null = null;
   @Input() selectedColor: string | null = null;
   @Input() showImageControls: boolean = false;
-  @Input() isAdmin: boolean = false;
 
   @Output() selectImage = new EventEmitter<{ id: string; url: string }>();
   @Output() prevImage = new EventEmitter<void>();

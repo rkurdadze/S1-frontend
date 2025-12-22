@@ -32,6 +32,63 @@ export class GoogleAuthService {
         return user?.user?.role?.name === 'Administrator';
     }
 
+    get isManager(): boolean {
+        const user = this.userSubject.getValue();
+        return user?.user?.role?.name === 'Manager';
+    }
+
+    get isAdminOrManager(): boolean {
+        return this.isAdmin || this.isManager;
+    }
+
+    get token(): string | null {
+        const currentUser = this.currentUser;
+        const tokenFromCurrent = this.extractToken(currentUser);
+        if (tokenFromCurrent) {
+            return tokenFromCurrent;
+        }
+        if (typeof localStorage === 'undefined') {
+            return null;
+        }
+        const stored = localStorage.getItem('user');
+        if (!stored) {
+            return null;
+        }
+        try {
+            const parsed = JSON.parse(stored);
+            return this.extractToken(parsed);
+        } catch {
+            return null;
+        }
+    }
+
+    private extractToken(source: unknown): string | null {
+        if (!source || typeof source !== 'object') {
+            if (typeof source === 'string') {
+                return source;
+            }
+            return null;
+        }
+        const candidate = source as Record<string, any>;
+        const nestedUser = candidate['user'] as Record<string, any> | undefined;
+        return (
+            candidate['token'] ||
+            candidate['accessToken'] ||
+            candidate['access_token'] ||
+            candidate['jwt'] ||
+            candidate['jwtToken'] ||
+            candidate['authToken'] ||
+            candidate['data']?.['token'] ||
+            nestedUser?.['token'] ||
+            nestedUser?.['accessToken'] ||
+            nestedUser?.['access_token'] ||
+            nestedUser?.['jwt'] ||
+            nestedUser?.['jwtToken'] ||
+            nestedUser?.['authToken'] ||
+            nestedUser?.['data']?.['token'] ||
+            null
+        );
+    }
 
     loadGoogleAuth(): Promise<void> {
         return new Promise((resolve) => {

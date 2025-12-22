@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject, OnDestroy, AfterViewInit, HostListener} from '@angular/core';
+import {Component, DestroyRef, ElementRef, inject, OnDestroy, AfterViewInit, HostListener} from '@angular/core';
 import {ItemCardComponent} from '../../common-ui/item-card/item-card.component';
 import {Item} from '../../data/interfaces/item.interface';
 import {ItemService} from '../../data/services/item.service';
@@ -6,6 +6,9 @@ import {JsonPipe, NgFor, NgIf} from '@angular/common';
 import {Subscription} from "rxjs";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {RouterLink} from "@angular/router";
+import {AdminApiService} from '../../data/services/admin-api.service';
+import {AdminCollection, AdminEditorial} from '../../data/interfaces/admin/admin.interfaces';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 interface CollectionCard {
   title: string;
@@ -38,6 +41,8 @@ interface EditorialStory {
 })
 export class OutwearComponent implements OnDestroy, AfterViewInit {
   itemService = inject(ItemService);
+  adminApi = inject(AdminApiService);
+  private destroyRef = inject(DestroyRef);
   items: Item[] = [];
   displayedItems: Item[] = [];
   private itemAddedSubscription!: Subscription;
@@ -47,6 +52,10 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   highlightCollections: CollectionCard[] = [];
   perks: any[] = [];
   editorials: EditorialStory[] = [];
+
+  private translatedOutwear: any = null;
+  private adminCollections: AdminCollection[] = [];
+  private adminEditorials: AdminEditorial[] = [];
 
   communityGrid = [
     'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80',
@@ -63,8 +72,29 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
     });
 
     this.translationSubscription = this.translate.stream('outwear').subscribe(outwear => {
+      this.translatedOutwear = outwear;
       this.updateTranslatedSections(outwear);
     });
+
+    this.adminApi
+      .getCollections()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: collections => {
+          this.adminCollections = collections;
+          this.syncEditorialsAndCollections();
+        }
+      });
+
+    this.adminApi
+      .getEditorials()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: editorials => {
+          this.adminEditorials = editorials;
+          this.syncEditorialsAndCollections();
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -77,16 +107,40 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   }
 
   private updateTranslatedSections(outwear: any) {
-    this.highlightCollections = outwear.highlightCollections.map((item: any) => ({
-      ...item,
-      image: this.getHighlightCollectionImage(item.id),
-      anchor: this.getHighlightCollectionAnchor(item.id)
-    }));
     this.perks = outwear.perks;
-    this.editorials = outwear.editorials.map((item: any) => ({
-      ...item,
-      image: this.getEditorialImage(item.id)
-    }));
+    this.syncEditorialsAndCollections();
+  }
+
+  private syncEditorialsAndCollections(): void {
+    if (this.adminCollections.length) {
+      this.highlightCollections = this.adminCollections.map(collection => ({
+        title: collection.title,
+        description: collection.description,
+        tag: collection.tag,
+        image: collection.image,
+        anchor: collection.anchor
+      }));
+    } else if (this.translatedOutwear) {
+      this.highlightCollections = this.translatedOutwear.highlightCollections.map((item: any) => ({
+        ...item,
+        image: this.getHighlightCollectionImage(item.id),
+        anchor: this.getHighlightCollectionAnchor(item.id)
+      }));
+    }
+
+    if (this.adminEditorials.length) {
+      this.editorials = this.adminEditorials.map(story => ({
+        title: story.title,
+        summary: story.summary,
+        image: story.image,
+        cta: story.cta
+      }));
+    } else if (this.translatedOutwear) {
+      this.editorials = this.translatedOutwear.editorials.map((item: any) => ({
+        ...item,
+        image: this.getEditorialImage(item.id)
+      }));
+    }
   }
 
   private getHighlightCollectionImage(id: string): string {
@@ -119,44 +173,40 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
     if (id === 'puffer-jacket') {
       return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80';
     }
-    if (id === 'graphite-color') {
-      return 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80';
+    if (id === 'commuter-looks') {
+      return 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=80';
+    }
+    if (id === 'elegance-layering') {
+      return 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80';
     }
     return '';
   }
 
   refreshItems() {
-    this.itemService.getItems().subscribe(
-      val => {
-        this.items = val;
-        this.updateDisplayedItems();
-      }
-    );
+    this.itemService.getItems().subscribe(items => {
+      this.items = items;
+      this.updateDisplayedItems();
+    });
+  }
+
+  getItemCardWrapper(): HTMLElement | null {
+    return this.elementRef.nativeElement.querySelector('.item-card__wrapper');
+  }
+
+  updateDisplayedItems() {
+    const itemCardWrapper = this.getItemCardWrapper();
+    if (!itemCardWrapper) return;
+
+    const wrapperWidth = itemCardWrapper.offsetWidth;
+    const cardWidth = 306; // 280px + 26px gap = 306px
+    const maxCards = Math.floor(wrapperWidth / cardWidth);
+
+    this.displayedItems = this.items.slice(0, Math.max(1, maxCards));
   }
 
   @HostListener('window:resize')
   onResize() {
     this.updateDisplayedItems();
-  }
-
-  private updateDisplayedItems() {
-    if (!this.items || this.items.length === 0) {
-      this.displayedItems = [];
-      return;
-    }
-
-    const itemCardWrapper = this.getItemCardWrapper();
-    if (!itemCardWrapper) {
-      return;
-    }
-
-    const templateColumns = window
-      .getComputedStyle(itemCardWrapper)
-      .getPropertyValue('grid-template-columns')
-      .trim();
-    const itemsPerRow = Math.max(1, templateColumns.split(' ').filter(Boolean).length);
-    const maxItemsToShow = itemsPerRow * 2;
-    this.displayedItems = this.items.slice(0, maxItemsToShow);
   }
 
   ngOnDestroy() {
@@ -169,9 +219,5 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
-  }
-
-  private getItemCardWrapper(): HTMLElement | null {
-    return this.elementRef.nativeElement.querySelector('.item-card__wrapper');
   }
 }
