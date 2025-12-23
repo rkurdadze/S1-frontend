@@ -208,30 +208,6 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.selector-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 5px;
-}
-
-.selector-block {
-  display: grid;
-  gap: 6px;
-  padding: 6px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.selector-label {
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #9ca3af;
-  font-size: 12px;
-}
-
 .capsule-panels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

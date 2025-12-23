@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
@@ -31,7 +31,7 @@ interface AdminImagePreview {
 @Component({
   selector: 'app-admin-items',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule, ItemColorsComponent, ItemSizesComponent, TranslateModule],
+  imports: [NgFor, NgIf, NgTemplateOutlet, FormsModule, ItemColorsComponent, ItemSizesComponent, TranslateModule],
   templateUrl: './admin-items.component.html',
   styleUrl: './admin-items.component.scss'
 })
@@ -53,17 +53,11 @@ export class AdminItemsComponent implements OnInit {
   isTagsLoading = false;
   isPhotosLoading = false;
   showCreateForm = false;
+  draftItemId: number | null = null;
   uploadQueue: Photo[] = [];
   selectedColorImages: AdminImagePreview[] = [];
 
-  createForm: ItemFormState = {
-    name: '',
-    description: '',
-    publish: true,
-    price: 0
-  };
-
-  editForm: ItemFormState = {
+  itemForm: ItemFormState = {
     name: '',
     description: '',
     publish: false,
@@ -71,8 +65,7 @@ export class AdminItemsComponent implements OnInit {
   };
 
   tags: string[] = [];
-  selectedItemTags: string[] = [];
-  createItemTags: string[] = [];
+  activeItemTags: string[] = [];
 
   ngOnInit(): void {
     this.loadItems();
@@ -89,140 +82,134 @@ export class AdminItemsComponent implements OnInit {
 
   loadItems(): void {
     this.isLoading = true;
-
     this.itemService
       .getItems()
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
-        next: items => {
-          this.items = items;
-        },
-        error: () => {
-          this.toast.error(this.translate.instant('admin.items.toast_load_error'));
-        }
+        next: items => this.items = items,
+        error: () => this.toast.error(this.translate.instant('admin.items.toast_load_error'))
       });
   }
 
   startEdit(item: Item): void {
-    if (!item.id) {
-      return;
-    }
+    if (!item.id) return;
     this.editingItemId = item.id;
     this.loadItem(item.id);
   }
 
   cancelEdit(): void {
-    if (this.selectedItem) {
-      this.editForm = {
-        name: this.selectedItem.name,
-        description: this.selectedItem.description,
-        publish: this.selectedItem.publish,
-        price: this.selectedItem.price
-      };
-      this.selectedItemTags = this.selectedItem.tags ?? [];
+    if (this.draftItemId && this.selectedItem?.id === this.draftItemId) {
+      this.onDeleteItem(this.selectedItem, true);
     }
     this.editingItemId = null;
     this.selectedItem = null;
     this.selectedColor = null;
     this.selectedColorImages = [];
+    this.draftItemId = null;
+    this.showCreateForm = false;
   }
 
   loadItem(itemId: number): void {
-
     this.itemService.getItem(itemId).subscribe({
       next: item => {
         this.selectedItem = item;
-        this.editForm = {
+        this.itemForm = {
           name: item.name,
           description: item.description,
           publish: item.publish,
           price: item.price
         };
         this.selectedColor = item.colors?.[0]?.name ?? null;
-        this.selectedItemTags = item.tags ?? [];
+        this.activeItemTags = item.tags ?? [];
         this.loadSelectedColorPhotos();
       },
-      error: () => {
-        this.toast.error(this.translate.instant('admin.items.toast_load_error'));
-      }
+      error: () => this.toast.error(this.translate.instant('admin.items.toast_load_error'))
     });
+  }
+
+  toggleCreateForm(): void {
+    if (!this.showCreateForm) {
+      this.onCreateItem();
+    } else {
+      this.cancelEdit();
+    }
   }
 
   onCreateItem(): void {
     const payload: Item = {
-      name: this.createForm.name.trim(),
-      description: this.createForm.description.trim(),
-      publish: this.createForm.publish,
-      price: this.createForm.price,
+      name: this.translate.instant('admin.items.new_card'),
+      description: '',
+      publish: false,
+      price: 0,
       colors: [],
-      tags: this.createItemTags
+      tags: []
     };
-
-    if (!payload.name) {
-      return;
-    }
 
     this.itemService.addItem(payload).subscribe({
       next: item => {
-        this.toast.success(this.translate.instant('admin.items.toast_created'));
-        this.createForm = { name: '', description: '', publish: true, price: 0 };
-        this.createItemTags = [];
-        this.loadItems();
+        this.draftItemId = item.id ?? null;
+        this.showCreateForm = true;
+        this.selectedItem = item;
+        this.editingItemId = item.id ?? null;
+        this.itemForm = { name: '', description: '', publish: false, price: 0 };
+        this.activeItemTags = [];
+        this.selectedColor = null;
+        this.selectedColorImages = [];
       },
-      error: () => {
-        this.toast.error(this.translate.instant('admin.items.toast_create_error'));
-      }
+      error: () => this.toast.error(this.translate.instant('admin.items.toast_create_error'))
     });
   }
 
-  onUpdateItem(): void {
-    if (!this.selectedItem?.id) {
-      return;
-    }
+  onSaveItem(): void {
+    if (!this.selectedItem?.id) return;
 
     const updated: Item = {
       ...this.selectedItem,
-      name: this.editForm.name.trim(),
-      description: this.editForm.description.trim(),
-      publish: this.editForm.publish,
-      price: this.editForm.price,
-      tags: this.selectedItemTags
+      name: this.itemForm.name.trim(),
+      description: this.itemForm.description.trim(),
+      publish: this.itemForm.publish,
+      price: this.itemForm.price,
+      tags: this.activeItemTags
     };
+
+    if (!updated.name) return;
+
+    const isNew = this.selectedItem.id === this.draftItemId;
 
     this.itemService.save(updated).subscribe({
       next: () => {
-        this.toast.success(this.translate.instant('admin.items.toast_updated'));
+        this.toast.success(this.translate.instant(isNew ? 'admin.items.toast_created' : 'admin.items.toast_updated'));
+        this.draftItemId = null;
+        this.showCreateForm = false;
+        this.editingItemId = null;
+        this.selectedItem = null;
         this.loadItems();
-        this.cancelEdit();
       },
-      error: () => {
-        this.toast.error(this.translate.instant('admin.items.toast_update_error'));
-      }
+      error: () => this.toast.error(this.translate.instant(isNew ? 'admin.items.toast_create_error' : 'admin.items.toast_update_error'))
     });
   }
 
-  onDeleteItem(item?: Item): void {
+  onDeleteItem(item?: Item, silent = false): void {
     const target = item ?? this.selectedItem;
-    if (!target?.id) {
-      return;
-    }
-    const confirmation = globalThis.confirm(this.translate.instant('admin.items.confirm_delete'));
-    if (!confirmation) {
-      return;
+    if (!target?.id) return;
+
+    if (!silent) {
+      const confirmation = globalThis.confirm(this.translate.instant('admin.items.confirm_delete'));
+      if (!confirmation) return;
     }
 
     this.itemService.delete(target.id).subscribe({
       next: () => {
-        this.toast.success(this.translate.instant('admin.items.toast_deleted'));
-        this.selectedItem = null;
-        this.selectedColor = null;
-        if (this.editingItemId === target.id) {
+        if (!silent) this.toast.success(this.translate.instant('admin.items.toast_deleted'));
+        if (this.selectedItem?.id === target.id) {
+          this.selectedItem = null;
+          this.selectedColor = null;
           this.editingItemId = null;
         }
         this.loadItems();
       },
       error: () => {
-        this.toast.error(this.translate.instant('admin.items.toast_delete_error'));
+        if (!silent) this.toast.error(this.translate.instant('admin.items.toast_delete_error'));
       }
     });
   }
@@ -233,87 +220,30 @@ export class AdminItemsComponent implements OnInit {
   }
 
   toggleTag(tag: string): void {
-    if (!this.selectedItem?.id) {
-      return;
-    }
-    const current = new Set(this.selectedItemTags);
-    if (current.has(tag)) {
-      current.delete(tag);
-    } else {
-      current.add(tag);
-    }
-    const next = Array.from(current);
-
-    this.isTagsLoading = true;
-    this.adminApi
-      .updateItemTags(this.selectedItem.id, next)
-      .pipe(finalize(() => (this.isTagsLoading = false)))
-      .subscribe({
-        next: tags => {
-          const updatedTags = tags?.length ? tags : next;
-          this.selectedItemTags = updatedTags;
-          if (this.selectedItem) {
-            this.selectedItem.tags = updatedTags;
-          }
-        },
-        error: () => {
-          this.toast.error(this.translate.instant('admin.items.toast_tag_update_error'));
-        }
-      });
-  }
-
-  toggleCreateTag(tag: string): void {
-    this.createItemTags = this.updateTagSelection(this.createItemTags, tag);
+    const current = new Set(this.activeItemTags);
+    current.has(tag) ? current.delete(tag) : current.add(tag);
+    this.activeItemTags = Array.from(current);
   }
 
   isTagActive(tag: string): boolean {
-    return this.selectedItemTags.includes(tag);
-  }
-
-  isCreateTagActive(tag: string): boolean {
-    return this.createItemTags.includes(tag);
-  }
-
-  get selectedItemId(): number {
-    return this.selectedItem?.id ?? 0;
+    return this.activeItemTags.includes(tag);
   }
 
   get filteredItems(): Item[] {
     const term = this.searchTerm.trim().toLowerCase();
-    if (!term) {
-      return this.items;
-    }
-    return this.items.filter(item => {
-      const parts = [
-        item.name,
-        item.description,
-        item.tags?.join(' '),
-        item.id?.toString()
-      ].filter(Boolean) as string[];
+    const list = this.items.filter(item => item.id !== this.draftItemId);
+    if (!term) return list;
+    return list.filter(item => {
+      const parts = [item.name, item.description, item.tags?.join(' '), item.id?.toString()].filter(Boolean) as string[];
       return parts.join(' ').toLowerCase().includes(term);
     });
   }
 
-  toggleCreateForm(): void {
-    this.showCreateForm = !this.showCreateForm;
-  }
-
   getColorPreviews(item: Item): Array<{ color: string; image: string | null }> {
-    if (!item.colors) {
-      return [];
-    }
-    return item.colors.map(color => ({
+    return (item.colors ?? []).map(color => ({
       color: color.name,
-      image: this.getColorImage(color)
+      image: color.photoIds?.[0] ? this.photoService.getPhotoSrcForRes(color.photoIds[0], 100) : null
     }));
-  }
-
-  private getColorImage(color: Color): string | null {
-    const photoId = color.photoIds?.[0];
-    if (!photoId) {
-      return null;
-    }
-    return this.photoService.getPhotoSrcForRes(photoId, 100);
   }
 
   getSelectedColorImages(): AdminImagePreview[] {
@@ -322,14 +252,9 @@ export class AdminItemsComponent implements OnInit {
 
   onImagesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (!input.files || !this.selectedItem?.id || !this.selectedColor) {
-      return;
-    }
+    if (!input.files || !this.selectedItem?.id || !this.selectedColor) return;
 
-    const files = Array.from(input.files);
-    this.uploadQueue = [];
-
-    Promise.all(files.map(file => this.readFileAsBase64(file))).then(photos => {
+    Promise.all(Array.from(input.files).map(file => this.readFileAsBase64(file))).then(photos => {
       this.uploadQueue = photos;
       this.saveImages();
     });
@@ -339,83 +264,38 @@ export class AdminItemsComponent implements OnInit {
   private readFileAsBase64(file: File): Promise<Photo> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        resolve({
-          name: file.name,
-          image: e.target.result,
-          colorName: this.selectedColor ?? undefined
-        });
-      };
+      reader.onload = (e: any) => resolve({ name: file.name, image: e.target.result, colorName: this.selectedColor ?? undefined });
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
 
   saveImages(): void {
-    if (!this.uploadQueue.length || !this.selectedItem?.id) {
-      return;
-    }
+    if (!this.uploadQueue.length || !this.selectedItem?.id) return;
     this.itemService.saveImages(this.uploadQueue, this.selectedItem.id).subscribe({
-      next: (response: any) => {
+      next: () => {
         this.toast.success(this.translate.instant('admin.items.toast_photos_uploaded'));
-        const latestId = response?.[response.length - 1]?.id;
         this.loadItem(this.selectedItem!.id!);
-        if (latestId) {
-          this.selectedColor = this.selectedColor ?? this.selectedItem?.colors?.[0]?.name ?? null;
-        }
       },
-      error: () => {
-        this.toast.error(this.translate.instant('admin.items.toast_photos_upload_error'));
-      }
+      error: () => this.toast.error(this.translate.instant('admin.items.toast_photos_upload_error'))
     });
   }
 
   deleteImage(photoId: number): void {
-    const confirmation = globalThis.confirm(this.translate.instant('admin.items.confirm_delete_image'));
-    if (!confirmation) {
-      return;
-    }
-
-    this.adminApi
-      .deletePhoto(photoId)
-      .pipe(finalize(() => (this.isPhotosLoading = false)))
-      .subscribe({
-        next: () => {
-          this.toast.success(this.translate.instant('admin.items.toast_photo_deleted'));
-          if (this.selectedItem?.id) {
-            this.loadItem(this.selectedItem.id);
-          }
-        },
-        error: () => {
-          this.toast.error(this.translate.instant('admin.items.toast_photo_delete_error'));
-        }
-      });
+    if (!globalThis.confirm(this.translate.instant('admin.items.confirm_delete_image'))) return;
+    this.adminApi.deletePhoto(photoId).subscribe({
+      next: () => {
+        this.toast.success(this.translate.instant('admin.items.toast_photo_deleted'));
+        if (this.selectedItem?.id) this.loadItem(this.selectedItem.id);
+      },
+      error: () => this.toast.error(this.translate.instant('admin.items.toast_photo_delete_error'))
+    });
   }
 
   private loadTags(): void {
-    this.isTagsLoading = true;
-
-    this.adminApi
-      .getTags()
-      .pipe(finalize(() => (this.isTagsLoading = false)))
-      .subscribe({
-        next: tags => {
-          this.tags = tags;
-        },
-        error: () => {
-          this.toast.error(this.translate.instant('admin.items.toast_load_tags_error'));
-        }
-      });
-  }
-
-  private refreshSelectedItemTags(itemId: number): void {
-    this.adminApi.getItemTags(itemId).subscribe({
-      next: tags => {
-        this.selectedItemTags = tags;
-        if (this.selectedItem) {
-          this.selectedItem.tags = tags;
-        }
-      }
+    this.adminApi.getTags().subscribe({
+      next: tags => this.tags = tags,
+      error: () => this.toast.error(this.translate.instant('admin.items.toast_load_tags_error'))
     });
   }
 
@@ -430,42 +310,14 @@ export class AdminItemsComponent implements OnInit {
       return;
     }
     this.isPhotosLoading = true;
-
-    this.adminApi
-      .getItemColorPhotos(this.selectedItem.id, color.id)
-      .pipe(finalize(() => (this.isPhotosLoading = false)))
+    this.adminApi.getItemColorPhotos(this.selectedItem.id, color.id)
+      .pipe(finalize(() => this.isPhotosLoading = false))
       .subscribe({
-        next: photos => {
-          this.selectedColorImages = photos
-            .filter(photo => typeof photo.id === 'number')
-            .map(photo => ({
-              id: photo.id as number,
-              url: this.buildPhotoUrl(photo.image)
-            }));
-        },
-        error: () => {
-
-        }
+        next: photos => this.selectedColorImages = photos.filter(p => typeof p.id === 'number').map(p => ({ id: p.id as number, url: this.buildPhotoUrl(p.image) }))
       });
   }
 
   private buildPhotoUrl(image: string): string {
-    if (!image) {
-      return '';
-    }
-    if (image.startsWith('data:')) {
-      return image;
-    }
-    return `data:image/jpeg;base64,${image}`;
-  }
-
-  private updateTagSelection(current: string[], tag: string): string[] {
-    const next = new Set(current);
-    if (next.has(tag)) {
-      next.delete(tag);
-    } else {
-      next.add(tag);
-    }
-    return Array.from(next);
+    return image?.startsWith('data:') ? image : (image ? `data:image/jpeg;base64,${image}` : '');
   }
 }

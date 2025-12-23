@@ -605,6 +605,8 @@
       "editing": "Editing",
       "save_changes": "Save changes",
       "cancel_edit": "Cancel editing",
+      "color_palette": "Color palette",
+      "sizes_and_availability": "Sizes and availability",
       "color_images": "Images for color",
       "upload": "Upload",
       "select_color_hint": "Select color to manage images.",
