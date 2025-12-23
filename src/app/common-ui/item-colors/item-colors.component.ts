@@ -25,6 +25,7 @@ export class ItemColorsComponent implements OnChanges {
     @Input() colors?: Color[] = [];
     @Input() itemId!: number;
     @Input() isAdmin: boolean = false;
+    @Input() activeColor?: string | null;
     @Output() selectedColorEmitter = new EventEmitter<string>();
 
     private toastService = inject(ToastService);
@@ -43,12 +44,16 @@ export class ItemColorsComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes['colors'] && changes['colors'].currentValue) {
             this.loadImagesCounter(this.colors!);
-            if (changes['colors'].previousValue === null &&
-                changes['colors'] &&
-                changes['colors'].currentValue &&
-                changes['colors'].currentValue[0]) {
-                this.selectColor(changes['colors'].currentValue[0].name);
-            }
+        }
+
+        if (changes['activeColor'] && changes['activeColor'].currentValue) {
+            this.selectedColor = changes['activeColor'].currentValue;
+            this.currentlyPickedColor = this.selectedColor!;
+        } else if (changes['colors'] && changes['colors'].currentValue && !this.selectedColor) {
+             // Default fallback if no activeColor is provided
+             if (this.colors && this.colors.length > 0) {
+                 this.selectColor(this.colors[0].name);
+             }
         }
     }
 

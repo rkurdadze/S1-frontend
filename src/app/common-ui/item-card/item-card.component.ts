@@ -28,44 +28,74 @@ export class ItemCardComponent implements OnChanges{
   isProduction = environment.production;
   private photoService = new PhotoService();
 
+  selectedColorId: number | null = null;
+
   getUniqueSizes = ItemHelpers.getUniqueSizes;
   isOutOfStock = ItemHelpers.isOutOfStock;
   isColorOutOfStock = ItemHelpers.isColorOutOfStock;
   totalStock = ItemHelpers.getTotalStock;
 
+  getActiveColorId(): number | null {
+    return this.selectedColorId ?? this.getDefaultColorId();
+  }
+
+  getDefaultColorId(): number | null {
+    if (!this.item || !this.item.colors || this.item.colors.length === 0) {
+      return null;
+    }
+
+    // Try to find the first color that actually has photos
+    for (const color of this.item.colors) {
+      if (color.photoIds && color.photoIds.length > 0) {
+        return color.id;
+      }
+    }
+
+    // Fallback to the first color if none have photos
+    return this.item.colors[0].id;
+  }
+
   getPrimaryColor(): string {
-    return this.item?.colors?.[0]?.name ?? 'Цвет';
+    const activeId = this.getActiveColorId();
+    if (activeId !== null) {
+      const color = this.item.colors.find(c => c.id === activeId);
+      if (color) return color.name;
+    }
+    return 'Цвет';
   }
 
   navigateToItemPage(): void {
-    this.router.navigate(['/item', this.item.id]); // Navigate to item-page with item ID
+    const activeColorId = this.getActiveColorId();
+    this.router.navigate(['/item', this.item.id], {
+      queryParams: { colorId: activeColorId }
+    }); // Navigate to item-page with item ID and selected color
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   getPhotoSrc(): string {
-    if (!this.item?.colors?.length) {
-      return '/assets/imgs/no-image.png';
+    const photoId = this.getDisplayPhotoId();
+    if (photoId) {
+      return this.photoService.getPhotoSrc(photoId) + '/400';
     }
-
-
-    let id = this.getFirstPhotoId(this.item);
-    if (id)
-      return this.photoService.getPhotoSrc(id) + '/400';
-    else return '/assets/imgs/no-image.png';
+    return '/assets/imgs/no-image.png';
   }
 
-  getFirstPhotoId(item: Item): number | null {
-    if (!item || !item.colors || item.colors.length === 0) {
-      return null;
-    }
-
-    for (const color of item.colors) {
-      if (color.photoIds && color.photoIds.length > 0) {
-        return color.photoIds[0]; // Return the first photo ID found
+  getDisplayPhotoId(): number | null {
+    const activeId = this.getActiveColorId();
+    if (activeId !== null) {
+      const selectedColor = this.item.colors.find(c => c.id === activeId);
+      if (selectedColor && selectedColor.photoIds && selectedColor.photoIds.length > 0) {
+        return selectedColor.photoIds[0];
       }
     }
 
-    return null; // If no photo ID was found
+    return null;
+  }
+
+  onColorClick(event: MouseEvent, colorId: number): void {
+    if (this.item.colors.length <= 1) return;
+    event.stopPropagation();
+    this.selectedColorId = colorId;
   }
 
 

@@ -8,7 +8,12 @@
           <div
             class="color-circle"
             [ngStyle]="{'background-color': color.name.toLowerCase()}"
-            [ngClass]="{'out-of-stock': isColorOutOfStock(color)}"
+            [ngClass]="{
+              'out-of-stock': isColorOutOfStock(color),
+              'active': item.colors.length > 1 && getActiveColorId() === color.id,
+              'no-interaction': item.colors.length <= 1
+            }"
+            (click)="onColorClick($event, color.id)"
           ></div>
         }
       </div>

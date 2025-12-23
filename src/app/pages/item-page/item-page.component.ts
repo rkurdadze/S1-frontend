@@ -12,7 +12,7 @@ import {ColorPickerComponent} from "../../common-ui/color-picker/color-picker.co
 import {LoaderService} from "../../data/services/loader.service";
 import {LoadingComponent} from "../../common-ui/loading/loading.component";
 import {PhotoService} from "../../data/services/photo.service";
-import {Observable, Subscription, firstValueFrom} from "rxjs";
+import {Observable, Subscription, firstValueFrom, combineLatest} from "rxjs";
 import {EventService} from "../../data/services/event.service";
 import {ItemColorsComponent} from "../../common-ui/item-colors/item-colors.component";
 import {ItemSizesComponent} from "../../common-ui/item-sizes/item-sizes.component";
@@ -24,6 +24,7 @@ import {ShareService} from "../../data/services/share.service";
 import {ShareRequest} from "../../data/interfaces/share.interface";
 import {ToastService} from "../../common-ui/toast-container/toast.service";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {ItemHelpers} from "../../helpers/ItemHelpers";
 import {ItemPurchaseBarComponent, AvailabilityState} from "../../common-ui/item-purchase-bar/item-purchase-bar.component";
 import {ItemPurchaseBarService} from "../../common-ui/item-purchase-bar/item-purchase-bar.service";
 import {Inventories} from "../../data/interfaces/inventories.interface";
@@ -105,12 +106,26 @@ export class ItemPageComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        this.route.paramMap.subscribe(params => {
+        combineLatest([
+            this.route.paramMap,
+            this.route.queryParamMap
+        ]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(([params, queryParams]) => {
             const itemId = params.get('id');
+            const colorId = queryParams.get('colorId');
+
             if (itemId) {
-                this.images = [];
-                this.selectedImage = null;
-                this.loadItem(itemId);
+                if (this.item && String(this.item.id) === itemId) {
+                    if (colorId) {
+                        const foundColor = this.item.colors.find(c => c.id === Number(colorId));
+                        if (foundColor && foundColor.name !== this.selectedColor) {
+                            this.selectColor(foundColor.name);
+                        }
+                    }
+                } else {
+                    this.images = [];
+                    this.selectedImage = null;
+                    this.loadItem(itemId, undefined, undefined, colorId ? Number(colorId) : undefined);
+                }
             }
         });
 
@@ -132,7 +147,7 @@ export class ItemPageComponent implements OnInit, OnDestroy {
     }
 
 
-    loadItem(id: string, forColor?: string, photoIdToSelectAfterLoad?: number): void {
+    loadItem(id: string, forColor?: string, photoIdToSelectAfterLoad?: number, colorIdToActivate?: number): void {
         // console.log("load item", "item-page");
         this.loadingService.show();
         this.http.get<Item>(`${this.baseApiUrl}items/${id}`).subscribe({
@@ -140,8 +155,15 @@ export class ItemPageComponent implements OnInit, OnDestroy {
                 this.item = data;
                 this.quantity = 1;
                 this.selectedSize = null;
+
+                let activeColor = forColor;
+                if (!activeColor && colorIdToActivate) {
+                    const foundColor = data.colors.find(c => c.id === colorIdToActivate);
+                    if (foundColor) activeColor = foundColor.name;
+                }
+
                 // modalData: Item | null = null;
-                this.loadImagesByColor(data.colors, forColor, photoIdToSelectAfterLoad);
+                this.loadImagesByColor(data.colors, activeColor, photoIdToSelectAfterLoad);
                 this.loadSuggestions(data.id);
                 this.updatePurchaseBarState();
             },
@@ -175,8 +197,7 @@ export class ItemPageComponent implements OnInit, OnDestroy {
             }
             this.selectColor(colorToActivate);
         } else if (colors.length > 0) {
-            this.selectedColor = colors[0].name;
-            this.updateImagesForSelectedColor();
+            this.selectColor(colors[0].name);
         }
 
 
@@ -214,7 +235,19 @@ export class ItemPageComponent implements OnInit, OnDestroy {
         this.selectedColor = colorName;
         this.updateImagesForSelectedColor();
         this.currentColor = colorName;
-        this.selectedSize = null;
+        
+        // Auto-select size if only one is available
+        if (this.item) {
+            const availableSizes = ItemHelpers.getUniqueSizes(this.item, colorName);
+            if (availableSizes.length === 1) {
+                this.selectedSize = availableSizes[0].name;
+            } else {
+                this.selectedSize = null;
+            }
+        } else {
+            this.selectedSize = null;
+        }
+        
         this.updatePurchaseBarState();
     }
 
