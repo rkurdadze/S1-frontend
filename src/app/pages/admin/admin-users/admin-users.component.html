@@ -46,10 +46,9 @@
       <h3>Команда Studio101</h3>
       <span class="admin-pill">{{ users.length }} активных</span>
     </div>
-    <div class="user-list">
-      <p class="admin-empty" *ngIf="isLoading">Загрузка пользователей...</p>
-      <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
-      <ng-container *ngFor="let user of users">
+  <div class="admin-grid">
+    <p class="admin-empty" *ngIf="isLoading">Загрузка пользователей...</p>
+    <ng-container *ngFor="let user of users">
         <article class="user-row">
           <div>
             <h4>{{ user.name }}</h4>

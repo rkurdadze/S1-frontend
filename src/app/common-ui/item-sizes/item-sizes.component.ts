@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {Inventories} from "../../data/interfaces/inventories.interface";
 import {EditModalComponent, EditModalField} from "../edit-modal/edit-modal.component";
@@ -10,6 +10,7 @@ import {SizeService} from "../../data/services/size.service";
 import {InventoryService} from "../../data/services/inventory.service";
 import {Item} from "../../data/interfaces/item.interface";
 import {TranslateModule} from "@ngx-translate/core";
+import { ToastService } from '../toast-container/toast.service';
 
 @Component({
   selector: 'app-item-sizes',
@@ -31,6 +32,8 @@ export class ItemSizesComponent implements OnChanges {
     @Output() sizeSelected = new EventEmitter<string>();
 
     groupedInventories: Map<string, Inventories[]> | null = null;
+
+    private toast = inject(ToastService);
 
     constructor(
         private eventService: EventService,
@@ -86,7 +89,8 @@ export class ItemSizesComponent implements OnChanges {
                     }))
                     .filter((item: any) => this.groupedInventories === null || !this.groupedInventories.has(item.value));
                 if (transformed.length === 0) {
-                    throw new Error("All Sizes added");
+                    this.toast.info("Все размеры уже добавлены");
+                    return;
                 }
                 // Находим поле в sizesModalFields по имени
                 const categoriesField = this.sizesModalFields.find(field => field.name === 'size');
@@ -99,7 +103,7 @@ export class ItemSizesComponent implements OnChanges {
                 this.editSizesModalRef.openModal();
             },
             error: (error: any) => {
-                // console.log("error", error);
+                this.toast.error("Не удалось загрузить размеры");
             },
         })
 
@@ -114,10 +118,11 @@ export class ItemSizesComponent implements OnChanges {
 
         this.inventoryService.save(transformed).subscribe({
             next: (response: any) => {
+                this.toast.success("Размер добавлен");
                 this.eventService.emitRefreshItem(this.item?.id, this.forColor!);
             },
             error: (error: any) => {
-
+                this.toast.error("Не удалось добавить размер");
             }
         })
     }
@@ -183,10 +188,11 @@ export class ItemSizesComponent implements OnChanges {
 
         this.inventoryService.update(transformed).subscribe({
             next: (response: any) => {
+                this.toast.success("Остатки обновлены");
                 this.eventService.emitRefreshItem(this.item?.id, this.forColor!);
             },
             error: (error: any) => {
-
+                this.toast.error("Не удалось обновить остатки");
             }
         });
     }
@@ -226,7 +232,7 @@ export class ItemSizesComponent implements OnChanges {
 
     deleteInventoryClick(sizeName: string, event: Event) {
         event.stopPropagation();
-        const confirmation = window.confirm("Вы уверены, что хотите удалить этот razmer?");
+        const confirmation = window.confirm("Вы уверены, что хотите удалить этот размер?");
         if (confirmation) {
             let inventory_id: number = -1;
             if (this.groupedInventories && this.groupedInventories.has(sizeName)) {
@@ -238,10 +244,12 @@ export class ItemSizesComponent implements OnChanges {
             }
             this.inventoryService.delete(inventory_id).subscribe({
                 next: () => {
+                    this.toast.success("Размер удален");
                     this.eventService.emitRefreshItem(this.item?.id, this.forColor!);
                 },
                 error: (error: any) => {
                     console.error("Ошибка при удалении элемента:", error);
+                    this.toast.error("Не удалось удалить размер");
                 }
             });
         }

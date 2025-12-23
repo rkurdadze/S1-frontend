@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminUser } from '../../../data/interfaces/admin/admin.interfaces';
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 @Component({
   selector: 'app-admin-users',
@@ -15,12 +16,12 @@ import { AdminUser } from '../../../data/interfaces/admin/admin.interfaces';
 })
 export class AdminUsersComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private toast = inject(ToastService);
 
   users: AdminUser[] = [];
   selectedUser: AdminUser | null = null;
   showCreateForm = false;
   isLoading = false;
-  errorMessage = '';
 
   form: Omit<AdminUser, 'id' | 'lastActive'> = {
     name: '',
@@ -59,25 +60,27 @@ export class AdminUsersComponent implements OnInit {
     if (!this.form.name.trim() || !this.form.email.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     const payload = {
       ...this.form,
       name: this.form.name.trim(),
       email: this.form.email.trim()
     };
-    const request = this.selectedUser
-      ? this.adminApi.updateUser({ ...this.selectedUser, ...payload })
+    const isUpdate = !!this.selectedUser;
+    const request = isUpdate
+      ? this.adminApi.updateUser({ ...this.selectedUser!, ...payload })
       : this.adminApi.createUser(payload);
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success(isUpdate ? 'Пользователь обновлен' : 'Пользователь создан');
           this.resetForm();
           this.loadUsers();
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить пользователя. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить пользователя');
         }
       });
   }
@@ -87,27 +90,28 @@ export class AdminUsersComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .deleteUser(user.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Пользователь удален');
           if (this.selectedUser?.id === user.id) {
             this.resetForm();
           }
           this.loadUsers();
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить пользователя. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить пользователя');
         }
       });
   }
 
   private loadUsers(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getUsers()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -122,7 +126,7 @@ export class AdminUsersComponent implements OnInit {
           }
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить пользователей. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить пользователей');
         }
       });
   }

@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminEditorial } from '../../../data/interfaces/admin/admin.interfaces';
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 @Component({
   selector: 'app-admin-editorials',
@@ -15,12 +16,12 @@ import { AdminEditorial } from '../../../data/interfaces/admin/admin.interfaces'
 })
 export class AdminEditorialsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private toast = inject(ToastService);
 
   editorials: AdminEditorial[] = [];
   selectedEditorial: AdminEditorial | null = null;
   showCreateForm = false;
   isLoading = false;
-  errorMessage = '';
 
   form: Omit<AdminEditorial, 'id'> = {
     title: '',
@@ -59,21 +60,23 @@ export class AdminEditorialsComponent implements OnInit {
     if (!this.form.title.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     const payload = { ...this.form, title: this.form.title.trim() };
-    const request = this.selectedEditorial
-      ? this.adminApi.updateEditorial({ ...this.selectedEditorial, ...payload })
+    const isUpdate = !!this.selectedEditorial;
+    const request = isUpdate
+      ? this.adminApi.updateEditorial({ ...this.selectedEditorial!, ...payload })
       : this.adminApi.createEditorial(payload);
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success(isUpdate ? 'История обновлена' : 'История создана');
           this.resetForm();
           this.loadEditorials();
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить историю. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить историю');
         }
       });
   }
@@ -83,27 +86,28 @@ export class AdminEditorialsComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .deleteEditorial(editorial.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('История удалена');
           if (this.selectedEditorial?.id === editorial.id) {
             this.resetForm();
           }
           this.loadEditorials();
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить историю. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить историю');
         }
       });
   }
 
   private loadEditorials(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getEditorials()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -118,7 +122,7 @@ export class AdminEditorialsComponent implements OnInit {
           }
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить редакционные истории. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить редакционные истории');
         }
       });
   }

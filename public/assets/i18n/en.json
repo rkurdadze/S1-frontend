@@ -526,6 +526,10 @@
         "label": "Products",
         "desc": "Assortment, tags, variability"
       },
+      "tags": {
+        "label": "Tags",
+        "desc": "Product and category labels"
+      },
       "categories": {
         "label": "Categories",
         "desc": "Catalog and storefront structure"
@@ -583,6 +587,8 @@
       "price": "Price",
       "description": "Description",
       "publish_immediately": "Publish immediately",
+      "tags_label": "Item tags",
+      "no_tags": "No tags available. Add them in the panel on the right.",
       "list_title": "Product list",
       "in_database": "{{count}} in database",
       "loading": "Loading products...",
@@ -608,6 +614,26 @@
       "loading_tags": "Loading tags...",
       "new_tag_placeholder": "New tag",
       "add_tag": "Add"
+    },
+    "tags": {
+      "eyebrow": "Dictionaries",
+      "title": "Tags",
+      "subtitle": "Manage tags for items and categories.",
+      "card_title": "Tag Management",
+      "card_subtitle": "Enter a name to search or create a new tag",
+      "input_placeholder": "Start typing name...",
+      "add_button": "Add",
+      "list_title": "Tag List",
+      "duplicate_error": "This tag already exists",
+      "empty_search": "No matches found. Click 'Add' to create a new tag.",
+      "empty_list": "Tag list is empty",
+      "loading": "Loading...",
+      "confirm_delete": "Are you sure you want to delete tag \"{{name}}\"?",
+      "toast_created": "Tag \"{{name}}\" created",
+      "toast_deleted": "Tag \"{{name}}\" deleted",
+      "toast_load_error": "Failed to load tags",
+      "toast_create_error": "Failed to create tag",
+      "toast_delete_error": "Failed to delete tag"
     }
   }
 }

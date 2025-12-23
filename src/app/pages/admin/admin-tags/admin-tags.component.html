@@ -1,0 +1,61 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <p class="admin-page__eyebrow">{{ 'admin.tags.eyebrow' | translate }}</p>
+      <h2>{{ 'admin.tags.title' | translate }}</h2>
+      <p class="admin-page__subtitle">{{ 'admin.tags.subtitle' | translate }}</p>
+    </div>
+  </header>
+
+  <div class="admin-grid">
+    <div class="admin-card admin-card--create">
+      <div class="admin-card__header">
+        <h3>{{ 'admin.tags.card_title' | translate }}</h3>
+        <p class="admin-card__subtitle">{{ 'admin.tags.card_subtitle' | translate }}</p>
+      </div>
+      <form (ngSubmit)="addTag()" class="admin-form">
+        <div class="create-tag-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              [(ngModel)]="newTag" 
+              (ngModelChange)="filterTags()"
+              name="newTag" 
+              [placeholder]="'admin.tags.input_placeholder' | translate" 
+              class="admin-input"
+              [class.is-invalid]="isDuplicate"
+              autocomplete="off"
+            >
+            <p class="input-hint error" *ngIf="isDuplicate">{{ 'admin.tags.duplicate_error' | translate }}</p>
+          </div>
+          <button type="submit" class="admin-button admin-button--primary" [disabled]="!canAddTag">
+            {{ 'admin.tags.add_button' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="admin-card admin-card--list">
+      <div class="admin-card__header">
+        <h3>{{ 'admin.tags.list_title' | translate }}</h3>
+        <span class="admin-pill">{{ filteredTags.length }} / {{ tags.length }}</span>
+      </div>
+
+      <p class="admin-empty" *ngIf="isLoading">{{ 'admin.tags.loading' | translate }}</p>
+
+      <div class="tags-grid" *ngIf="!isLoading">
+        <div class="tag-card" *ngFor="let tag of filteredTags">
+          <span class="tag-name">{{ tag }}</span>
+          <button class="delete-btn" (click)="deleteTag(tag)" [title]="'admin.items.delete' | translate">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="admin-empty" *ngIf="filteredTags.length === 0">
+            {{ newTag ? ('admin.tags.empty_search' | translate) : ('admin.tags.empty_list' | translate) }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

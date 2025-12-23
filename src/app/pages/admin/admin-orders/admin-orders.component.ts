@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminOrder } from '../../../data/interfaces/admin/admin.interfaces';
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 @Component({
   selector: 'app-admin-orders',
@@ -15,11 +16,11 @@ import { AdminOrder } from '../../../data/interfaces/admin/admin.interfaces';
 })
 export class AdminOrdersComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private toast = inject(ToastService);
 
   orders: AdminOrder[] = [];
   selectedOrder: AdminOrder | null = null;
   isLoading = false;
-  errorMessage = '';
 
   form: Omit<AdminOrder, 'id'> = {
     orderNumber: '',
@@ -74,7 +75,7 @@ export class AdminOrdersComponent implements OnInit {
     if (!this.selectedOrder) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     const payload: AdminOrder = { ...this.selectedOrder, ...this.form, orderNumber: this.form.orderNumber.trim() };
     this.adminApi
@@ -82,11 +83,12 @@ export class AdminOrdersComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Заказ обновлен');
           this.resetForm();
           this.loadOrders();
         },
         error: () => {
-          this.errorMessage = 'Не удалось обновить заказ. Попробуйте ещё раз.';
+          this.toast.error('Не удалось обновить заказ');
         }
       });
   }
@@ -96,27 +98,28 @@ export class AdminOrdersComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .deleteOrder(order.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Заказ удален');
           if (this.selectedOrder?.id === order.id) {
             this.resetForm();
           }
           this.loadOrders();
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить заказ. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить заказ');
         }
       });
   }
 
   private loadOrders(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getOrders()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -131,7 +134,7 @@ export class AdminOrdersComponent implements OnInit {
           }
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить заказы. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить заказы');
         }
       });
   }

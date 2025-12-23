@@ -48,7 +48,6 @@
     </div>
     <div class="zone-list">
       <p class="admin-empty" *ngIf="isLoading">Загрузка зон доставки...</p>
-      <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
       <ng-container *ngFor="let zone of zones">
         <div class="zone">
           <div>

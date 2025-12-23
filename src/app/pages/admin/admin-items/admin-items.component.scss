@@ -125,11 +125,26 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.admin-form__section {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-form__label {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .admin-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 16px;
+}
+
+.admin-tags--selected {
+  margin-top: 6px;
 }
 
 .admin-tag {

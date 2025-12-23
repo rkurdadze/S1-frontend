@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminCollection } from '../../../data/interfaces/admin/admin.interfaces';
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 @Component({
   selector: 'app-admin-collections',
@@ -15,12 +16,12 @@ import { AdminCollection } from '../../../data/interfaces/admin/admin.interfaces
 })
 export class AdminCollectionsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private toast = inject(ToastService);
 
   collections: AdminCollection[] = [];
   selectedCollection: AdminCollection | null = null;
   showCreateForm = false;
   isLoading = false;
-  errorMessage = '';
 
   form: Omit<AdminCollection, 'id'> = {
     title: '',
@@ -61,21 +62,23 @@ export class AdminCollectionsComponent implements OnInit {
     if (!this.form.title.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     const payload = { ...this.form, title: this.form.title.trim() };
-    const request = this.selectedCollection
-      ? this.adminApi.updateCollection({ ...this.selectedCollection, ...payload })
+    const isUpdate = !!this.selectedCollection;
+    const request = isUpdate
+      ? this.adminApi.updateCollection({ ...this.selectedCollection!, ...payload })
       : this.adminApi.createCollection(payload);
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success(isUpdate ? 'Коллекция обновлена' : 'Коллекция создана');
           this.resetForm();
           this.loadCollections();
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить коллекцию. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить коллекцию');
         }
       });
   }
@@ -85,27 +88,28 @@ export class AdminCollectionsComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .deleteCollection(collection.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Коллекция удалена');
           if (this.selectedCollection?.id === collection.id) {
             this.resetForm();
           }
           this.loadCollections();
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить коллекцию. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить коллекцию');
         }
       });
   }
 
   private loadCollections(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getCollections()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -120,7 +124,7 @@ export class AdminCollectionsComponent implements OnInit {
           }
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить коллекции. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить коллекции');
         }
       });
   }

@@ -20,7 +20,7 @@ import { ToastService } from '../../../common-ui/toast-container/toast.service';
 })
 export class AdminNewsletterComponent implements OnInit {
   private adminApi = inject(AdminApiService);
-  private toastService = inject(ToastService);
+  private toast = inject(ToastService);
 
   draft: AdminNewsletterDraft = { subject: '', message: '' };
   segments: AdminNewsletterSegment[] = [];
@@ -28,7 +28,6 @@ export class AdminNewsletterComponent implements OnInit {
   showDraftForm = false;
   showSegmentForm = false;
   isLoading = false;
-  errorMessage = '';
 
   segmentForm: Omit<AdminNewsletterSegment, 'id'> = {
     name: '',
@@ -45,7 +44,7 @@ export class AdminNewsletterComponent implements OnInit {
     if (!this.draft.subject.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .updateNewsletterDraft({
@@ -56,10 +55,10 @@ export class AdminNewsletterComponent implements OnInit {
       .subscribe({
         next: draft => {
           this.draft = { ...draft };
-          this.toastService.info('Черновик сохранён', { autoClose: true, duration: 2500 });
+          this.toast.success('Черновик сохранён');
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить черновик. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить черновик');
         }
       });
   }
@@ -76,7 +75,11 @@ export class AdminNewsletterComponent implements OnInit {
     if (!this.draft.subject.trim()) {
       return;
     }
-    this.errorMessage = '';
+    const confirmation = globalThis.confirm('Вы уверены, что хотите отправить рассылку?');
+    if (!confirmation) {
+      return;
+    }
+
     this.isLoading = true;
     const segmentIds = this.segments.map(segment => segment.id);
     this.adminApi
@@ -90,10 +93,10 @@ export class AdminNewsletterComponent implements OnInit {
       .subscribe({
         next: send => {
           this.sends = [send, ...this.sends];
-          this.toastService.info('Рассылка отправлена', { autoClose: true, duration: 2500 });
+          this.toast.success('Рассылка отправлена');
         },
         error: () => {
-          this.errorMessage = 'Не удалось отправить рассылку. Попробуйте ещё раз.';
+          this.toast.error('Не удалось отправить рассылку');
         }
       });
   }
@@ -102,7 +105,7 @@ export class AdminNewsletterComponent implements OnInit {
     if (!this.segmentForm.name.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .createNewsletterSegment({
@@ -115,15 +118,20 @@ export class AdminNewsletterComponent implements OnInit {
         next: () => {
           this.segmentForm = { name: '', count: 0, description: '' };
           this.loadSegments();
+          this.toast.success('Сегмент создан');
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить сегмент. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить сегмент');
         }
       });
   }
 
   removeSegment(segment: AdminNewsletterSegment): void {
-    this.errorMessage = '';
+    const confirmation = globalThis.confirm('Удалить сегмент?');
+    if (!confirmation) {
+      return;
+    }
+
     this.isLoading = true;
     this.adminApi
       .deleteNewsletterSegment(segment.id)
@@ -131,16 +139,17 @@ export class AdminNewsletterComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadSegments();
+          this.toast.success('Сегмент удален');
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить сегмент. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить сегмент');
         }
       });
   }
 
   private loadDraft(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getNewsletterDraft()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -149,14 +158,14 @@ export class AdminNewsletterComponent implements OnInit {
           this.draft = { ...draft };
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить черновик. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить черновик');
         }
       });
   }
 
   private loadSegments(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getNewsletterSegments()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -165,7 +174,7 @@ export class AdminNewsletterComponent implements OnInit {
           this.segments = segments;
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить сегменты. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить сегменты');
         }
       });
   }

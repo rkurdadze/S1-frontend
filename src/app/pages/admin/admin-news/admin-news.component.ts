@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminNewsItem } from '../../../data/interfaces/admin/admin.interfaces';
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 @Component({
   selector: 'app-admin-news',
@@ -15,12 +16,12 @@ import { AdminNewsItem } from '../../../data/interfaces/admin/admin.interfaces';
 })
 export class AdminNewsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private toast = inject(ToastService);
 
   news: AdminNewsItem[] = [];
   selectedNews: AdminNewsItem | null = null;
   showCreateForm = false;
   isLoading = false;
-  errorMessage = '';
 
   form: Omit<AdminNewsItem, 'id'> = {
     title: '',
@@ -59,21 +60,23 @@ export class AdminNewsComponent implements OnInit {
     if (!this.form.title.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     const payload = { ...this.form, title: this.form.title.trim() };
-    const request = this.selectedNews
-      ? this.adminApi.updateNews({ ...this.selectedNews, ...payload })
+    const isUpdate = !!this.selectedNews;
+    const request = isUpdate
+      ? this.adminApi.updateNews({ ...this.selectedNews!, ...payload })
       : this.adminApi.createNews(payload);
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success(isUpdate ? 'Новость обновлена' : 'Новость создана');
           this.resetForm();
           this.loadNews();
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить новость. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить новость');
         }
       });
   }
@@ -83,27 +86,28 @@ export class AdminNewsComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .deleteNews(item.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Новость удалена');
           if (this.selectedNews?.id === item.id) {
             this.resetForm();
           }
           this.loadNews();
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить новость. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить новость');
         }
       });
   }
 
   private loadNews(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getNews()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -118,7 +122,7 @@ export class AdminNewsComponent implements OnInit {
           }
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить новости. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить новости');
         }
       });
   }

@@ -67,15 +67,13 @@ export class ItemColorsComponent implements OnChanges {
             };
             this.itemService.addColors([colorObject]).subscribe({
                 next: (response) => {
+                    this.toastService.success('Цвет добавлен');
                     this.eventService.emitRefreshItem(this.itemId, colorHex);
                     this.selectColor(colorHex);
                 },
                 error: (err) => {
                     console.error('Ошибка при сохранении цветов:', err);
-                    this.toastService.error(
-                        `Ошибка при сохранении цветов`,
-                        { autoClose: true, duration: 4000 }
-                    );
+                    this.toastService.error('Не удалось добавить цвет');
                 }
             });
         }
@@ -89,21 +87,19 @@ export class ItemColorsComponent implements OnChanges {
                 item_id: this.itemId
             };
 
-            const confirmation = globalThis.confirm("Вы уверены, что хотите change этот элемент?");
+            const confirmation = globalThis.confirm("Вы уверены, что хотите изменить этот элемент?");
             if (confirmation) {
                 let color_id = this.getColorIdByName(this.selectedColor);
                 if (color_id) {
                     this.itemService.editColor(color_id, colorObject).subscribe({
                         next: (response) => {
+                            this.toastService.success('Цвет обновлен');
                             this.eventService.emitRefreshItem(this.itemId, colorHex);
                             this.selectColor(colorHex);
                         },
                         error: (err) => {
                             console.error('Ошибка при сохранении цветов:', err);
-                            this.toastService.error(
-                                `Ошибка при сохранении цветов`,
-                                { autoClose: true, duration: 4000 }
-                            );
+                            this.toastService.error('Не удалось обновить цвет');
                         }
                     });
                 }
@@ -117,10 +113,11 @@ export class ItemColorsComponent implements OnChanges {
             item_id: this.itemId
         };
 
-        const confirmation = globalThis.confirm("Вы уверены, что хотите удалить этот color?");
+        const confirmation = globalThis.confirm("Вы уверены, что хотите удалить этот цвет?");
         if (confirmation) {
             this.itemService.removeColor(colorObject).subscribe({
                 next: () => {
+                    this.toastService.success('Цвет удален');
                     if (this.colors){
                         const index = this.colors.findIndex(c => c.name === colorObject.name);
 
@@ -137,6 +134,7 @@ export class ItemColorsComponent implements OnChanges {
                 },
                 error: (err) => {
                     console.error('Ошибка при удалении color:', err);
+                    this.toastService.error('Не удалось удалить цвет');
                 }
             });
         }

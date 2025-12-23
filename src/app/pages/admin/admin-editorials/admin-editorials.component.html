@@ -41,7 +41,6 @@
 
   <div class="editorial-grid">
     <p class="admin-empty" *ngIf="isLoading">Загрузка историй...</p>
-    <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
     <ng-container *ngFor="let item of editorials">
       <article class="editorial-card">
         <div class="editorial-card__image" [style.backgroundImage]="'url(' + item.image + ')'">

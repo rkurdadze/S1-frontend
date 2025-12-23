@@ -33,6 +33,26 @@
           <input type="checkbox" name="createPublish" [(ngModel)]="createForm.publish" />
           {{ 'admin.items.publish_immediately' | translate }}
         </label>
+        <div class="admin-form__section">
+          <p class="admin-form__label">{{ 'admin.items.tags_label' | translate }}</p>
+          <div class="admin-tags" *ngIf="tags.length; else createTagsEmpty">
+            <button
+              class="admin-tag"
+              type="button"
+              *ngFor="let tag of tags"
+              [class.is-active]="isCreateTagActive(tag)"
+              (click)="toggleCreateTag(tag)"
+            >
+              {{ tag }}
+            </button>
+          </div>
+          <ng-template #createTagsEmpty>
+            <p class="admin-empty">{{ 'admin.items.no_tags' | translate }}</p>
+          </ng-template>
+          <div class="admin-tags admin-tags--selected" *ngIf="createItemTags.length">
+            <span class="admin-chip" *ngFor="let tag of createItemTags">{{ tag }}</span>
+          </div>
+        </div>
         <div class="admin-form__actions">
           <button class="admin-button admin-button--primary" type="submit">{{ 'admin.items.create_item' | translate }}</button>
         </div>
@@ -45,7 +65,6 @@
         <span class="admin-pill">{{ 'admin.items.in_database' | translate: { count: items.length } }}</span>
       </div>
       <p class="admin-empty" *ngIf="isLoading">{{ 'admin.items.loading' | translate }}</p>
-      <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
       <div class="admin-list" *ngIf="items.length; else emptyItems">
         <ng-container *ngFor="let item of items">
           <article
@@ -105,14 +124,31 @@
                 <input type="checkbox" name="editPublish" [(ngModel)]="editForm.publish" />
                 {{ 'admin.items.published' | translate }}
               </label>
+              <div class="admin-form__section">
+                <p class="admin-form__label">{{ 'admin.items.tags_label' | translate }}</p>
+                <div class="admin-tags" *ngIf="tags.length; else editTagsEmpty">
+                  <button
+                    class="admin-tag"
+                    type="button"
+                    *ngFor="let tag of tags"
+                    [class.is-active]="isTagActive(tag)"
+                    (click)="toggleTag(tag)"
+                  >
+                    {{ tag }}
+                  </button>
+                </div>
+                <ng-template #editTagsEmpty>
+                  <p class="admin-empty">{{ 'admin.items.no_tags' | translate }}</p>
+                </ng-template>
+                <div class="admin-tags admin-tags--selected" *ngIf="selectedItemTags.length">
+                  <span class="admin-chip" *ngFor="let tag of selectedItemTags">{{ tag }}</span>
+                </div>
+              </div>
               <div class="admin-form__actions">
                 <button class="admin-button admin-button--primary" type="submit">{{ 'admin.items.save_changes' | translate }}</button>
                 <button class="admin-button" type="button" (click)="onDeleteItem()">{{ 'admin.items.delete' | translate }}</button>
               </div>
             </form>
-            <div class="admin-tags admin-tags--selected" *ngIf="selectedItemTags.length">
-              <span class="admin-chip" *ngFor="let tag of selectedItemTags">{{ tag }}</span>
-            </div>
             <div class="admin-inventory-panel">
               <app-item-colors
                 [colors]="selectedItem?.colors ?? []"
@@ -136,7 +172,6 @@
               </div>
               <p class="admin-empty" *ngIf="!selectedColor">{{ 'admin.items.select_color_hint' | translate }}</p>
               <p class="admin-empty" *ngIf="isPhotosLoading">{{ 'admin.items.loading_images' | translate }}</p>
-              <p class="admin-empty" *ngIf="photoError">{{ photoError }}</p>
               <div class="admin-image-grid" *ngIf="selectedColor">
                 <div class="admin-image-card" *ngFor="let image of getSelectedColorImages()">
                   <img [src]="image.url" [alt]="('admin.items.id' | translate) + ' ' + image.id" />
@@ -152,31 +187,6 @@
       <ng-template #emptyItems>
         <p class="admin-empty">{{ 'admin.items.no_items' | translate }}</p>
       </ng-template>
-    </section>
-
-    <section class="admin-card admin-card--tags">
-      <div class="admin-card__header">
-        <h3>{{ 'admin.items.tags_title' | translate }}</h3>
-        <span class="admin-pill">{{ 'admin.items.active_tags' | translate: { count: tags.length } }}</span>
-      </div>
-      <p class="admin-empty" *ngIf="isTagsLoading">{{ 'admin.items.loading_tags' | translate }}</p>
-      <p class="admin-empty" *ngIf="tagError">{{ tagError }}</p>
-      <div class="admin-tags">
-        <button
-          class="admin-tag"
-          type="button"
-          *ngFor="let tag of tags"
-          [class.is-active]="isTagActive(tag)"
-          (click)="toggleTag(tag)"
-        >
-          {{ tag }}
-          <span class="admin-tag__close" (click)="$event.stopPropagation(); removeTag(tag)">×</span>
-        </button>
-      </div>
-      <div class="admin-tag-input">
-        <input type="text" [(ngModel)]="tagInput" name="tagInput" [placeholder]="'admin.items.new_tag_placeholder' | translate" />
-        <button class="admin-button admin-button--primary" type="button" (click)="addTag()">{{ 'admin.items.add_tag' | translate }}</button>
-      </div>
     </section>
   </div>
 </section>

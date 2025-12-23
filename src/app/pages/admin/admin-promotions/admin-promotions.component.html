@@ -47,7 +47,6 @@
 
   <div class="admin-grid">
     <p class="admin-empty" *ngIf="isLoading">Загрузка акций...</p>
-    <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
     <ng-container *ngFor="let promo of promotions">
       <article class="promo-card">
         <div class="promo-card__header">

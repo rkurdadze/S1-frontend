@@ -17,6 +17,7 @@ import {AdminPromotionsComponent} from "./pages/admin/admin-promotions/admin-pro
 import {AdminUsersComponent} from "./pages/admin/admin-users/admin-users.component";
 import {AdminNewsletterComponent} from "./pages/admin/admin-newsletter/admin-newsletter.component";
 import {AdminDeliveryComponent} from "./pages/admin/admin-delivery/admin-delivery.component";
+import {AdminTagsComponent} from "./pages/admin/admin-tags/admin-tags.component";
 import {adminGuard} from "./data/guards/admin.guard";
 
 export const routes: Routes = [
@@ -36,6 +37,7 @@ export const routes: Routes = [
                 children: [
                     {path: '', pathMatch: 'full', redirectTo: 'items'},
                     {path: 'items', component: AdminItemsComponent},
+                    {path: 'tags', component: AdminTagsComponent},
                     {path: 'categories', component: AdminCategoriesComponent},
                     {path: 'news', component: AdminNewsComponent},
                     {path: 'collections', component: AdminCollectionsComponent},

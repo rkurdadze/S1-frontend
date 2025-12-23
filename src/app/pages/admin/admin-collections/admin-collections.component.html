@@ -43,9 +43,8 @@
     </form>
   </article>
 
-  <div class="collection-grid">
+  <div class="admin-grid">
     <p class="admin-empty" *ngIf="isLoading">Загрузка коллекций...</p>
-    <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
     <ng-container *ngFor="let collection of collections">
       <article class="collection-card">
         <div class="collection-card__media" [style.backgroundImage]="'url(' + collection.image + ')'">

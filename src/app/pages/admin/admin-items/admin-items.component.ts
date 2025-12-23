@@ -14,6 +14,7 @@ import { Color } from '../../../data/interfaces/color.interface';
 import { Photo } from '../../../data/interfaces/photo.interface';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import {TranslateModule} from "@ngx-translate/core";
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 interface ItemFormState {
   name: string;
@@ -40,6 +41,7 @@ export class AdminItemsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private photoService = inject(PhotoService);
   private destroyRef = inject(DestroyRef);
+  private toast = inject(ToastService);
 
   items: Item[] = [];
   selectedItem: Item | null = null;
@@ -47,9 +49,6 @@ export class AdminItemsComponent implements OnInit {
   isLoading = false;
   isTagsLoading = false;
   isPhotosLoading = false;
-  errorMessage = '';
-  tagError = '';
-  photoError = '';
   showCreateForm = false;
   uploadQueue: Photo[] = [];
   selectedColorImages: AdminImagePreview[] = [];
@@ -69,8 +68,8 @@ export class AdminItemsComponent implements OnInit {
   };
 
   tags: string[] = [];
-  tagInput = '';
   selectedItemTags: string[] = [];
+  createItemTags: string[] = [];
 
   ngOnInit(): void {
     this.loadItems();
@@ -87,7 +86,7 @@ export class AdminItemsComponent implements OnInit {
 
   loadItems(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.itemService
       .getItems()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -96,7 +95,7 @@ export class AdminItemsComponent implements OnInit {
           this.items = items;
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить товары. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить товары');
         }
       });
   }
@@ -109,7 +108,7 @@ export class AdminItemsComponent implements OnInit {
   }
 
   loadItem(itemId: number): void {
-    this.errorMessage = '';
+
     this.itemService.getItem(itemId).subscribe({
       next: item => {
         this.selectedItem = item;
@@ -124,7 +123,7 @@ export class AdminItemsComponent implements OnInit {
         this.loadSelectedColorPhotos();
       },
       error: () => {
-        this.errorMessage = 'Не удалось загрузить данные товара. Попробуйте ещё раз.';
+        this.toast.error('Не удалось загрузить данные товара');
       }
     });
   }
@@ -136,7 +135,7 @@ export class AdminItemsComponent implements OnInit {
       publish: this.createForm.publish,
       price: this.createForm.price,
       colors: [],
-      tags: []
+      tags: this.createItemTags
     };
 
     if (!payload.name) {
@@ -145,11 +144,16 @@ export class AdminItemsComponent implements OnInit {
 
     this.itemService.addItem(payload).subscribe({
       next: item => {
+        this.toast.success('Товар создан');
         this.createForm = { name: '', description: '', publish: true, price: 0 };
+        this.createItemTags = [];
         this.loadItems();
         if (item.id) {
           this.selectItem(item);
         }
+      },
+      error: () => {
+        this.toast.error('Не удалось создать товар');
       }
     });
   }
@@ -170,8 +174,12 @@ export class AdminItemsComponent implements OnInit {
 
     this.itemService.save(updated).subscribe({
       next: () => {
+        this.toast.success('Товар обновлен');
         this.loadItems();
         this.loadItem(updated.id!);
+      },
+      error: () => {
+        this.toast.error('Не удалось обновить товар');
       }
     });
   }
@@ -188,9 +196,13 @@ export class AdminItemsComponent implements OnInit {
 
     this.itemService.delete(target.id).subscribe({
       next: () => {
+        this.toast.success('Товар удален');
         this.selectedItem = null;
         this.selectedColor = null;
         this.loadItems();
+      },
+      error: () => {
+        this.toast.error('Не удалось удалить товар');
       }
     });
   }
@@ -198,46 +210,6 @@ export class AdminItemsComponent implements OnInit {
   onColorSelected(color: string): void {
     this.selectedColor = color;
     this.loadSelectedColorPhotos();
-  }
-
-  addTag(): void {
-    const trimmed = this.tagInput.trim();
-    if (!trimmed) {
-      return;
-    }
-    this.tagError = '';
-    this.isTagsLoading = true;
-    this.adminApi
-      .createTag(trimmed)
-      .pipe(finalize(() => (this.isTagsLoading = false)))
-      .subscribe({
-        next: () => {
-          this.tagInput = '';
-          this.loadTags();
-        },
-        error: () => {
-          this.tagError = 'Не удалось добавить тег. Попробуйте ещё раз.';
-        }
-      });
-  }
-
-  removeTag(tag: string): void {
-    this.tagError = '';
-    this.isTagsLoading = true;
-    this.adminApi
-      .deleteTag(tag)
-      .pipe(finalize(() => (this.isTagsLoading = false)))
-      .subscribe({
-        next: () => {
-          this.loadTags();
-          if (this.selectedItem?.id) {
-            this.refreshSelectedItemTags(this.selectedItem.id);
-          }
-        },
-        error: () => {
-          this.tagError = 'Не удалось удалить тег. Попробуйте ещё раз.';
-        }
-      });
   }
 
   toggleTag(tag: string): void {
@@ -251,7 +223,7 @@ export class AdminItemsComponent implements OnInit {
       current.add(tag);
     }
     const next = Array.from(current);
-    this.tagError = '';
+
     this.isTagsLoading = true;
     this.adminApi
       .updateItemTags(this.selectedItem.id, next)
@@ -265,13 +237,21 @@ export class AdminItemsComponent implements OnInit {
           }
         },
         error: () => {
-          this.tagError = 'Не удалось обновить теги товара. Попробуйте ещё раз.';
+          this.toast.error('Не удалось обновить теги товара');
         }
       });
   }
 
+  toggleCreateTag(tag: string): void {
+    this.createItemTags = this.updateTagSelection(this.createItemTags, tag);
+  }
+
   isTagActive(tag: string): boolean {
     return this.selectedItemTags.includes(tag);
+  }
+
+  isCreateTagActive(tag: string): boolean {
+    return this.createItemTags.includes(tag);
   }
 
   get selectedItemId(): number {
@@ -341,11 +321,15 @@ export class AdminItemsComponent implements OnInit {
     }
     this.itemService.saveImages(this.uploadQueue, this.selectedItem.id).subscribe({
       next: (response: any) => {
+        this.toast.success('Изображения загружены');
         const latestId = response?.[response.length - 1]?.id;
         this.loadItem(this.selectedItem!.id!);
         if (latestId) {
           this.selectedColor = this.selectedColor ?? this.selectedItem?.colors?.[0]?.name ?? null;
         }
+      },
+      error: () => {
+        this.toast.error('Не удалось загрузить изображения');
       }
     });
   }
@@ -355,26 +339,26 @@ export class AdminItemsComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.photoError = '';
-    this.isPhotosLoading = true;
+
     this.adminApi
       .deletePhoto(photoId)
       .pipe(finalize(() => (this.isPhotosLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Изображение удалено');
           if (this.selectedItem?.id) {
             this.loadItem(this.selectedItem.id);
           }
         },
         error: () => {
-          this.photoError = 'Не удалось удалить изображение. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить изображение');
         }
       });
   }
 
   private loadTags(): void {
     this.isTagsLoading = true;
-    this.tagError = '';
+
     this.adminApi
       .getTags()
       .pipe(finalize(() => (this.isTagsLoading = false)))
@@ -383,7 +367,7 @@ export class AdminItemsComponent implements OnInit {
           this.tags = tags;
         },
         error: () => {
-          this.tagError = 'Не удалось загрузить теги. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить теги');
         }
       });
   }
@@ -410,7 +394,7 @@ export class AdminItemsComponent implements OnInit {
       return;
     }
     this.isPhotosLoading = true;
-    this.photoError = '';
+
     this.adminApi
       .getItemColorPhotos(this.selectedItem.id, color.id)
       .pipe(finalize(() => (this.isPhotosLoading = false)))
@@ -424,7 +408,7 @@ export class AdminItemsComponent implements OnInit {
             }));
         },
         error: () => {
-          this.photoError = 'Не удалось загрузить изображения. Попробуйте ещё раз.';
+
         }
       });
   }
@@ -437,5 +421,15 @@ export class AdminItemsComponent implements OnInit {
       return image;
     }
     return `data:image/jpeg;base64,${image}`;
+  }
+
+  private updateTagSelection(current: string[], tag: string): string[] {
+    const next = new Set(current);
+    if (next.has(tag)) {
+      next.delete(tag);
+    } else {
+      next.add(tag);
+    }
+    return Array.from(next);
   }
 }

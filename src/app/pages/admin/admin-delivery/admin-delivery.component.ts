@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminDeliveryZone } from '../../../data/interfaces/admin/admin.interfaces';
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 @Component({
   selector: 'app-admin-delivery',
@@ -15,12 +16,12 @@ import { AdminDeliveryZone } from '../../../data/interfaces/admin/admin.interfac
 })
 export class AdminDeliveryComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private toast = inject(ToastService);
 
   zones: AdminDeliveryZone[] = [];
   selectedZone: AdminDeliveryZone | null = null;
   showCreateForm = false;
   isLoading = false;
-  errorMessage = '';
 
   form: Omit<AdminDeliveryZone, 'id'> = {
     zone: '',
@@ -59,21 +60,23 @@ export class AdminDeliveryComponent implements OnInit {
     if (!this.form.zone.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     const payload = { ...this.form, zone: this.form.zone.trim() };
-    const request = this.selectedZone
-      ? this.adminApi.updateDeliveryZone({ ...this.selectedZone, ...payload })
+    const isUpdate = !!this.selectedZone;
+    const request = isUpdate
+      ? this.adminApi.updateDeliveryZone({ ...this.selectedZone!, ...payload })
       : this.adminApi.createDeliveryZone(payload);
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success(isUpdate ? 'Зона доставки обновлена' : 'Зона доставки создана');
           this.resetForm();
           this.loadZones();
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить зону доставки. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить зону доставки');
         }
       });
   }
@@ -83,27 +86,28 @@ export class AdminDeliveryComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .deleteDeliveryZone(zone.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Зона доставки удалена');
           if (this.selectedZone?.id === zone.id) {
             this.resetForm();
           }
           this.loadZones();
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить зону доставки. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить зону доставки');
         }
       });
   }
 
   private loadZones(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getDeliveryZones()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -118,7 +122,7 @@ export class AdminDeliveryComponent implements OnInit {
           }
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить зоны доставки. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить зоны доставки');
         }
       });
   }

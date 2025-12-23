@@ -14,7 +14,7 @@
     </div>
     <div class="order-list">
       <p class="admin-empty" *ngIf="isLoading">Загрузка заказов...</p>
-      <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
+  
       <ng-container *ngFor="let order of orders">
         <article class="order-row">
           <div>

@@ -13,6 +13,12 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     count: 0
   },
   {
+    label: 'admin.nav.tags.label',
+    description: 'admin.nav.tags.desc',
+    route: 'tags',
+    count: 0
+  },
+  {
     label: 'admin.nav.categories.label',
     description: 'admin.nav.categories.desc',
     route: 'categories',

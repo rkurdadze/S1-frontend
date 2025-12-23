@@ -24,16 +24,36 @@
         Описание
         <textarea rows="4" name="description" [(ngModel)]="form.description"></textarea>
       </label>
-      <div class="admin-form__row">
-        <label>
-          Количество товаров
-          <input type="number" name="items" [(ngModel)]="form.items" />
-        </label>
-        <label>
-          Highlight
-          <input type="text" name="highlight" [(ngModel)]="form.highlight" />
-        </label>
+      <label>
+        Highlight
+        <input type="text" name="highlight" [(ngModel)]="form.highlight" />
+      </label>
+
+      <div class="admin-form__tags">
+        <label>Теги</label>
+        
+        <div class="current-tags" *ngIf="form.tags.length > 0">
+          <span class="tag-pill" *ngFor="let tag of form.tags">
+            {{ tag }}
+            <button type="button" class="remove-tag" (click)="removeTag(tag)">×</button>
+          </span>
+        </div>
+
+        <div class="available-tags" *ngIf="availableTags.length > 0">
+          <p class="small-label">Доступные теги:</p>
+          <div class="tags-cloud">
+            <button 
+              type="button" 
+              class="tag-chip" 
+              *ngFor="let tag of availableTags" 
+              [class.active]="form.tags.includes(tag)"
+              (click)="toggleTag(tag)">
+              {{ tag }}
+            </button>
+          </div>
+        </div>
       </div>
+
       <div class="admin-form__actions">
         <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
         <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
@@ -43,12 +63,13 @@
 
   <div class="admin-grid">
     <p class="admin-empty" *ngIf="isLoading">Загрузка категорий...</p>
-    <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
     <ng-container *ngFor="let category of categories">
       <article class="admin-card">
         <div class="admin-card__header">
           <h3>{{ category.title }}</h3>
-          <span class="admin-pill">{{ category.items }} товаров</span>
+          <div class="tags-list">
+             <span class="admin-pill" *ngFor="let tag of category.tags">{{ tag }}</span>
+          </div>
         </div>
         <p class="admin-card__text">{{ category.description }}</p>
         <div class="admin-card__footer">
@@ -74,16 +95,36 @@
             Описание
             <textarea rows="4" name="editDescription" [(ngModel)]="form.description"></textarea>
           </label>
-          <div class="admin-form__row">
-            <label>
-              Количество товаров
-              <input type="number" name="editItems" [(ngModel)]="form.items" />
-            </label>
-            <label>
-              Highlight
-              <input type="text" name="editHighlight" [(ngModel)]="form.highlight" />
-            </label>
+          <label>
+            Highlight
+            <input type="text" name="editHighlight" [(ngModel)]="form.highlight" />
+          </label>
+
+          <div class="admin-form__tags">
+            <label>Теги</label>
+            
+            <div class="current-tags" *ngIf="form.tags.length > 0">
+              <span class="tag-pill" *ngFor="let tag of form.tags">
+                {{ tag }}
+                <button type="button" class="remove-tag" (click)="removeTag(tag)">×</button>
+              </span>
+            </div>
+    
+            <div class="available-tags" *ngIf="availableTags.length > 0">
+              <p class="small-label">Доступные теги:</p>
+              <div class="tags-cloud">
+                <button 
+                  type="button" 
+                  class="tag-chip" 
+                  *ngFor="let tag of availableTags" 
+                  [class.active]="form.tags.includes(tag)"
+                  (click)="toggleTag(tag)">
+                  {{ tag }}
+                </button>
+              </div>
+            </div>
           </div>
+
           <div class="admin-form__actions">
             <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
             <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>

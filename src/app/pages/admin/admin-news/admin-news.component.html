@@ -41,7 +41,6 @@
 
   <div class="admin-grid">
     <p class="admin-empty" *ngIf="isLoading">Загрузка новостей...</p>
-    <p class="admin-empty" *ngIf="errorMessage">{{ errorMessage }}</p>
     <ng-container *ngFor="let item of news">
       <article class="news-card">
         <div class="news-card__image" [style.backgroundImage]="'url(' + item.image + ')'">

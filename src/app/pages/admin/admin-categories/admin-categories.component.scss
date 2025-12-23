@@ -44,6 +44,108 @@
   flex-wrap: wrap;
 }
 
+/* Tags Styling */
+.admin-form__tags {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.tags-input-container {
+  display: flex;
+  gap: 8px;
+  
+  input {
+    flex: 1;
+  }
+}
+
+.current-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 32px;
+  padding: 8px 0;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 16px;
+  font-size: 13px;
+  
+  .remove-tag {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    line-height: 1;
+    
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.available-tags {
+  margin-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 12px;
+}
+
+.small-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-chip {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+  }
+  
+  &.active {
+    background-color: #fff;
+    color: #000;
+    border-color: #fff;
+  }
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  
+  .admin-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+}
+
 @include media-md {
   .admin-card--form {
     grid-column: span 1;

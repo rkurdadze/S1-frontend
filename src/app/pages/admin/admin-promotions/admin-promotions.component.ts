@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminPromotion } from '../../../data/interfaces/admin/admin.interfaces';
+import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 @Component({
   selector: 'app-admin-promotions',
@@ -15,12 +16,12 @@ import { AdminPromotion } from '../../../data/interfaces/admin/admin.interfaces'
 })
 export class AdminPromotionsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private toast = inject(ToastService);
 
   promotions: AdminPromotion[] = [];
   selectedPromotion: AdminPromotion | null = null;
   showCreateForm = false;
   isLoading = false;
-  errorMessage = '';
 
   form: Omit<AdminPromotion, 'id'> = {
     name: '',
@@ -61,21 +62,23 @@ export class AdminPromotionsComponent implements OnInit {
     if (!this.form.name.trim()) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     const payload = { ...this.form, name: this.form.name.trim() };
-    const request = this.selectedPromotion
-      ? this.adminApi.updatePromotion({ ...this.selectedPromotion, ...payload })
+    const isUpdate = !!this.selectedPromotion;
+    const request = isUpdate
+      ? this.adminApi.updatePromotion({ ...this.selectedPromotion!, ...payload })
       : this.adminApi.createPromotion(payload);
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success(isUpdate ? 'Акция обновлена' : 'Акция создана');
           this.resetForm();
           this.loadPromotions();
         },
         error: () => {
-          this.errorMessage = 'Не удалось сохранить акцию. Попробуйте ещё раз.';
+          this.toast.error('Не удалось сохранить акцию');
         }
       });
   }
@@ -85,27 +88,28 @@ export class AdminPromotionsComponent implements OnInit {
     if (!confirmation) {
       return;
     }
-    this.errorMessage = '';
+
     this.isLoading = true;
     this.adminApi
       .deletePromotion(promotion.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
+          this.toast.success('Акция удалена');
           if (this.selectedPromotion?.id === promotion.id) {
             this.resetForm();
           }
           this.loadPromotions();
         },
         error: () => {
-          this.errorMessage = 'Не удалось удалить акцию. Попробуйте ещё раз.';
+          this.toast.error('Не удалось удалить акцию');
         }
       });
   }
 
   private loadPromotions(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+
     this.adminApi
       .getPromotions()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -120,7 +124,7 @@ export class AdminPromotionsComponent implements OnInit {
           }
         },
         error: () => {
-          this.errorMessage = 'Не удалось загрузить акции. Попробуйте ещё раз.';
+          this.toast.error('Не удалось загрузить акции');
         }
       });
   }
