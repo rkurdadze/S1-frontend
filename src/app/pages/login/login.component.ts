@@ -39,7 +39,13 @@ export class LoginComponent implements AfterViewInit {
   }
 
   handleCredentialResponse(response: any): void {
+    console.log("[LoginComponent] Google callback triggered. Response:", response);
     const token = response.credential;
+
+    if (!token) {
+      console.error("[LoginComponent] No token found in Google response!");
+      return;
+    }
 
     this.googleAuth.signInWithGoogle(token);
 
@@ -48,7 +54,8 @@ export class LoginComponent implements AfterViewInit {
             filter(Boolean),
             take(1)
         )
-        .subscribe(() => {
+        .subscribe((user) => {
+          console.log("[LoginComponent] Login successful, navigating to:", this.returnUrl);
           this.router.navigateByUrl(this.returnUrl!);
         });
   }

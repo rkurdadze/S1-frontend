@@ -82,6 +82,13 @@ p {
   color: rgba(245, 245, 247, 0.78);
 }
 
+.google-signin-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+
 .google-signout-button {
   display: flex;
   align-items: center;

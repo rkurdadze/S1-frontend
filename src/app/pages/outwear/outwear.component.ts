@@ -100,10 +100,15 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     const itemCardWrapper = this.getItemCardWrapper();
     if (itemCardWrapper) {
-      this.resizeObserver = new ResizeObserver(() => this.updateDisplayedItems());
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updateDisplayedItems();
+      });
       this.resizeObserver.observe(itemCardWrapper);
     }
-    this.updateDisplayedItems();
+    // Defer the initial update to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.updateDisplayedItems();
+    });
   }
 
   private updateTranslatedSections(outwear: any) {
@@ -185,7 +190,7 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   refreshItems() {
     this.itemService.getItems().subscribe(items => {
       this.items = items;
-      this.updateDisplayedItems();
+      setTimeout(() => this.updateDisplayedItems());
     });
   }
 

@@ -105,6 +105,8 @@ export class GoogleAuthService {
         (window as any).google.accounts.id.initialize({
             client_id: this.clientId,
             callback: callback,
+            auto_select: false,
+            ux_mode: 'popup'
         });
     }
 
@@ -116,18 +118,20 @@ export class GoogleAuthService {
     }
 
     signInWithGoogle(token: string): void {
-        console.log("[GoogleAuthService] Отправка токена на сервер для входа...");
+        console.log("[GoogleAuthService] Token received from Google. Sending to backend:", this.baseApiUrl + "auth/google");
 
         this.http.post(`${this.baseApiUrl}auth/google`, { token }).subscribe({
             next: (res: any) => {
-                console.log("[GoogleAuthService] Вход выполнен успешно:", res); // Проверяем содержимое ответа
-                if (!res.picture) {
-                    console.warn("[GoogleAuthService] Поле picture отсутствует в ответе!");
-                }
+                console.log("[GoogleAuthService] Backend response success:", res);
                 localStorage.setItem('user', JSON.stringify(res));
                 this.userSubject.next(res);
             },
-            error: (err) => console.error("[GoogleAuthService] Ошибка входа", err),
+            error: (err) => {
+                console.error("[GoogleAuthService] Backend login error:", err);
+                if (err.status === 0) {
+                    console.error("[GoogleAuthService] Possible CORS error or backend is down.");
+                }
+            }
         });
     }
 
