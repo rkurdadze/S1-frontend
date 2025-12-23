@@ -1,50 +1,50 @@
 <section class="admin-page">
   <header class="admin-page__header">
     <div>
-      <p class="admin-page__eyebrow">Витрина коллекций</p>
-      <h2>Коллекции</h2>
-      <p class="admin-page__subtitle">Настраивайте подборки для главной страницы и промо-кампаний.</p>
+      <p class="admin-page__eyebrow">{{ 'admin.collections.eyebrow' | translate }}</p>
+      <h2>{{ 'admin.collections.title' | translate }}</h2>
+      <p class="admin-page__subtitle">{{ 'admin.collections.subtitle' | translate }}</p>
     </div>
     <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
-      {{ showCreateForm ? 'Скрыть форму' : 'Новая коллекция' }}
+      {{ (showCreateForm ? 'admin.collections.hide_form' : 'admin.collections.show_form') | translate }}
     </button>
   </header>
 
   <article class="admin-card" *ngIf="showCreateForm">
     <div class="admin-card__header">
-      <h3>Новая коллекция</h3>
-      <span class="admin-pill">Черновик</span>
+      <h3>{{ 'admin.collections.new_card' | translate }}</h3>
+      <span class="admin-pill">{{ 'admin.categories.draft' | translate }}</span>
     </div>
     <form class="admin-form" (ngSubmit)="saveCollection()">
       <label>
-        Заголовок
+        {{ 'admin.collections.label_title' | translate }}
         <input type="text" name="title" [(ngModel)]="form.title" />
       </label>
       <label>
-        Короткое описание
+        {{ 'admin.collections.label_description' | translate }}
         <textarea rows="4" name="description" [(ngModel)]="form.description"></textarea>
       </label>
       <label>
-        Тег
+        {{ 'admin.collections.label_tag' | translate }}
         <input type="text" name="tag" [(ngModel)]="form.tag" />
       </label>
       <label>
-        Изображение
+        {{ 'admin.collections.label_image' | translate }}
         <input type="text" name="image" [(ngModel)]="form.image" />
       </label>
       <label>
-        Якорь
+        {{ 'admin.collections.label_anchor' | translate }}
         <input type="text" name="anchor" [(ngModel)]="form.anchor" />
       </label>
       <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-        <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+        <button class="admin-button admin-button--primary" type="submit">{{ 'admin.collections.button_save' | translate }}</button>
+        <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.collections.button_reset' | translate }}</button>
       </div>
     </form>
   </article>
 
   <div class="admin-grid">
-    <p class="admin-empty" *ngIf="isLoading">Загрузка коллекций...</p>
+    <p class="admin-empty" *ngIf="isLoading">{{ 'admin.collections.loading' | translate }}</p>
     <ng-container *ngFor="let collection of collections">
       <article class="collection-card">
         <div class="collection-card__media" [style.backgroundImage]="'url(' + collection.image + ')'">
@@ -54,41 +54,41 @@
           <h3>{{ collection.title }}</h3>
           <p>{{ collection.description }}</p>
           <div class="collection-card__actions">
-            <button class="admin-button" type="button" (click)="selectCollection(collection)">Редактировать</button>
-            <button class="admin-button" type="button" (click)="deleteCollection(collection)">Удалить</button>
+            <button class="admin-button" type="button" (click)="selectCollection(collection)">{{ 'admin.collections.button_edit' | translate }}</button>
+            <button class="admin-button" type="button" (click)="deleteCollection(collection)">{{ 'admin.collections.button_delete' | translate }}</button>
           </div>
         </div>
       </article>
 
       <article class="admin-card admin-card--inline" *ngIf="selectedCollection?.id === collection.id">
         <div class="admin-card__header">
-          <h3>Редактирование коллекции</h3>
+          <h3>{{ 'admin.collections.edit_card' | translate }}</h3>
         <span class="admin-pill">ID {{ selectedCollection?.id }}</span>
         </div>
         <form class="admin-form" (ngSubmit)="saveCollection()">
           <label>
-            Заголовок
+            {{ 'admin.collections.label_title' | translate }}
             <input type="text" name="editTitle" [(ngModel)]="form.title" />
           </label>
           <label>
-            Короткое описание
+            {{ 'admin.collections.label_description' | translate }}
             <textarea rows="4" name="editDescription" [(ngModel)]="form.description"></textarea>
           </label>
           <label>
-            Тег
+            {{ 'admin.collections.label_tag' | translate }}
             <input type="text" name="editTag" [(ngModel)]="form.tag" />
           </label>
           <label>
-            Изображение
+            {{ 'admin.collections.label_image' | translate }}
             <input type="text" name="editImage" [(ngModel)]="form.image" />
           </label>
           <label>
-            Якорь
+            {{ 'admin.collections.label_anchor' | translate }}
             <input type="text" name="editAnchor" [(ngModel)]="form.anchor" />
           </label>
           <div class="admin-form__actions">
-            <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-            <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+            <button class="admin-button admin-button--primary" type="submit">{{ 'admin.collections.button_save' | translate }}</button>
+            <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.collections.button_reset' | translate }}</button>
           </div>
         </form>
       </article>

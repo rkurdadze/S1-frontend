@@ -1,37 +1,37 @@
 <section class="admin-page">
   <header class="admin-page__header">
     <div>
-      <p class="admin-page__eyebrow">Коммуникации</p>
-      <h2>Рассылка</h2>
-      <p class="admin-page__subtitle">Создавайте письма, сегментируйте подписчиков и запускайте кампании.</p>
+      <p class="admin-page__eyebrow">{{ 'admin.newsletter.eyebrow' | translate }}</p>
+      <h2>{{ 'admin.newsletter.title' | translate }}</h2>
+      <p class="admin-page__subtitle">{{ 'admin.newsletter.subtitle' | translate }}</p>
     </div>
     <div class="admin-page__actions">
       <button class="admin-button admin-button--create" type="button" (click)="toggleDraftForm()">
-        {{ showDraftForm ? 'Скрыть черновик' : 'Редактировать черновик' }}
+        {{ (showDraftForm ? 'admin.newsletter.hide_draft' : 'admin.newsletter.show_draft') | translate }}
       </button>
-      <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="sendCampaign()">Отправить кампанию</button>
+      <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="sendCampaign()">{{ 'admin.newsletter.button_send_campaign' | translate }}</button>
     </div>
   </header>
-  <p class="admin-empty" *ngIf="isLoading">Загрузка данных...</p>
+  <p class="admin-empty" *ngIf="isLoading">{{ 'admin.newsletter.loading_data' | translate }}</p>
 
 
   <article class="admin-card" *ngIf="showDraftForm">
     <div class="admin-card__header">
-      <h3>Черновик письма</h3>
-      <span class="admin-pill">Готовность: {{ draft.subject ? '100%' : '0%' }}</span>
+      <h3>{{ 'admin.newsletter.draft_title' | translate }}</h3>
+      <span class="admin-pill">{{ 'admin.newsletter.readiness' | translate: { percent: draft.subject ? '100' : '0' } }}</span>
     </div>
     <form class="admin-form" (ngSubmit)="saveDraft()">
       <label>
-        Тема письма
+        {{ 'admin.newsletter.label_subject' | translate }}
         <input type="text" name="subject" [(ngModel)]="draft.subject" />
       </label>
       <label>
-        Сообщение
+        {{ 'admin.newsletter.label_message' | translate }}
         <textarea rows="6" name="message" [(ngModel)]="draft.message"></textarea>
       </label>
       <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="submit">Сохранить черновик</button>
-        <button class="admin-button" type="button" (click)="sendCampaign()">Отправить</button>
+        <button class="admin-button admin-button--primary" type="submit">{{ 'admin.newsletter.button_save_draft' | translate }}</button>
+        <button class="admin-button" type="button" (click)="sendCampaign()">{{ 'admin.newsletter.button_send' | translate }}</button>
       </div>
     </form>
   </article>
@@ -39,11 +39,11 @@
   <div class="admin-grid">
     <article class="admin-card">
       <div class="admin-card__header">
-        <h3>Сегменты подписчиков</h3>
-        <span class="admin-pill">{{ segments.length }} сегмента</span>
+        <h3>{{ 'admin.newsletter.segments_title' | translate }}</h3>
+        <span class="admin-pill">{{ 'admin.newsletter.segments_count' | translate: { count: segments.length } }}</span>
       </div>
       <div class="segment-list">
-        <p class="admin-empty" *ngIf="isLoading">Загрузка сегментов...</p>
+        <p class="admin-empty" *ngIf="isLoading">{{ 'admin.newsletter.loading_segments' | translate }}</p>
       
         <div class="segment" *ngFor="let segment of segments">
           <div>
@@ -51,36 +51,36 @@
             <p>{{ segment.description }}</p>
           </div>
           <span class="segment__count">{{ segment.count }}</span>
-          <button class="admin-button" type="button" (click)="removeSegment(segment)">Удалить</button>
+          <button class="admin-button" type="button" (click)="removeSegment(segment)">{{ 'admin.newsletter.button_delete_segment' | translate }}</button>
         </div>
       </div>
       <button class="admin-button admin-button--create" type="button" (click)="toggleSegmentForm()">
-        {{ showSegmentForm ? 'Скрыть форму' : 'Создать сегмент' }}
+        {{ (showSegmentForm ? 'admin.newsletter.hide_form' : 'admin.newsletter.show_form') | translate }}
       </button>
       <form class="admin-form" (ngSubmit)="addSegment()" *ngIf="showSegmentForm">
         <label>
-          Название сегмента
+          {{ 'admin.newsletter.label_segment_name' | translate }}
           <input type="text" name="segmentName" [(ngModel)]="segmentForm.name" />
         </label>
         <label>
-          Количество
+          {{ 'admin.newsletter.label_segment_count' | translate }}
           <input type="number" name="segmentCount" [(ngModel)]="segmentForm.count" />
         </label>
         <label>
-          Описание
+          {{ 'admin.newsletter.label_segment_description' | translate }}
           <input type="text" name="segmentDescription" [(ngModel)]="segmentForm.description" />
         </label>
-        <button class="admin-button" type="submit">Сохранить сегмент</button>
+        <button class="admin-button" type="submit">{{ 'admin.newsletter.button_save_segment' | translate }}</button>
       </form>
     </article>
 
     <article class="admin-card">
       <div class="admin-card__header">
-        <h3>История отправок</h3>
-        <span class="admin-pill">{{ sends.length }} отправок</span>
+        <h3>{{ 'admin.newsletter.history_title' | translate }}</h3>
+        <span class="admin-pill">{{ 'admin.newsletter.sends_count' | translate: { count: sends.length } }}</span>
       </div>
       <div class="segment-list">
-        <p class="admin-empty" *ngIf="isLoading && !sends.length">Загрузка отправок...</p>
+        <p class="admin-empty" *ngIf="isLoading && !sends.length">{{ 'admin.newsletter.loading_sends' | translate }}</p>
         <div class="segment" *ngFor="let send of sends">
           <div>
             <h4>{{ send.subject }}</h4>

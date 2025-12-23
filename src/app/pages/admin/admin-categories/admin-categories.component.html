@@ -1,36 +1,36 @@
 <section class="admin-page">
   <header class="admin-page__header">
     <div>
-      <p class="admin-page__eyebrow">Структура каталога</p>
-      <h2>Категории</h2>
-      <p class="admin-page__subtitle">Группируйте товары, формируйте витрины и управляйте SEO-настройками.</p>
+      <p class="admin-page__eyebrow">{{ 'admin.categories.eyebrow' | translate }}</p>
+      <h2>{{ 'admin.categories.title' | translate }}</h2>
+      <p class="admin-page__subtitle">{{ 'admin.categories.subtitle' | translate }}</p>
     </div>
     <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
-      {{ showCreateForm ? 'Скрыть форму' : 'Новая категория' }}
+      {{ (showCreateForm ? 'admin.categories.hide_form' : 'admin.categories.show_form') | translate }}
     </button>
   </header>
 
   <article class="admin-card admin-card--form" *ngIf="showCreateForm">
     <div class="admin-card__header">
-      <h3>Новая категория</h3>
-      <span class="admin-pill">Черновик</span>
+      <h3>{{ 'admin.categories.new_card' | translate }}</h3>
+      <span class="admin-pill">{{ 'admin.categories.draft' | translate }}</span>
     </div>
     <form class="admin-form" (ngSubmit)="saveCategory()">
       <label>
-        Название
+        {{ 'admin.categories.label_title' | translate }}
         <input type="text" name="title" [(ngModel)]="form.title" />
       </label>
       <label>
-        Описание
+        {{ 'admin.categories.label_description' | translate }}
         <textarea rows="4" name="description" [(ngModel)]="form.description"></textarea>
       </label>
       <label>
-        Highlight
+        {{ 'admin.categories.label_highlight' | translate }}
         <input type="text" name="highlight" [(ngModel)]="form.highlight" />
       </label>
 
       <div class="admin-form__tags">
-        <label>Теги</label>
+        <label>{{ 'admin.categories.label_tags' | translate }}</label>
         
         <div class="current-tags" *ngIf="form.tags.length > 0">
           <span class="tag-pill" *ngFor="let tag of form.tags">
@@ -40,7 +40,7 @@
         </div>
 
         <div class="available-tags" *ngIf="availableTags.length > 0">
-          <p class="small-label">Доступные теги:</p>
+          <p class="small-label">{{ 'admin.categories.label_available_tags' | translate }}</p>
           <div class="tags-cloud">
             <button 
               type="button" 
@@ -55,14 +55,14 @@
       </div>
 
       <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-        <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+        <button class="admin-button admin-button--primary" type="submit">{{ 'admin.categories.button_save' | translate }}</button>
+        <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.categories.button_reset' | translate }}</button>
       </div>
     </form>
   </article>
 
   <div class="admin-grid">
-    <p class="admin-empty" *ngIf="isLoading">Загрузка категорий...</p>
+    <p class="admin-empty" *ngIf="isLoading">{{ 'admin.categories.loading' | translate }}</p>
     <ng-container *ngFor="let category of categories">
       <article class="admin-card">
         <div class="admin-card__header">
@@ -75,33 +75,33 @@
         <div class="admin-card__footer">
           <span class="admin-chip">{{ category.highlight }}</span>
           <div class="admin-actions">
-            <button class="admin-button" type="button" (click)="selectCategory(category)">Редактировать</button>
-            <button class="admin-button" type="button" (click)="deleteCategory(category)">Удалить</button>
+            <button class="admin-button" type="button" (click)="selectCategory(category)">{{ 'admin.categories.button_edit' | translate }}</button>
+            <button class="admin-button" type="button" (click)="deleteCategory(category)">{{ 'admin.categories.button_delete' | translate }}</button>
           </div>
         </div>
       </article>
 
       <article class="admin-card admin-card--inline" *ngIf="selectedCategory?.id === category.id">
         <div class="admin-card__header">
-          <h3>Редактирование категории</h3>
+          <h3>{{ 'admin.categories.edit_card' | translate }}</h3>
           <span class="admin-pill">ID {{ selectedCategory?.id }}</span>
         </div>
         <form class="admin-form" (ngSubmit)="saveCategory()">
           <label>
-            Название
+            {{ 'admin.categories.label_title' | translate }}
             <input type="text" name="editTitle" [(ngModel)]="form.title" />
           </label>
           <label>
-            Описание
+            {{ 'admin.categories.label_description' | translate }}
             <textarea rows="4" name="editDescription" [(ngModel)]="form.description"></textarea>
           </label>
           <label>
-            Highlight
+            {{ 'admin.categories.label_highlight' | translate }}
             <input type="text" name="editHighlight" [(ngModel)]="form.highlight" />
           </label>
 
           <div class="admin-form__tags">
-            <label>Теги</label>
+            <label>{{ 'admin.categories.label_tags' | translate }}</label>
             
             <div class="current-tags" *ngIf="form.tags.length > 0">
               <span class="tag-pill" *ngFor="let tag of form.tags">
@@ -111,7 +111,7 @@
             </div>
     
             <div class="available-tags" *ngIf="availableTags.length > 0">
-              <p class="small-label">Доступные теги:</p>
+              <p class="small-label">{{ 'admin.categories.label_available_tags' | translate }}</p>
               <div class="tags-cloud">
                 <button 
                   type="button" 
@@ -126,8 +126,8 @@
           </div>
 
           <div class="admin-form__actions">
-            <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-            <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+            <button class="admin-button admin-button--primary" type="submit">{{ 'admin.categories.button_save' | translate }}</button>
+            <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.categories.button_reset' | translate }}</button>
           </div>
         </form>
       </article>

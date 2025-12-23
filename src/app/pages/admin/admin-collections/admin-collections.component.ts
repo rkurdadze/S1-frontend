@@ -6,17 +6,19 @@ import { finalize } from 'rxjs';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminCollection } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-collections',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TranslateModule],
   templateUrl: './admin-collections.component.html',
   styleUrl: './admin-collections.component.scss'
 })
 export class AdminCollectionsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   collections: AdminCollection[] = [];
   selectedCollection: AdminCollection | null = null;
@@ -73,18 +75,18 @@ export class AdminCollectionsComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success(isUpdate ? 'Коллекция обновлена' : 'Коллекция создана');
+          this.toast.success(this.translate.instant(isUpdate ? 'admin.collections.toast_updated' : 'admin.collections.toast_created'));
           this.resetForm();
           this.loadCollections();
         },
         error: () => {
-          this.toast.error('Не удалось сохранить коллекцию');
+          this.toast.error(this.translate.instant('admin.collections.toast_save_error'));
         }
       });
   }
 
   deleteCollection(collection: AdminCollection): void {
-    const confirmation = globalThis.confirm('Удалить коллекцию?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.collections.confirm_delete'));
     if (!confirmation) {
       return;
     }
@@ -95,14 +97,14 @@ export class AdminCollectionsComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('Коллекция удалена');
+          this.toast.success(this.translate.instant('admin.collections.toast_deleted'));
           if (this.selectedCollection?.id === collection.id) {
             this.resetForm();
           }
           this.loadCollections();
         },
         error: () => {
-          this.toast.error('Не удалось удалить коллекцию');
+          this.toast.error(this.translate.instant('admin.collections.toast_delete_error'));
         }
       });
   }
@@ -124,7 +126,7 @@ export class AdminCollectionsComponent implements OnInit {
           }
         },
         error: () => {
-          this.toast.error('Не удалось загрузить коллекции');
+          this.toast.error(this.translate.instant('admin.collections.toast_load_error'));
         }
       });
   }

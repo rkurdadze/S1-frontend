@@ -1,46 +1,46 @@
 <section class="admin-page">
   <header class="admin-page__header">
     <div>
-      <p class="admin-page__eyebrow">Редакционные блоки</p>
-      <h2>Editorials</h2>
-      <p class="admin-page__subtitle">Управляйте историями, которые отображаются в редакционном блоке Outwear.</p>
+      <p class="admin-page__eyebrow">{{ 'admin.editorials.eyebrow' | translate }}</p>
+      <h2>{{ 'admin.editorials.title' | translate }}</h2>
+      <p class="admin-page__subtitle">{{ 'admin.editorials.subtitle' | translate }}</p>
     </div>
     <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
-      {{ showCreateForm ? 'Скрыть форму' : 'Новая история' }}
+      {{ (showCreateForm ? 'admin.editorials.hide_form' : 'admin.editorials.show_form') | translate }}
     </button>
   </header>
 
   <article class="admin-card" *ngIf="showCreateForm">
     <div class="admin-card__header">
-      <h3>Новая история</h3>
-      <span class="admin-pill">Черновик</span>
+      <h3>{{ 'admin.editorials.new_card' | translate }}</h3>
+      <span class="admin-pill">{{ 'admin.categories.draft' | translate }}</span>
     </div>
     <form class="admin-form" (ngSubmit)="saveEditorial()">
       <label>
-        Заголовок
+        {{ 'admin.editorials.label_title' | translate }}
         <input type="text" name="title" [(ngModel)]="form.title" />
       </label>
       <label>
-        Подзаголовок
+        {{ 'admin.editorials.label_summary' | translate }}
         <textarea rows="4" name="summary" [(ngModel)]="form.summary"></textarea>
       </label>
       <label>
-        CTA текст
+        {{ 'admin.editorials.label_cta' | translate }}
         <input type="text" name="cta" [(ngModel)]="form.cta" />
       </label>
       <label>
-        Изображение
+        {{ 'admin.editorials.label_image' | translate }}
         <input type="text" name="image" [(ngModel)]="form.image" />
       </label>
       <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-        <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+        <button class="admin-button admin-button--primary" type="submit">{{ 'admin.editorials.button_save' | translate }}</button>
+        <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.editorials.button_reset' | translate }}</button>
       </div>
     </form>
   </article>
 
   <div class="editorial-grid">
-    <p class="admin-empty" *ngIf="isLoading">Загрузка историй...</p>
+    <p class="admin-empty" *ngIf="isLoading">{{ 'admin.editorials.loading' | translate }}</p>
     <ng-container *ngFor="let item of editorials">
       <article class="editorial-card">
         <div class="editorial-card__image" [style.backgroundImage]="'url(' + item.image + ')'">
@@ -50,37 +50,37 @@
           <h3>{{ item.title }}</h3>
           <p>{{ item.summary }}</p>
           <div class="editorial-card__actions">
-            <button class="admin-button" type="button" (click)="selectEditorial(item)">Редактировать</button>
-            <button class="admin-button" type="button" (click)="deleteEditorial(item)">Удалить</button>
+            <button class="admin-button" type="button" (click)="selectEditorial(item)">{{ 'admin.editorials.button_edit' | translate }}</button>
+            <button class="admin-button" type="button" (click)="deleteEditorial(item)">{{ 'admin.editorials.button_delete' | translate }}</button>
           </div>
         </div>
       </article>
 
       <article class="admin-card admin-card--inline" *ngIf="selectedEditorial?.id === item.id">
         <div class="admin-card__header">
-          <h3>Редактор истории</h3>
+          <h3>{{ 'admin.editorials.edit_card' | translate }}</h3>
         <span class="admin-pill">ID {{ selectedEditorial?.id }}</span>
         </div>
         <form class="admin-form" (ngSubmit)="saveEditorial()">
           <label>
-            Заголовок
+            {{ 'admin.editorials.label_title' | translate }}
             <input type="text" name="editTitle" [(ngModel)]="form.title" />
           </label>
           <label>
-            Подзаголовок
+            {{ 'admin.editorials.label_summary' | translate }}
             <textarea rows="4" name="editSummary" [(ngModel)]="form.summary"></textarea>
           </label>
           <label>
-            CTA текст
+            {{ 'admin.editorials.label_cta' | translate }}
             <input type="text" name="editCta" [(ngModel)]="form.cta" />
           </label>
           <label>
-            Изображение
+            {{ 'admin.editorials.label_image' | translate }}
             <input type="text" name="editImage" [(ngModel)]="form.image" />
           </label>
           <div class="admin-form__actions">
-            <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-            <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+            <button class="admin-button admin-button--primary" type="submit">{{ 'admin.editorials.button_save' | translate }}</button>
+            <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.editorials.button_reset' | translate }}</button>
           </div>
         </form>
       </article>

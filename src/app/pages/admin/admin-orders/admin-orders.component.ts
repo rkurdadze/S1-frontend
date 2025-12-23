@@ -6,17 +6,19 @@ import { finalize } from 'rxjs';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminOrder } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-orders',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TranslateModule],
   templateUrl: './admin-orders.component.html',
   styleUrl: './admin-orders.component.scss'
 })
 export class AdminOrdersComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   orders: AdminOrder[] = [];
   selectedOrder: AdminOrder | null = null;
@@ -75,7 +77,6 @@ export class AdminOrdersComponent implements OnInit {
     if (!this.selectedOrder) {
       return;
     }
-
     this.isLoading = true;
     const payload: AdminOrder = { ...this.selectedOrder, ...this.form, orderNumber: this.form.orderNumber.trim() };
     this.adminApi
@@ -83,43 +84,41 @@ export class AdminOrdersComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('Заказ обновлен');
+          this.toast.success(this.translate.instant('admin.orders.toast_updated'));
           this.resetForm();
           this.loadOrders();
         },
         error: () => {
-          this.toast.error('Не удалось обновить заказ');
+          this.toast.error(this.translate.instant('admin.orders.toast_save_error'));
         }
       });
   }
 
   deleteOrder(order: AdminOrder): void {
-    const confirmation = globalThis.confirm('Удалить заказ?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.orders.confirm_delete'));
     if (!confirmation) {
       return;
     }
-
     this.isLoading = true;
     this.adminApi
       .deleteOrder(order.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('Заказ удален');
+          this.toast.success(this.translate.instant('admin.orders.toast_deleted'));
           if (this.selectedOrder?.id === order.id) {
             this.resetForm();
           }
           this.loadOrders();
         },
         error: () => {
-          this.toast.error('Не удалось удалить заказ');
+          this.toast.error(this.translate.instant('admin.orders.toast_delete_error'));
         }
       });
   }
 
   private loadOrders(): void {
     this.isLoading = true;
-
     this.adminApi
       .getOrders()
       .pipe(finalize(() => (this.isLoading = false)))
@@ -134,7 +133,7 @@ export class AdminOrdersComponent implements OnInit {
           }
         },
         error: () => {
-          this.toast.error('Не удалось загрузить заказы');
+          this.toast.error(this.translate.instant('admin.orders.toast_load_error'));
         }
       });
   }

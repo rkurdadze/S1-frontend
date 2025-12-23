@@ -33,24 +33,27 @@
           <input type="checkbox" name="createPublish" [(ngModel)]="createForm.publish" />
           {{ 'admin.items.publish_immediately' | translate }}
         </label>
-        <div class="admin-form__section">
-          <p class="admin-form__label">{{ 'admin.items.tags_label' | translate }}</p>
-          <div class="admin-tags" *ngIf="tags.length; else createTagsEmpty">
-            <button
-              class="admin-tag"
-              type="button"
-              *ngFor="let tag of tags"
-              [class.is-active]="isCreateTagActive(tag)"
-              (click)="toggleCreateTag(tag)"
-            >
+        <div class="admin-form__tags">
+          <label>{{ 'admin.items.tags_label' | translate }}</label>
+          <div class="current-tags" *ngIf="createItemTags.length > 0">
+            <span class="tag-pill" *ngFor="let tag of createItemTags">
               {{ tag }}
-            </button>
+              <button type="button" class="remove-tag" (click)="toggleCreateTag(tag)">×</button>
+            </span>
           </div>
-          <ng-template #createTagsEmpty>
-            <p class="admin-empty">{{ 'admin.items.no_tags' | translate }}</p>
-          </ng-template>
-          <div class="admin-tags admin-tags--selected" *ngIf="createItemTags.length">
-            <span class="admin-chip" *ngFor="let tag of createItemTags">{{ tag }}</span>
+
+          <div class="available-tags" *ngIf="tags.length > 0">
+            <p class="small-label">{{ 'admin.categories.label_available_tags' | translate }}</p>
+            <div class="tags-cloud">
+              <button 
+                type="button" 
+                class="tag-chip" 
+                *ngFor="let tag of tags" 
+                [class.active]="isCreateTagActive(tag)"
+                (click)="toggleCreateTag(tag)">
+                {{ tag }}
+              </button>
+            </div>
           </div>
         </div>
         <div class="admin-form__actions">
@@ -60,132 +63,179 @@
     </section>
 
     <section class="admin-card admin-card--list">
-      <div class="admin-card__header">
-        <h3>{{ 'admin.items.list_title' | translate }}</h3>
-        <span class="admin-pill">{{ 'admin.items.in_database' | translate: { count: items.length } }}</span>
+      <div class="admin-card__header admin-card__header--with-search">
+        <div>
+          <h3>{{ 'admin.items.list_title' | translate }}</h3>
+          <span class="admin-pill">{{ 'admin.items.in_database' | translate: { count: items.length } }}</span>
+        </div>
+        <label class="admin-search">
+          <span class="admin-search__icon" aria-hidden="true">🔎</span>
+          <input
+            type="search"
+            name="itemSearch"
+            [(ngModel)]="searchTerm"
+            [placeholder]="'admin.items.search_placeholder' | translate"
+          />
+        </label>
       </div>
       <p class="admin-empty" *ngIf="isLoading">{{ 'admin.items.loading' | translate }}</p>
-      <div class="admin-list" *ngIf="items.length; else emptyItems">
-        <ng-container *ngFor="let item of items">
-          <article
-            class="admin-list__row"
-            (click)="selectItem(item)"
-            [class.is-active]="item.id === selectedItem?.id"
-          >
-            <div class="admin-list__main">
-              <div>
-                <h4>{{ item.name }}</h4>
-                <p class="admin-list__meta">{{ 'admin.items.id' | translate }} {{ item.id }} • {{ (item.publish ? 'admin.items.published' : 'admin.items.draft') | translate }}</p>
-                <div class="admin-list__tags" *ngIf="item.tags?.length">
-                  <span class="admin-chip" *ngFor="let tag of item.tags">{{ tag }}</span>
+      <div class="admin-list" *ngIf="filteredItems.length; else emptyItems">
+        <ng-container *ngFor="let item of filteredItems">
+          <article class="admin-list__item" [class.is-active]="item.id === editingItemId">
+            <div class="admin-list__row">
+              <div class="admin-list__main">
+                <div>
+                  <h4>{{ item.name }}</h4>
+                  <p class="admin-list__meta">{{ 'admin.items.id' | translate }} {{ item.id }} • {{ (item.publish ? 'admin.items.published' : 'admin.items.draft') | translate }}</p>
+                  <div class="admin-list__tags" *ngIf="item.tags?.length">
+                    <span class="admin-chip" *ngFor="let tag of item.tags">{{ tag }}</span>
+                  </div>
+                </div>
+                <div class="admin-list__previews">
+                  <div class="admin-preview" *ngFor="let preview of getColorPreviews(item)">
+                    <span class="admin-preview__swatch" [style.background]="preview.color"></span>
+                    <img *ngIf="preview.image" [src]="preview.image" [alt]="preview.color" />
+                    <span *ngIf="!preview.image" class="admin-preview__placeholder">{{ 'admin.items.no_photo' | translate }}</span>
+                  </div>
                 </div>
               </div>
-              <div class="admin-list__previews">
-                <div class="admin-preview" *ngFor="let preview of getColorPreviews(item)">
-                  <span class="admin-preview__swatch" [style.background]="preview.color"></span>
-                  <img *ngIf="preview.image" [src]="preview.image" [alt]="preview.color" />
-                  <span *ngIf="!preview.image" class="admin-preview__placeholder">{{ 'admin.items.no_photo' | translate }}</span>
+              <div class="admin-list__stats">
+                <span class="admin-chip">{{ (item.publish ? 'admin.items.in_sale' : 'admin.items.hidden') | translate }}</span>
+                <span class="admin-list__price">{{ 'admin.items.colors_count' | translate: { count: item.colors.length || 0 } }}</span>
+                <div class="admin-list__actions">
+                  <ng-container *ngIf="editingItemId === item.id; else editAction">
+                    <button
+                      class="admin-action-button admin-action-button--save"
+                      type="button"
+                      (click)="onUpdateItem()"
+                    >
+                      {{ 'admin.items.save_changes' | translate }}
+                    </button>
+                    <button
+                      class="admin-action-button admin-action-button--cancel"
+                      type="button"
+                      (click)="cancelEdit()"
+                    >
+                      {{ 'admin.items.cancel_edit' | translate }}
+                    </button>
+                  </ng-container>
+                  <ng-template #editAction>
+                    <button
+                      class="admin-icon-button admin-icon-button--edit"
+                      type="button"
+                      (click)="startEdit(item)"
+                      [attr.aria-label]="'admin.items.edit' | translate"
+                      [title]="'admin.items.edit' | translate"
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M3 17.25V21h3.75L19.81 7.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41l-2.51-2.51a1 1 0 0 0-1.41 0l-1.97 1.97 3.75 3.75 2.14-2.14z"
+                        />
+                      </svg>
+                    </button>
+                  </ng-template>
+                  <button
+                    class="admin-icon-button admin-icon-button--delete"
+                    type="button"
+                    (click)="onDeleteItem(item)"
+                    [attr.aria-label]="'admin.items.delete' | translate"
+                    [title]="'admin.items.delete' | translate"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M6 7h12l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 7zm3-4h6l1 2h4v2H4V5h4l1-2z"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
-            <div class="admin-list__stats">
-              <span class="admin-chip">{{ (item.publish ? 'admin.items.in_sale' : 'admin.items.hidden') | translate }}</span>
-              <span class="admin-list__price">{{ 'admin.items.colors_count' | translate: { count: item.colors.length || 0 } }}</span>
-              <div class="admin-list__actions">
-                <button class="admin-button admin-button--ghost" type="button" (click)="$event.stopPropagation(); selectItem(item)">
-                  {{ 'admin.items.edit' | translate }}
-                </button>
-                <button class="admin-button admin-button--ghost" type="button" (click)="$event.stopPropagation(); onDeleteItem(item)">
-                  {{ 'admin.items.delete' | translate }}
-                </button>
+
+            <div class="admin-inline-panel" *ngIf="selectedItem?.id === item.id && editingItemId === item.id">
+              <div class="admin-card__header">
+                <h3>{{ 'admin.items.editing' | translate }}</h3>
+                <span class="admin-pill">{{ 'admin.items.id' | translate }} {{ selectedItem?.id }}</span>
+              </div>
+              <form class="admin-form" (ngSubmit)="onUpdateItem()">
+                <label>
+                  {{ 'admin.items.name' | translate }}
+                  <input type="text" name="editName" [(ngModel)]="editForm.name" />
+                </label>
+                <label>
+                  {{ 'admin.items.price' | translate }}
+                  <input type="number" name="editPrice" [(ngModel)]="editForm.price" />
+                </label>
+                <label>
+                  {{ 'admin.items.description' | translate }}
+                  <textarea rows="4" name="editDescription" [(ngModel)]="editForm.description"></textarea>
+                </label>
+                <label class="admin-checkbox">
+                  <input type="checkbox" name="editPublish" [(ngModel)]="editForm.publish" />
+                  {{ 'admin.items.published' | translate }}
+                </label>
+                              <div class="admin-form__tags">
+                                <label>{{ 'admin.items.tags_label' | translate }}</label>
+                                <div class="current-tags" *ngIf="selectedItemTags.length > 0">
+                                  <span class="tag-pill" *ngFor="let tag of selectedItemTags">
+                                    {{ tag }}
+                                    <button type="button" class="remove-tag" (click)="toggleTag(tag)">×</button>
+                                  </span>
+                                </div>
+                
+                                <div class="available-tags" *ngIf="tags.length > 0">
+                                  <p class="small-label">{{ 'admin.categories.label_available_tags' | translate }}</p>
+                                  <div class="tags-cloud">
+                                    <button 
+                                      type="button" 
+                                      class="tag-chip" 
+                                      *ngFor="let tag of tags" 
+                                      [class.active]="isTagActive(tag)"
+                                      (click)="toggleTag(tag)">
+                                      {{ tag }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>              </form>
+              <div class="admin-inventory-panel">
+                <app-item-colors
+                  [colors]="selectedItem?.colors ?? []"
+                  [itemId]="selectedItemId"
+                  [isAdmin]="true"
+                  (selectedColorEmitter)="onColorSelected($event)"
+                ></app-item-colors>
+                <app-item-sizes
+                  [item]="selectedItem!"
+                  [forColor]="selectedColor"
+                  [isAdmin]="true"
+                ></app-item-sizes>
+              </div>
+              <div class="admin-image-panel">
+                <div class="admin-image-panel__header">
+                  <h4>{{ 'admin.items.color_images' | translate }}</h4>
+                  <label class="admin-button admin-button--ghost" *ngIf="selectedColor">
+                    {{ 'admin.items.upload' | translate }}
+                    <input type="file" multiple (change)="onImagesSelected($event)" />
+                  </label>
+                </div>
+                <p class="admin-empty" *ngIf="!selectedColor">{{ 'admin.items.select_color_hint' | translate }}</p>
+                <p class="admin-empty" *ngIf="isPhotosLoading">{{ 'admin.items.loading_images' | translate }}</p>
+                <div class="admin-image-grid" *ngIf="selectedColor">
+                  <div class="admin-image-card" *ngFor="let image of getSelectedColorImages()">
+                    <img [src]="image.url" [alt]="('admin.items.id' | translate) + ' ' + image.id" />
+                    <button class="admin-button admin-button--ghost" type="button" (click)="deleteImage(image.id)">
+                      {{ 'admin.items.delete_image' | translate }}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </article>
-
-          <div class="admin-inline-panel" *ngIf="selectedItem?.id === item.id">
-            <div class="admin-card__header">
-              <h3>{{ 'admin.items.editing' | translate }}</h3>
-              <span class="admin-pill">{{ 'admin.items.id' | translate }} {{ selectedItem?.id }}</span>
-            </div>
-            <form class="admin-form" (ngSubmit)="onUpdateItem()">
-              <label>
-                {{ 'admin.items.name' | translate }}
-                <input type="text" name="editName" [(ngModel)]="editForm.name" />
-              </label>
-              <label>
-                {{ 'admin.items.price' | translate }}
-                <input type="number" name="editPrice" [(ngModel)]="editForm.price" />
-              </label>
-              <label>
-                {{ 'admin.items.description' | translate }}
-                <textarea rows="4" name="editDescription" [(ngModel)]="editForm.description"></textarea>
-              </label>
-              <label class="admin-checkbox">
-                <input type="checkbox" name="editPublish" [(ngModel)]="editForm.publish" />
-                {{ 'admin.items.published' | translate }}
-              </label>
-              <div class="admin-form__section">
-                <p class="admin-form__label">{{ 'admin.items.tags_label' | translate }}</p>
-                <div class="admin-tags" *ngIf="tags.length; else editTagsEmpty">
-                  <button
-                    class="admin-tag"
-                    type="button"
-                    *ngFor="let tag of tags"
-                    [class.is-active]="isTagActive(tag)"
-                    (click)="toggleTag(tag)"
-                  >
-                    {{ tag }}
-                  </button>
-                </div>
-                <ng-template #editTagsEmpty>
-                  <p class="admin-empty">{{ 'admin.items.no_tags' | translate }}</p>
-                </ng-template>
-                <div class="admin-tags admin-tags--selected" *ngIf="selectedItemTags.length">
-                  <span class="admin-chip" *ngFor="let tag of selectedItemTags">{{ tag }}</span>
-                </div>
-              </div>
-              <div class="admin-form__actions">
-                <button class="admin-button admin-button--primary" type="submit">{{ 'admin.items.save_changes' | translate }}</button>
-                <button class="admin-button" type="button" (click)="onDeleteItem()">{{ 'admin.items.delete' | translate }}</button>
-              </div>
-            </form>
-            <div class="admin-inventory-panel">
-              <app-item-colors
-                [colors]="selectedItem?.colors ?? []"
-                [itemId]="selectedItemId"
-                [isAdmin]="true"
-                (selectedColorEmitter)="onColorSelected($event)"
-              ></app-item-colors>
-              <app-item-sizes
-                [item]="selectedItem!"
-                [forColor]="selectedColor"
-                [isAdmin]="true"
-              ></app-item-sizes>
-            </div>
-            <div class="admin-image-panel">
-              <div class="admin-image-panel__header">
-                <h4>{{ 'admin.items.color_images' | translate }}</h4>
-                <label class="admin-button admin-button--ghost" *ngIf="selectedColor">
-                  {{ 'admin.items.upload' | translate }}
-                  <input type="file" multiple (change)="onImagesSelected($event)" />
-                </label>
-              </div>
-              <p class="admin-empty" *ngIf="!selectedColor">{{ 'admin.items.select_color_hint' | translate }}</p>
-              <p class="admin-empty" *ngIf="isPhotosLoading">{{ 'admin.items.loading_images' | translate }}</p>
-              <div class="admin-image-grid" *ngIf="selectedColor">
-                <div class="admin-image-card" *ngFor="let image of getSelectedColorImages()">
-                  <img [src]="image.url" [alt]="('admin.items.id' | translate) + ' ' + image.id" />
-                  <button class="admin-button admin-button--ghost" type="button" (click)="deleteImage(image.id)">
-                    {{ 'admin.items.delete_image' | translate }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
         </ng-container>
       </div>
       <ng-template #emptyItems>
-        <p class="admin-empty">{{ 'admin.items.no_items' | translate }}</p>
+        <p class="admin-empty">
+          {{ (searchTerm ? 'admin.items.no_results' : 'admin.items.no_items') | translate }}
+        </p>
       </ng-template>
     </section>
   </div>

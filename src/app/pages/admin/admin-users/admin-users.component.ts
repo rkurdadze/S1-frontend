@@ -6,17 +6,19 @@ import { finalize } from 'rxjs';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminUser } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TranslateModule],
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.scss'
 })
 export class AdminUsersComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   users: AdminUser[] = [];
   selectedUser: AdminUser | null = null;
@@ -68,25 +70,25 @@ export class AdminUsersComponent implements OnInit {
       email: this.form.email.trim()
     };
     const isUpdate = !!this.selectedUser;
-    const request = isUpdate
-      ? this.adminApi.updateUser({ ...this.selectedUser!, ...payload })
+    const request = this.selectedUser
+      ? this.adminApi.updateUser({ ...this.selectedUser, ...payload })
       : this.adminApi.createUser(payload);
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success(isUpdate ? 'Пользователь обновлен' : 'Пользователь создан');
+          this.toast.success(this.translate.instant(isUpdate ? 'admin.users.toast_updated' : 'admin.users.toast_created'));
           this.resetForm();
           this.loadUsers();
         },
         error: () => {
-          this.toast.error('Не удалось сохранить пользователя');
+          this.toast.error(this.translate.instant('admin.users.toast_save_error'));
         }
       });
   }
 
   deleteUser(user: AdminUser): void {
-    const confirmation = globalThis.confirm('Отключить пользователя?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.users.confirm_disable'));
     if (!confirmation) {
       return;
     }
@@ -97,14 +99,14 @@ export class AdminUsersComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('Пользователь удален');
+          this.toast.success(this.translate.instant('admin.users.toast_deleted'));
           if (this.selectedUser?.id === user.id) {
             this.resetForm();
           }
           this.loadUsers();
         },
         error: () => {
-          this.toast.error('Не удалось удалить пользователя');
+          this.toast.error(this.translate.instant('admin.users.toast_delete_error'));
         }
       });
   }
@@ -126,7 +128,7 @@ export class AdminUsersComponent implements OnInit {
           }
         },
         error: () => {
-          this.toast.error('Не удалось загрузить пользователей');
+          this.toast.error(this.translate.instant('admin.users.toast_load_error'));
         }
       });
   }

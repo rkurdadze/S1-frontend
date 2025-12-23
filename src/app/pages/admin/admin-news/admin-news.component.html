@@ -1,46 +1,46 @@
 <section class="admin-page">
   <header class="admin-page__header">
     <div>
-      <p class="admin-page__eyebrow">Контент витрины</p>
-      <h2>Новости и анонсы</h2>
-      <p class="admin-page__subtitle">Редактируйте новости для блока на странице Outwear и обновляйте ключевые инфоповоды.</p>
+      <p class="admin-page__eyebrow">{{ 'admin.news.eyebrow' | translate }}</p>
+      <h2>{{ 'admin.news.title' | translate }}</h2>
+      <p class="admin-page__subtitle">{{ 'admin.news.subtitle' | translate }}</p>
     </div>
     <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
-      {{ showCreateForm ? 'Скрыть форму' : 'Новая новость' }}
+      {{ (showCreateForm ? 'admin.news.hide_form' : 'admin.news.show_form') | translate }}
     </button>
   </header>
 
   <article class="admin-card admin-card--form" *ngIf="showCreateForm">
     <div class="admin-card__header">
-      <h3>Новая новость</h3>
-      <span class="admin-pill">Черновик</span>
+      <h3>{{ 'admin.news.new_card' | translate }}</h3>
+      <span class="admin-pill">{{ 'admin.categories.draft' | translate }}</span>
     </div>
     <form class="admin-form" (ngSubmit)="saveNews()">
       <label>
-        Заголовок
+        {{ 'admin.news.label_title' | translate }}
         <input type="text" name="title" [(ngModel)]="form.title" />
       </label>
       <label>
-        Дата
+        {{ 'admin.news.label_date' | translate }}
         <input type="text" name="date" [(ngModel)]="form.date" />
       </label>
       <label>
-        Короткое описание
+        {{ 'admin.news.label_summary' | translate }}
         <textarea rows="4" name="summary" [(ngModel)]="form.summary"></textarea>
       </label>
       <label>
-        Ссылка на изображение
+        {{ 'admin.news.label_image' | translate }}
         <input type="text" name="image" [(ngModel)]="form.image" />
       </label>
       <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-        <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+        <button class="admin-button admin-button--primary" type="submit">{{ 'admin.news.button_save' | translate }}</button>
+        <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.news.button_reset' | translate }}</button>
       </div>
     </form>
   </article>
 
   <div class="admin-grid">
-    <p class="admin-empty" *ngIf="isLoading">Загрузка новостей...</p>
+    <p class="admin-empty" *ngIf="isLoading">{{ 'admin.news.loading' | translate }}</p>
     <ng-container *ngFor="let item of news">
       <article class="news-card">
         <div class="news-card__image" [style.backgroundImage]="'url(' + item.image + ')'">
@@ -50,37 +50,37 @@
           <h3>{{ item.title }}</h3>
           <p>{{ item.summary }}</p>
           <div class="news-card__actions">
-            <button class="admin-button" type="button" (click)="selectNews(item)">Редактировать</button>
-            <button class="admin-button" type="button" (click)="deleteNews(item)">Удалить</button>
+            <button class="admin-button" type="button" (click)="selectNews(item)">{{ 'admin.news.button_edit' | translate }}</button>
+            <button class="admin-button" type="button" (click)="deleteNews(item)">{{ 'admin.news.button_delete' | translate }}</button>
           </div>
         </div>
       </article>
 
       <article class="admin-card admin-card--inline" *ngIf="selectedNews?.id === item.id">
         <div class="admin-card__header">
-          <h3>Редактор новости</h3>
+          <h3>{{ 'admin.news.edit_card' | translate }}</h3>
           <span class="admin-pill">ID {{ selectedNews?.id }}</span>
         </div>
         <form class="admin-form" (ngSubmit)="saveNews()">
           <label>
-            Заголовок
+            {{ 'admin.news.label_title' | translate }}
             <input type="text" name="editTitle" [(ngModel)]="form.title" />
           </label>
           <label>
-            Дата
+            {{ 'admin.news.label_date' | translate }}
             <input type="text" name="editDate" [(ngModel)]="form.date" />
           </label>
           <label>
-            Короткое описание
+            {{ 'admin.news.label_summary' | translate }}
             <textarea rows="4" name="editSummary" [(ngModel)]="form.summary"></textarea>
           </label>
           <label>
-            Ссылка на изображение
+            {{ 'admin.news.label_image' | translate }}
             <input type="text" name="editImage" [(ngModel)]="form.image" />
           </label>
           <div class="admin-form__actions">
-            <button class="admin-button admin-button--primary" type="submit">Сохранить</button>
-            <button class="admin-button" type="button" (click)="resetForm()">Сбросить</button>
+            <button class="admin-button admin-button--primary" type="submit">{{ 'admin.news.button_save' | translate }}</button>
+            <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.news.button_reset' | translate }}</button>
           </div>
         </form>
       </article>

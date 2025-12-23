@@ -13,7 +13,7 @@ import { PhotoService } from '../../../data/services/photo.service';
 import { Color } from '../../../data/interfaces/color.interface';
 import { Photo } from '../../../data/interfaces/photo.interface';
 import { AdminApiService } from '../../../data/services/admin-api.service';
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
 
 interface ItemFormState {
@@ -42,10 +42,13 @@ export class AdminItemsComponent implements OnInit {
   private photoService = inject(PhotoService);
   private destroyRef = inject(DestroyRef);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   items: Item[] = [];
   selectedItem: Item | null = null;
   selectedColor: string | null = null;
+  editingItemId: number | null = null;
+  searchTerm = '';
   isLoading = false;
   isTagsLoading = false;
   isPhotosLoading = false;
@@ -95,16 +98,33 @@ export class AdminItemsComponent implements OnInit {
           this.items = items;
         },
         error: () => {
-          this.toast.error('Не удалось загрузить товары');
+          this.toast.error(this.translate.instant('admin.items.toast_load_error'));
         }
       });
   }
 
-  selectItem(item: Item): void {
+  startEdit(item: Item): void {
     if (!item.id) {
       return;
     }
+    this.editingItemId = item.id;
     this.loadItem(item.id);
+  }
+
+  cancelEdit(): void {
+    if (this.selectedItem) {
+      this.editForm = {
+        name: this.selectedItem.name,
+        description: this.selectedItem.description,
+        publish: this.selectedItem.publish,
+        price: this.selectedItem.price
+      };
+      this.selectedItemTags = this.selectedItem.tags ?? [];
+    }
+    this.editingItemId = null;
+    this.selectedItem = null;
+    this.selectedColor = null;
+    this.selectedColorImages = [];
   }
 
   loadItem(itemId: number): void {
@@ -123,7 +143,7 @@ export class AdminItemsComponent implements OnInit {
         this.loadSelectedColorPhotos();
       },
       error: () => {
-        this.toast.error('Не удалось загрузить данные товара');
+        this.toast.error(this.translate.instant('admin.items.toast_load_error'));
       }
     });
   }
@@ -144,16 +164,13 @@ export class AdminItemsComponent implements OnInit {
 
     this.itemService.addItem(payload).subscribe({
       next: item => {
-        this.toast.success('Товар создан');
+        this.toast.success(this.translate.instant('admin.items.toast_created'));
         this.createForm = { name: '', description: '', publish: true, price: 0 };
         this.createItemTags = [];
         this.loadItems();
-        if (item.id) {
-          this.selectItem(item);
-        }
       },
       error: () => {
-        this.toast.error('Не удалось создать товар');
+        this.toast.error(this.translate.instant('admin.items.toast_create_error'));
       }
     });
   }
@@ -174,12 +191,12 @@ export class AdminItemsComponent implements OnInit {
 
     this.itemService.save(updated).subscribe({
       next: () => {
-        this.toast.success('Товар обновлен');
+        this.toast.success(this.translate.instant('admin.items.toast_updated'));
         this.loadItems();
-        this.loadItem(updated.id!);
+        this.cancelEdit();
       },
       error: () => {
-        this.toast.error('Не удалось обновить товар');
+        this.toast.error(this.translate.instant('admin.items.toast_update_error'));
       }
     });
   }
@@ -189,20 +206,23 @@ export class AdminItemsComponent implements OnInit {
     if (!target?.id) {
       return;
     }
-    const confirmation = globalThis.confirm('Удалить выбранный товар?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.items.confirm_delete'));
     if (!confirmation) {
       return;
     }
 
     this.itemService.delete(target.id).subscribe({
       next: () => {
-        this.toast.success('Товар удален');
+        this.toast.success(this.translate.instant('admin.items.toast_deleted'));
         this.selectedItem = null;
         this.selectedColor = null;
+        if (this.editingItemId === target.id) {
+          this.editingItemId = null;
+        }
         this.loadItems();
       },
       error: () => {
-        this.toast.error('Не удалось удалить товар');
+        this.toast.error(this.translate.instant('admin.items.toast_delete_error'));
       }
     });
   }
@@ -237,7 +257,7 @@ export class AdminItemsComponent implements OnInit {
           }
         },
         error: () => {
-          this.toast.error('Не удалось обновить теги товара');
+          this.toast.error(this.translate.instant('admin.items.toast_tag_update_error'));
         }
       });
   }
@@ -256,6 +276,22 @@ export class AdminItemsComponent implements OnInit {
 
   get selectedItemId(): number {
     return this.selectedItem?.id ?? 0;
+  }
+
+  get filteredItems(): Item[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      return this.items;
+    }
+    return this.items.filter(item => {
+      const parts = [
+        item.name,
+        item.description,
+        item.tags?.join(' '),
+        item.id?.toString()
+      ].filter(Boolean) as string[];
+      return parts.join(' ').toLowerCase().includes(term);
+    });
   }
 
   toggleCreateForm(): void {
@@ -321,7 +357,7 @@ export class AdminItemsComponent implements OnInit {
     }
     this.itemService.saveImages(this.uploadQueue, this.selectedItem.id).subscribe({
       next: (response: any) => {
-        this.toast.success('Изображения загружены');
+        this.toast.success(this.translate.instant('admin.items.toast_photos_uploaded'));
         const latestId = response?.[response.length - 1]?.id;
         this.loadItem(this.selectedItem!.id!);
         if (latestId) {
@@ -329,13 +365,13 @@ export class AdminItemsComponent implements OnInit {
         }
       },
       error: () => {
-        this.toast.error('Не удалось загрузить изображения');
+        this.toast.error(this.translate.instant('admin.items.toast_photos_upload_error'));
       }
     });
   }
 
   deleteImage(photoId: number): void {
-    const confirmation = globalThis.confirm('Удалить изображение?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.items.confirm_delete_image'));
     if (!confirmation) {
       return;
     }
@@ -345,13 +381,13 @@ export class AdminItemsComponent implements OnInit {
       .pipe(finalize(() => (this.isPhotosLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('Изображение удалено');
+          this.toast.success(this.translate.instant('admin.items.toast_photo_deleted'));
           if (this.selectedItem?.id) {
             this.loadItem(this.selectedItem.id);
           }
         },
         error: () => {
-          this.toast.error('Не удалось удалить изображение');
+          this.toast.error(this.translate.instant('admin.items.toast_photo_delete_error'));
         }
       });
   }
@@ -367,7 +403,7 @@ export class AdminItemsComponent implements OnInit {
           this.tags = tags;
         },
         error: () => {
-          this.toast.error('Не удалось загрузить теги');
+          this.toast.error(this.translate.instant('admin.items.toast_load_tags_error'));
         }
       });
   }

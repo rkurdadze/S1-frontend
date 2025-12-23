@@ -6,17 +6,19 @@ import { finalize } from 'rxjs';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminPromotion } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-promotions',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TranslateModule],
   templateUrl: './admin-promotions.component.html',
   styleUrl: './admin-promotions.component.scss'
 })
 export class AdminPromotionsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   promotions: AdminPromotion[] = [];
   selectedPromotion: AdminPromotion | null = null;
@@ -73,18 +75,18 @@ export class AdminPromotionsComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success(isUpdate ? 'Акция обновлена' : 'Акция создана');
+          this.toast.success(this.translate.instant(isUpdate ? 'admin.promotions.toast_updated' : 'admin.promotions.toast_created'));
           this.resetForm();
           this.loadPromotions();
         },
         error: () => {
-          this.toast.error('Не удалось сохранить акцию');
+          this.toast.error(this.translate.instant('admin.promotions.toast_save_error'));
         }
       });
   }
 
   deletePromotion(promotion: AdminPromotion): void {
-    const confirmation = globalThis.confirm('Удалить акцию?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.promotions.confirm_delete'));
     if (!confirmation) {
       return;
     }
@@ -95,14 +97,14 @@ export class AdminPromotionsComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('Акция удалена');
+          this.toast.success(this.translate.instant('admin.promotions.toast_deleted'));
           if (this.selectedPromotion?.id === promotion.id) {
             this.resetForm();
           }
           this.loadPromotions();
         },
         error: () => {
-          this.toast.error('Не удалось удалить акцию');
+          this.toast.error(this.translate.instant('admin.promotions.toast_delete_error'));
         }
       });
   }
@@ -124,7 +126,7 @@ export class AdminPromotionsComponent implements OnInit {
           }
         },
         error: () => {
-          this.toast.error('Не удалось загрузить акции');
+          this.toast.error(this.translate.instant('admin.promotions.toast_load_error'));
         }
       });
   }

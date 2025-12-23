@@ -10,17 +10,19 @@ import {
 } from '../../../data/interfaces/admin/admin.interfaces';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-newsletter',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TranslateModule],
   templateUrl: './admin-newsletter.component.html',
   styleUrl: './admin-newsletter.component.scss'
 })
 export class AdminNewsletterComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   draft: AdminNewsletterDraft = { subject: '', message: '' };
   segments: AdminNewsletterSegment[] = [];
@@ -55,10 +57,10 @@ export class AdminNewsletterComponent implements OnInit {
       .subscribe({
         next: draft => {
           this.draft = { ...draft };
-          this.toast.success('Черновик сохранён');
+          this.toast.success(this.translate.instant('admin.newsletter.toast_draft_saved'));
         },
         error: () => {
-          this.toast.error('Не удалось сохранить черновик');
+          this.toast.error(this.translate.instant('admin.newsletter.toast_draft_save_error'));
         }
       });
   }
@@ -75,7 +77,7 @@ export class AdminNewsletterComponent implements OnInit {
     if (!this.draft.subject.trim()) {
       return;
     }
-    const confirmation = globalThis.confirm('Вы уверены, что хотите отправить рассылку?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.newsletter.confirm_send'));
     if (!confirmation) {
       return;
     }
@@ -93,10 +95,10 @@ export class AdminNewsletterComponent implements OnInit {
       .subscribe({
         next: send => {
           this.sends = [send, ...this.sends];
-          this.toast.success('Рассылка отправлена');
+          this.toast.success(this.translate.instant('admin.newsletter.toast_campaign_sent'));
         },
         error: () => {
-          this.toast.error('Не удалось отправить рассылку');
+          this.toast.error(this.translate.instant('admin.newsletter.toast_campaign_send_error'));
         }
       });
   }
@@ -118,16 +120,16 @@ export class AdminNewsletterComponent implements OnInit {
         next: () => {
           this.segmentForm = { name: '', count: 0, description: '' };
           this.loadSegments();
-          this.toast.success('Сегмент создан');
+          this.toast.success(this.translate.instant('admin.newsletter.toast_segment_created'));
         },
         error: () => {
-          this.toast.error('Не удалось сохранить сегмент');
+          this.toast.error(this.translate.instant('admin.newsletter.toast_segment_save_error'));
         }
       });
   }
 
   removeSegment(segment: AdminNewsletterSegment): void {
-    const confirmation = globalThis.confirm('Удалить сегмент?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.newsletter.confirm_delete_segment'));
     if (!confirmation) {
       return;
     }
@@ -139,10 +141,10 @@ export class AdminNewsletterComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadSegments();
-          this.toast.success('Сегмент удален');
+          this.toast.success(this.translate.instant('admin.newsletter.toast_segment_deleted'));
         },
         error: () => {
-          this.toast.error('Не удалось удалить сегмент');
+          this.toast.error(this.translate.instant('admin.newsletter.toast_segment_delete_error'));
         }
       });
   }
@@ -158,7 +160,7 @@ export class AdminNewsletterComponent implements OnInit {
           this.draft = { ...draft };
         },
         error: () => {
-          this.toast.error('Не удалось загрузить черновик');
+          this.toast.error(this.translate.instant('admin.newsletter.toast_load_draft_error'));
         }
       });
   }
@@ -174,7 +176,7 @@ export class AdminNewsletterComponent implements OnInit {
           this.segments = segments;
         },
         error: () => {
-          this.toast.error('Не удалось загрузить сегменты');
+          this.toast.error(this.translate.instant('admin.newsletter.toast_load_segments_error'));
         }
       });
   }

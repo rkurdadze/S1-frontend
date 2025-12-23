@@ -70,6 +70,7 @@
 }
 
 .admin-form input,
+.admin-form pseudo-input,
 .admin-form textarea,
 .admin-form select {
   border-radius: 14px;
@@ -98,6 +99,12 @@
   background: rgba(255, 255, 255, 0.05);
   color: var(--light-color);
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .admin-button--primary {
@@ -118,6 +125,99 @@
 .admin-empty {
   color: rgba(255, 255, 255, 0.6);
   margin: 0;
+}
+
+/* Common Tags Styles */
+.admin-form__tags {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.current-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 0;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 16px;
+  font-size: 13px;
+  
+  .remove-tag {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    line-height: 1;
+    
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.available-tags {
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 12px;
+}
+
+.small-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-chip {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+  }
+  
+  &.active {
+    background-color: #fff;
+    color: #000;
+    border-color: #fff;
+  }
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  
+  .admin-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
 }
 
 @include media-md {

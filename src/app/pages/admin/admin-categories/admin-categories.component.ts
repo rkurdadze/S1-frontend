@@ -6,17 +6,19 @@ import { finalize } from 'rxjs';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminCategory } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TranslateModule],
   templateUrl: './admin-categories.component.html',
   styleUrl: './admin-categories.component.scss'
 })
 export class AdminCategoriesComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   categories: AdminCategory[] = [];
   availableTags: string[] = [];
@@ -73,7 +75,6 @@ export class AdminCategoriesComponent implements OnInit {
     if (!this.form.title.trim()) {
       return;
     }
-
     this.isLoading = true;
     const payload = { ...this.form, title: this.form.title.trim() };
     const isUpdate = !!this.selectedCategory;
@@ -84,43 +85,41 @@ export class AdminCategoriesComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success(isUpdate ? 'Категория обновлена' : 'Категория создана');
+          this.toast.success(this.translate.instant(isUpdate ? 'admin.categories.toast_updated' : 'admin.categories.toast_created'));
           this.resetForm();
           this.loadData();
         },
         error: () => {
-          this.toast.error('Не удалось сохранить категорию');
+          this.toast.error(this.translate.instant('admin.categories.toast_save_error'));
         }
       });
   }
 
   deleteCategory(category: AdminCategory): void {
-    const confirmation = globalThis.confirm('Удалить категорию?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.categories.confirm_delete'));
     if (!confirmation) {
       return;
     }
-
     this.isLoading = true;
     this.adminApi
       .deleteCategory(category.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('Категория удалена');
+          this.toast.success(this.translate.instant('admin.categories.toast_deleted'));
           if (this.selectedCategory?.id === category.id) {
             this.resetForm();
           }
           this.loadData();
         },
         error: () => {
-          this.toast.error('Не удалось удалить категорию');
+          this.toast.error(this.translate.instant('admin.categories.toast_delete_error'));
         }
       });
   }
 
   private loadData(): void {
     this.isLoading = true;
-
     
     // Load categories and tags in parallel if possible, but sequential is fine for now
     this.adminApi.getCategories().subscribe({
@@ -135,7 +134,7 @@ export class AdminCategoriesComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.toast.error('Не удалось загрузить категории');
+        this.toast.error(this.translate.instant('admin.categories.toast_load_error'));
         this.isLoading = false;
       }
     });

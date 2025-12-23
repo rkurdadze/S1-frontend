@@ -6,17 +6,19 @@ import { finalize } from 'rxjs';
 import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminEditorial } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-editorials',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TranslateModule],
   templateUrl: './admin-editorials.component.html',
   styleUrl: './admin-editorials.component.scss'
 })
 export class AdminEditorialsComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   editorials: AdminEditorial[] = [];
   selectedEditorial: AdminEditorial | null = null;
@@ -71,18 +73,18 @@ export class AdminEditorialsComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success(isUpdate ? 'История обновлена' : 'История создана');
+          this.toast.success(this.translate.instant(isUpdate ? 'admin.editorials.toast_updated' : 'admin.editorials.toast_created'));
           this.resetForm();
           this.loadEditorials();
         },
         error: () => {
-          this.toast.error('Не удалось сохранить историю');
+          this.toast.error(this.translate.instant('admin.editorials.toast_save_error'));
         }
       });
   }
 
   deleteEditorial(editorial: AdminEditorial): void {
-    const confirmation = globalThis.confirm('Удалить историю?');
+    const confirmation = globalThis.confirm(this.translate.instant('admin.editorials.confirm_delete'));
     if (!confirmation) {
       return;
     }
@@ -93,14 +95,14 @@ export class AdminEditorialsComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
-          this.toast.success('История удалена');
+          this.toast.success(this.translate.instant('admin.editorials.toast_deleted'));
           if (this.selectedEditorial?.id === editorial.id) {
             this.resetForm();
           }
           this.loadEditorials();
         },
         error: () => {
-          this.toast.error('Не удалось удалить историю');
+          this.toast.error(this.translate.instant('admin.editorials.toast_delete_error'));
         }
       });
   }
@@ -122,7 +124,7 @@ export class AdminEditorialsComponent implements OnInit {
           }
         },
         error: () => {
-          this.toast.error('Не удалось загрузить редакционные истории');
+          this.toast.error(this.translate.instant('admin.editorials.toast_load_error'));
         }
       });
   }
