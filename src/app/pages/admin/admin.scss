@@ -100,6 +100,18 @@
   color: var(--light-color);
   cursor: pointer;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
 
   &:disabled {
     opacity: 0.5;
@@ -110,6 +122,30 @@
 .admin-button--primary {
   background: linear-gradient(135deg, rgba(255, 118, 84, 0.9), rgba(255, 157, 108, 0.85));
   border-color: transparent;
+  box-shadow: 0 4px 12px rgba(255, 118, 84, 0.25);
+}
+
+.admin-button--save {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.4);
+  color: #81c784;
+
+  &:hover {
+    background: rgba(76, 175, 80, 0.25);
+    border-color: #81c784;
+  }
+}
+
+.admin-button--cancel {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+
+  &:hover {
+    background: rgba(255, 106, 106, 0.1);
+    border-color: rgba(255, 106, 106, 0.4);
+    color: #ff8a8a;
+  }
 }
 
 .admin-button--ghost {
@@ -120,6 +156,39 @@
 .admin-button--create {
   padding: 8px 14px;
   font-size: 12px;
+}
+
+.admin-icon-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.06);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  color: var(--light-color); /* Default color */
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+}
+
+.admin-icon-button--edit {
+  color: #f5c84f;
+  border-color: rgba(245, 200, 84, 0.45);
+}
+
+.admin-icon-button--delete {
+  color: #ff6a6a;
+  border-color: rgba(255, 106, 106, 0.45);
+}
+
+.admin-icon-button:hover {
+  transform: translateY(-1px);
 }
 
 .admin-empty {

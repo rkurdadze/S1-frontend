@@ -169,38 +169,6 @@
   transform: translateY(-1px);
 }
 
-.admin-icon-button {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.06);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-
-  svg {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
-  }
-}
-
-.admin-icon-button--edit {
-  color: #f5c84f;
-  border-color: rgba(245, 200, 84, 0.45);
-}
-
-.admin-icon-button--delete {
-  color: #ff6a6a;
-  border-color: rgba(255, 106, 106, 0.45);
-}
-
-.admin-icon-button:hover {
-  transform: translateY(-1px);
-}
-
 
 .admin-preview {
   display: grid;

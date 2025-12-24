@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -7,11 +7,12 @@ import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminCategory } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { EventService } from '../../../data/services/event.service';
 
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule, TranslateModule],
+  imports: [NgFor, NgIf, NgTemplateOutlet, FormsModule, TranslateModule],
   templateUrl: './admin-categories.component.html',
   styleUrl: './admin-categories.component.scss'
 })
@@ -19,6 +20,7 @@ export class AdminCategoriesComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
+  private eventService = inject(EventService);
 
   categories: AdminCategory[] = [];
   availableTags: string[] = [];
@@ -45,30 +47,37 @@ export class AdminCategoriesComponent implements OnInit {
       tags: category.tags ? [...category.tags] : [],
       highlight: category.highlight || ''
     };
+    this.showCreateForm = false;
+  }
+
+  cancelEdit(): void {
+    this.selectedCategory = null;
+    this.showCreateForm = false;
+    this.resetForm();
   }
 
   resetForm(): void {
-    this.selectedCategory = null;
     this.form = { title: '', description: '', tags: [], highlight: '' };
   }
 
   toggleCreateForm(): void {
-    this.showCreateForm = !this.showCreateForm;
     if (!this.showCreateForm) {
       this.resetForm();
+      this.selectedCategory = null;
+      this.showCreateForm = true;
+    } else {
+      this.showCreateForm = false;
     }
-  }
-
-  removeTag(tag: string): void {
-    this.form.tags = this.form.tags.filter(t => t !== tag);
   }
 
   toggleTag(tag: string): void {
-    if (this.form.tags.includes(tag)) {
-      this.removeTag(tag);
-    } else {
-      this.form.tags.push(tag);
-    }
+    const current = new Set(this.form.tags);
+    current.has(tag) ? current.delete(tag) : current.add(tag);
+    this.form.tags = Array.from(current);
+  }
+
+  isTagActive(tag: string): boolean {
+    return this.form.tags.includes(tag);
   }
 
   saveCategory(): void {
@@ -78,16 +87,19 @@ export class AdminCategoriesComponent implements OnInit {
     this.isLoading = true;
     const payload = { ...this.form, title: this.form.title.trim() };
     const isUpdate = !!this.selectedCategory;
+    
     const request = isUpdate
       ? this.adminApi.updateCategory({ ...this.selectedCategory!, ...payload })
       : this.adminApi.createCategory(payload);
+
     request
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
           this.toast.success(this.translate.instant(isUpdate ? 'admin.categories.toast_updated' : 'admin.categories.toast_created'));
-          this.resetForm();
+          this.cancelEdit();
           this.loadData();
+          this.eventService.emitRefreshAdmin();
         },
         error: () => {
           this.toast.error(this.translate.instant('admin.categories.toast_save_error'));
@@ -97,20 +109,19 @@ export class AdminCategoriesComponent implements OnInit {
 
   deleteCategory(category: AdminCategory): void {
     const confirmation = globalThis.confirm(this.translate.instant('admin.categories.confirm_delete'));
-    if (!confirmation) {
-      return;
-    }
+    if (!confirmation) return;
+
     this.isLoading = true;
-    this.adminApi
-      .deleteCategory(category.id)
+    this.adminApi.deleteCategory(category.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
           this.toast.success(this.translate.instant('admin.categories.toast_deleted'));
           if (this.selectedCategory?.id === category.id) {
-            this.resetForm();
+            this.cancelEdit();
           }
           this.loadData();
+          this.eventService.emitRefreshAdmin();
         },
         error: () => {
           this.toast.error(this.translate.instant('admin.categories.toast_delete_error'));
@@ -120,17 +131,9 @@ export class AdminCategoriesComponent implements OnInit {
 
   private loadData(): void {
     this.isLoading = true;
-    
-    // Load categories and tags in parallel if possible, but sequential is fine for now
     this.adminApi.getCategories().subscribe({
       next: categories => {
         this.categories = categories;
-        if (this.selectedCategory) {
-          const updated = categories.find(item => item.id === this.selectedCategory?.id);
-          if (updated) {
-            this.selectCategory(updated);
-          }
-        }
         this.isLoading = false;
       },
       error: () => {
@@ -140,9 +143,7 @@ export class AdminCategoriesComponent implements OnInit {
     });
 
     this.adminApi.getTags().subscribe({
-      next: tags => {
-        this.availableTags = tags;
-      }
+      next: tags => this.availableTags = tags
     });
   }
 }

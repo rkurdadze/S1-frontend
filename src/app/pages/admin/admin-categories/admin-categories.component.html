@@ -10,127 +10,112 @@
     </button>
   </header>
 
+  <!-- CREATE FORM -->
   <article class="admin-card admin-card--form" *ngIf="showCreateForm">
     <div class="admin-card__header">
-      <h3>{{ 'admin.categories.new_card' | translate }}</h3>
-      <span class="admin-pill">{{ 'admin.categories.draft' | translate }}</span>
+      <div class="admin-card__title-group">
+        <h3>{{ 'admin.categories.new_card' | translate }}</h3>
+        <span class="admin-pill">{{ 'admin.categories.draft' | translate }}</span>
+      </div>
+      <div class="admin-card__header-actions">
+        <button class="admin-button admin-button--save" type="button" (click)="saveCategory()">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          {{ 'admin.categories.button_save' | translate }}
+        </button>
+        <button class="admin-button admin-button--cancel" type="button" (click)="cancelEdit()">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          {{ 'admin.categories.button_reset' | translate }}
+        </button>
+      </div>
     </div>
     <form class="admin-form" (ngSubmit)="saveCategory()">
-      <label>
-        {{ 'admin.categories.label_title' | translate }}
-        <input type="text" name="title" [(ngModel)]="form.title" />
-      </label>
-      <label>
-        {{ 'admin.categories.label_description' | translate }}
-        <textarea rows="4" name="description" [(ngModel)]="form.description"></textarea>
-      </label>
-      <label>
-        {{ 'admin.categories.label_highlight' | translate }}
-        <input type="text" name="highlight" [(ngModel)]="form.highlight" />
-      </label>
-
-      <div class="admin-form__tags">
-        <label>{{ 'admin.categories.label_tags' | translate }}</label>
-        
-        <div class="current-tags" *ngIf="form.tags.length > 0">
-          <span class="tag-pill" *ngFor="let tag of form.tags">
-            {{ tag }}
-            <button type="button" class="remove-tag" (click)="removeTag(tag)">×</button>
-          </span>
-        </div>
-
-        <div class="available-tags" *ngIf="availableTags.length > 0">
-          <p class="small-label">{{ 'admin.categories.label_available_tags' | translate }}</p>
-          <div class="tags-cloud">
-            <button 
-              type="button" 
-              class="tag-chip" 
-              *ngFor="let tag of availableTags" 
-              [class.active]="form.tags.includes(tag)"
-              (click)="toggleTag(tag)">
-              {{ tag }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="submit">{{ 'admin.categories.button_save' | translate }}</button>
-        <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.categories.button_reset' | translate }}</button>
-      </div>
+      <ng-container *ngTemplateOutlet="categoryFormFields"></ng-container>
+      <ng-container *ngTemplateOutlet="tagsSection"></ng-container>
     </form>
   </article>
 
   <div class="admin-grid">
     <p class="admin-empty" *ngIf="isLoading">{{ 'admin.categories.loading' | translate }}</p>
+    
     <ng-container *ngFor="let category of categories">
-      <article class="admin-card">
+      <article class="admin-card" [class.is-editing]="selectedCategory?.id === category.id">
         <div class="admin-card__header">
-          <h3>{{ category.title }}</h3>
-          <div class="tags-list">
+          <div class="admin-card__title-group">
+            <h3>{{ category.title }}</h3>
+            <span class="admin-chip" *ngIf="category.highlight">{{ category.highlight }}</span>
+          </div>
+          <div class="admin-actions">
+            <button class="admin-icon-button admin-icon-button--edit" type="button" (click)="selectCategory(category)" *ngIf="selectedCategory?.id !== category.id">
+              <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L19.81 7.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41l-2.51-2.51a1 1 0 0 0-1.41 0l-1.97 1.97 3.75 3.75 2.14-2.14z"/></svg>
+            </button>
+            <button class="admin-icon-button admin-icon-button--delete" type="button" (click)="deleteCategory(category)">
+              <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 7zm3-4h6l1 2h4v2H4V5h4l1-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        
+        <ng-container *ngIf="selectedCategory?.id !== category.id">
+          <p class="admin-card__text">{{ category.description }}</p>
+          
+          <div class="tags-list" *ngIf="category.tags?.length">
              <span class="admin-pill" *ngFor="let tag of category.tags">{{ tag }}</span>
           </div>
-        </div>
-        <p class="admin-card__text">{{ category.description }}</p>
-        <div class="admin-card__footer">
-          <span class="admin-chip">{{ category.highlight }}</span>
-          <div class="admin-actions">
-            <button class="admin-button" type="button" (click)="selectCategory(category)">{{ 'admin.categories.button_edit' | translate }}</button>
-            <button class="admin-button" type="button" (click)="deleteCategory(category)">{{ 'admin.categories.button_delete' | translate }}</button>
-          </div>
-        </div>
-      </article>
+        </ng-container>
 
-      <article class="admin-card admin-card--inline" *ngIf="selectedCategory?.id === category.id">
-        <div class="admin-card__header">
-          <h3>{{ 'admin.categories.edit_card' | translate }}</h3>
-          <span class="admin-pill">ID {{ selectedCategory?.id }}</span>
-        </div>
-        <form class="admin-form" (ngSubmit)="saveCategory()">
-          <label>
-            {{ 'admin.categories.label_title' | translate }}
-            <input type="text" name="editTitle" [(ngModel)]="form.title" />
-          </label>
-          <label>
-            {{ 'admin.categories.label_description' | translate }}
-            <textarea rows="4" name="editDescription" [(ngModel)]="form.description"></textarea>
-          </label>
-          <label>
-            {{ 'admin.categories.label_highlight' | translate }}
-            <input type="text" name="editHighlight" [(ngModel)]="form.highlight" />
-          </label>
-
-          <div class="admin-form__tags">
-            <label>{{ 'admin.categories.label_tags' | translate }}</label>
+        <!-- EDIT FORM (INLINE EMBEDDED) -->
+        <div class="admin-inline-form" *ngIf="selectedCategory?.id === category.id">
+          <form class="admin-form" (ngSubmit)="saveCategory()">
+            <ng-container *ngTemplateOutlet="categoryFormFields"></ng-container>
+            <ng-container *ngTemplateOutlet="tagsSection"></ng-container>
             
-            <div class="current-tags" *ngIf="form.tags.length > 0">
-              <span class="tag-pill" *ngFor="let tag of form.tags">
-                {{ tag }}
-                <button type="button" class="remove-tag" (click)="removeTag(tag)">×</button>
-              </span>
+            <div class="admin-form__actions">
+              <button class="admin-button admin-button--save" type="submit">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                {{ 'admin.categories.button_save' | translate }}
+              </button>
+              <button class="admin-button admin-button--cancel" type="button" (click)="cancelEdit()">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                {{ 'admin.categories.button_reset' | translate }}
+              </button>
             </div>
-    
-            <div class="available-tags" *ngIf="availableTags.length > 0">
-              <p class="small-label">{{ 'admin.categories.label_available_tags' | translate }}</p>
-              <div class="tags-cloud">
-                <button 
-                  type="button" 
-                  class="tag-chip" 
-                  *ngFor="let tag of availableTags" 
-                  [class.active]="form.tags.includes(tag)"
-                  (click)="toggleTag(tag)">
-                  {{ tag }}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="admin-form__actions">
-            <button class="admin-button admin-button--primary" type="submit">{{ 'admin.categories.button_save' | translate }}</button>
-            <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.categories.button_reset' | translate }}</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </article>
     </ng-container>
   </div>
 </section>
+
+<!-- REUSABLE TEMPLATES -->
+
+<ng-template #categoryFormFields>
+  <div class="admin-form__row">
+    <label>
+      {{ 'admin.categories.label_title' | translate }}
+      <input type="text" name="title" [(ngModel)]="form.title" />
+    </label>
+    <label>
+      {{ 'admin.categories.label_highlight' | translate }}
+      <input type="text" name="highlight" [(ngModel)]="form.highlight" />
+    </label>
+  </div>
+  <label>
+    {{ 'admin.categories.label_description' | translate }}
+    <textarea rows="4" name="description" [(ngModel)]="form.description"></textarea>
+  </label>
+</ng-template>
+
+<ng-template #tagsSection>
+  <div class="admin-form__tags">
+    <label>{{ 'admin.categories.label_tags' | translate }}</label>
+    <div class="tags-cloud">
+      <button 
+        type="button" 
+        class="tag-chip" 
+        *ngFor="let tag of availableTags" 
+        [class.active]="isTagActive(tag)"
+        (click)="toggleTag(tag)">
+        {{ tag }}
+      </button>
+    </div>
+  </div>
+</ng-template>
