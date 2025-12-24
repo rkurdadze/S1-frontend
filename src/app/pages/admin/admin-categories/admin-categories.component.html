@@ -42,6 +42,7 @@
         <div class="admin-card__header">
           <div class="admin-card__title-group">
             <h3>{{ category.title }}</h3>
+            <span class="admin-pill" *ngIf="category.items !== undefined">{{ category.items }} {{ 'admin.categories.items_count' | translate }}</span>
             <span class="admin-chip" *ngIf="category.highlight">{{ category.highlight }}</span>
           </div>
           <div class="admin-actions">

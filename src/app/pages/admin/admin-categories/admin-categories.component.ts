@@ -1,10 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 
 import { AdminApiService } from '../../../data/services/admin-api.service';
+import { ItemService } from '../../../data/services/item.service';
 import { AdminCategory } from '../../../data/interfaces/admin/admin.interfaces';
+import { Item } from '../../../data/interfaces/item.interface';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EventService } from '../../../data/services/event.service';
@@ -18,12 +20,14 @@ import { EventService } from '../../../data/services/event.service';
 })
 export class AdminCategoriesComponent implements OnInit {
   private adminApi = inject(AdminApiService);
+  private itemService = inject(ItemService);
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
   private eventService = inject(EventService);
 
   categories: AdminCategory[] = [];
   availableTags: string[] = [];
+  allItems: Item[] = [];
   selectedCategory: AdminCategory | null = null;
   showCreateForm = false;
   isLoading = false;
@@ -131,19 +135,38 @@ export class AdminCategoriesComponent implements OnInit {
 
   private loadData(): void {
     this.isLoading = true;
-    this.adminApi.getCategories().subscribe({
-      next: categories => {
-        this.categories = categories;
-        this.isLoading = false;
+
+    forkJoin({
+      categories: this.adminApi.getCategories(),
+      items: this.itemService.getItems(),
+      tags: this.adminApi.getTags()
+    }).pipe(
+      finalize(() => (this.isLoading = false))
+    ).subscribe({
+      next: ({ categories, items, tags }) => {
+        this.allItems = items;
+        this.availableTags = tags;
+        this.categories = categories.map(cat => ({
+          ...cat,
+          items: this.calculateItemCount(cat, items)
+        }));
       },
       error: () => {
         this.toast.error(this.translate.instant('admin.categories.toast_load_error'));
-        this.isLoading = false;
       }
     });
+  }
 
-    this.adminApi.getTags().subscribe({
-      next: tags => this.availableTags = tags
-    });
+  private calculateItemCount(category: AdminCategory, items: Item[]): number {
+    const categoryTags = category.tags || [];
+    if (categoryTags.length === 0) {
+      return 0;
+    }
+
+    return items.filter(item => {
+      const itemTags = item.tags || [];
+      // OR condition: item is counted if it has ANY of the category's tags
+      return itemTags.some(tag => categoryTags.includes(tag));
+    }).length;
   }
 }

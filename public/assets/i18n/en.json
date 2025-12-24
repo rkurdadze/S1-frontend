@@ -691,6 +691,7 @@
       "label_title": "Title",
       "label_description": "Description",
       "label_highlight": "Highlight",
+      "items_count": "items",
       "label_tags": "Tags",
       "label_available_tags": "Available tags:",
       "button_save": "Save",

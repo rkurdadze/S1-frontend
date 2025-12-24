@@ -3,6 +3,7 @@ export interface AdminCategory {
   title: string;
   description: string;
   highlight: string;
+  items?: number;
   tags: string[];
 }
 

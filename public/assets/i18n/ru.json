@@ -691,6 +691,7 @@
       "label_title": "Название",
       "label_description": "Описание",
       "label_highlight": "Highlight",
+      "items_count": "товаров",
       "label_tags": "Теги",
       "label_available_tags": "Доступные теги:",
       "button_save": "Сохранить",
