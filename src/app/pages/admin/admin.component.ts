@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -6,8 +6,10 @@ import { ItemService } from '../../data/services/item.service';
 import { Item } from '../../data/interfaces/item.interface';
 import { AdminApiService } from '../../data/services/admin-api.service';
 import { GoogleAuthService } from '../../data/services/google-auth.service';
+import { EventService } from '../../data/services/event.service';
 import { AdminNewsletterSegment } from '../../data/interfaces/admin/admin.interfaces';
 import { ADMIN_NAV_ITEMS, AdminNavItem } from './admin-nav.config';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface AdminKpi {
   label: string;
@@ -26,6 +28,8 @@ export class AdminComponent implements OnInit {
   private itemService = inject(ItemService);
   private adminApi = inject(AdminApiService);
   private googleAuth = inject(GoogleAuthService);
+  private eventService = inject(EventService);
+  private destroyRef = inject(DestroyRef);
 
   kpis: AdminKpi[] = [];
   private ordersCount = 0;
@@ -37,6 +41,10 @@ export class AdminComponent implements OnInit {
   ngOnInit(): void {
     if (this.googleAuth.isAdminOrManager) {
       this.loadAdminData();
+
+      this.eventService.refreshAdmin$
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.loadAdminData());
     }
   }
 
@@ -77,6 +85,10 @@ export class AdminComponent implements OnInit {
 
     this.adminApi.getDeliveryZones().subscribe(zones => {
       this.updateNavCount('delivery', zones.length);
+    });
+
+    this.adminApi.getTags().subscribe(tags => {
+      this.updateNavCount('tags', tags.length);
     });
 
     this.adminApi.getNewsletterSegments().subscribe(segments => {

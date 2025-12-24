@@ -39,5 +39,48 @@
         filter: invert(1);
       }
     }
+
+    .toast-actions {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 0.75rem;
+      margin-top: 0.25rem;
+
+      .btn {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+
+        &.btn-primary {
+          background: #fff;
+          color: #000;
+          border: none;
+          &:hover {
+            background: rgba(255, 255, 255, 0.9);
+          }
+        }
+
+        &.btn-danger {
+          background: #ff4d4d;
+          color: #fff;
+          border: none;
+          box-shadow: 0 2px 8px rgba(255, 77, 77, 0.4);
+          &:hover {
+            background: #ff3333;
+            transform: translateY(-1px);
+          }
+        }
+
+        &.btn-outline-secondary {
+          color: #fff;
+          border-color: rgba(255, 255, 255, 0.5);
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+          }
+        }
+      }
+    }
   }
 }

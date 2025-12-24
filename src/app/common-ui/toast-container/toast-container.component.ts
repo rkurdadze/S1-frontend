@@ -1,11 +1,11 @@
-import { AsyncPipe, NgClass, NgFor } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
 import {ToastMessage, ToastService} from "./toast.service";
 
 @Component({
   selector: 'app-toast-container',
   standalone: true,
-  imports: [AsyncPipe, NgClass, NgFor],
+  imports: [AsyncPipe, NgClass, NgFor, NgIf],
   templateUrl: './toast-container.component.html',
   styleUrls: ['./toast-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

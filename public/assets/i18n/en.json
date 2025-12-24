@@ -672,7 +672,12 @@
       "toast_deleted": "Tag \"{{name}}\" deleted",
       "toast_load_error": "Failed to load tags",
       "toast_create_error": "Failed to create tag",
-      "toast_delete_error": "Failed to delete tag"
+      "toast_delete_error": "Failed to delete tag",
+      "toast_delete_error_used": "Tag is used in products or categories and cannot be deleted",
+      "confirm_delete_used": "Tag \"{{name}}\" is in use (usage count: {{count}}). Deleting it will remove it from all associated objects. Continue?",
+      "tag_usage_warning": "Warning: tag is in use!",
+      "button_delete": "Delete",
+      "button_cancel": "Cancel"
     },
     "categories": {
       "eyebrow": "Catalog Structure",

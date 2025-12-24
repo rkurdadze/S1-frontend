@@ -23,4 +23,12 @@ export class EventService {
     emitAnotherEvent(data: string) {
         this.anotherEventSource.next(data);
     }
+
+    // Global admin data refresh
+    private refreshAdminSource = new Subject<void>();
+    refreshAdmin$ = this.refreshAdminSource.asObservable();
+
+    emitRefreshAdmin() {
+        this.refreshAdminSource.next();
+    }
 }

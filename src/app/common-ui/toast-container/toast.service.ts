@@ -3,9 +3,17 @@ import { BehaviorSubject } from 'rxjs';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
+export interface ToastAction {
+    label: string;
+    callback: (id: number) => void;
+    primary?: boolean;
+    danger?: boolean;
+}
+
 export interface ToastOptions {
     autoClose?: boolean;
     duration?: number;
+    actions?: ToastAction[];
 }
 
 export interface ToastMessage {
@@ -14,11 +22,12 @@ export interface ToastMessage {
     text: string;
     autoClose: boolean;
     duration: number;
+    actions?: ToastAction[];
 }
 
 @Injectable({ providedIn: 'root' })
 export class ToastService implements OnDestroy {
-    private static readonly DEFAULT_OPTIONS: Required<ToastOptions> = {
+    private static readonly DEFAULT_OPTIONS: Required<Omit<ToastOptions, 'actions'>> = {
         autoClose: true,
         duration: 5000
     };
@@ -31,7 +40,7 @@ export class ToastService implements OnDestroy {
 
     show(type: ToastType, text: string, options: ToastOptions = {}): number {
         const id = ++this.counter;
-        const config: Required<ToastOptions> = {
+        const config = {
             ...ToastService.DEFAULT_OPTIONS,
             ...options
         };
@@ -41,7 +50,8 @@ export class ToastService implements OnDestroy {
             type,
             text,
             autoClose: config.autoClose,
-            duration: config.duration
+            duration: config.duration,
+            actions: config.actions
         };
 
         this.toastsSubject.next([...this.toastsSubject.value, toast]);
