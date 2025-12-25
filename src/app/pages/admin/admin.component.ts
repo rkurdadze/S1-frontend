@@ -10,6 +10,7 @@ import { EventService } from '../../data/services/event.service';
 import { AdminNewsletterSegment } from '../../data/interfaces/admin/admin.interfaces';
 import { ADMIN_NAV_ITEMS, AdminNavItem } from './admin-nav.config';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {forkJoin} from 'rxjs';
 
 interface AdminKpi {
   label: string;
@@ -83,8 +84,15 @@ export class AdminComponent implements OnInit {
       this.updateOrderStats(orders.length);
     });
 
-    this.adminApi.getDeliveryZones().subscribe(zones => {
-      this.updateNavCount('delivery', zones.length);
+    forkJoin([
+      this.adminApi.getDeliveryZones(),
+      this.adminApi.getDeliverySettings()
+    ]).subscribe(([zones, settings]) => {
+      const enabledSettings = settings.filter(s => s.enabled).length;
+      const totalSettings = settings.length;
+      const total = totalSettings + zones.length;
+      const enabled = enabledSettings + zones.length;
+      this.updateNavCount('delivery', `${enabled}/${total}`);
     });
 
     this.adminApi.getTags().subscribe(tags => {
@@ -125,7 +133,7 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  private updateNavCount(route: string, count: number): void {
+  private updateNavCount(route: string, count: number | string): void {
     this.navItems = this.navItems.map(item =>
       item.route === route ? { ...item, count } : item
     );

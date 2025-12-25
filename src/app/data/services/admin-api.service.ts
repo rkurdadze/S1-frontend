@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, shareReplay } from 'rxjs';
+import { Observable, shareReplay, map } from 'rxjs';
 import { BASE_API_URL } from '../../app.config';
 import { GoogleAuthService } from './google-auth.service';
 import {
@@ -17,6 +17,7 @@ import {
   AdminUser
 } from '../interfaces/admin/admin.interfaces';
 import { Photo } from '../interfaces/photo.interface';
+import { DeliveryServiceSetting } from '../interfaces/delivery.interface';
 
 interface NewsletterSendPayload {
   subject: string;
@@ -180,6 +181,11 @@ export class AdminApiService {
 
   getDeliveryZones(forceRefresh = false): Observable<AdminDeliveryZone[]> {
     return this.getCached('delivery-zones', this.http.get<AdminDeliveryZone[]>(`${this.baseApiUrl}admin/delivery-zones`, this.authHeaders()), forceRefresh);
+  }
+
+  getDeliverySettings(): Observable<DeliveryServiceSetting[]> {
+    return this.http.get<{ data: DeliveryServiceSetting[] }>(`${this.baseApiUrl}admin/delivery/settings`, this.authHeaders())
+      .pipe(map(res => res.data));
   }
 
   createDeliveryZone(payload: Omit<AdminDeliveryZone, 'id'>): Observable<AdminDeliveryZone> {

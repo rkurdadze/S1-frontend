@@ -9,6 +9,7 @@ import { ToastService } from '../../../common-ui/toast-container/toast.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {DeliveryServiceSetting} from '../../../data/interfaces/delivery.interface';
 import {AdminDeliverySettingsService} from '../../../data/services/admin-delivery-settings.service';
+import {EventService} from '../../../data/services/event.service';
 
 @Component({
   selector: 'app-admin-delivery',
@@ -22,6 +23,7 @@ export class AdminDeliveryComponent implements OnInit {
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
   private deliverySettingsApi = inject(AdminDeliverySettingsService);
+  private eventService = inject(EventService);
 
   zones: AdminDeliveryZone[] = [];
   selectedZone: AdminDeliveryZone | null = null;
@@ -85,6 +87,7 @@ export class AdminDeliveryComponent implements OnInit {
           this.toast.success(this.translate.instant(isUpdate ? 'admin.delivery.toast_updated' : 'admin.delivery.toast_created'));
           this.resetForm();
           this.loadZones();
+          this.eventService.emitRefreshAdmin();
         },
         error: () => {
           this.toast.error(this.translate.instant('admin.delivery.toast_save_error'));
@@ -108,6 +111,7 @@ export class AdminDeliveryComponent implements OnInit {
             this.resetForm();
           }
           this.loadZones();
+          this.eventService.emitRefreshAdmin();
         },
         error: () => {
           this.toast.error(this.translate.instant('admin.delivery.toast_delete_error'));
@@ -128,6 +132,7 @@ export class AdminDeliveryComponent implements OnInit {
         next: settings => {
           this.serviceSettings = settings;
           this.toast.success(this.translate.instant('admin.delivery.settings_saved'));
+          this.eventService.emitRefreshAdmin();
         },
         error: () => {
           this.toast.error(this.translate.instant('admin.delivery.settings_error'));

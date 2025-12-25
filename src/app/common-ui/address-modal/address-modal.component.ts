@@ -32,12 +32,17 @@ export class AddressModalComponent implements OnChanges {
       region: [''],
       city_id: [null, Validators.required]
     });
-
-    this.loadRegions();
-    this.loadCities();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['open'] && this.open) {
+      if (this.regions.length === 0) {
+        this.loadRegions();
+      }
+      if (this.cities.length === 0) {
+        this.loadCities();
+      }
+    }
     if (changes['initialData'] && this.initialData) {
       this.form.patchValue({
         address: this.initialData.address,

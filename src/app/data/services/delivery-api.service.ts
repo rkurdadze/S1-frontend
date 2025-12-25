@@ -9,6 +9,7 @@ import {
   City,
   CreateOrderDto,
   DeliveryOrder,
+  DeliveryServiceSetting,
   PudoCity,
   PudoPoint,
   Region
@@ -27,6 +28,12 @@ export class DeliveryApiService {
   private pudoCities$?: Observable<PudoCity[]>;
   private citiesByRegion = new Map<number, Observable<City[]>>();
   private pudosByCity = new Map<number, Observable<PudoPoint[]>>();
+
+  getSettings(): Observable<DeliveryServiceSetting[]> {
+    return this.http
+      .get<{ data: DeliveryServiceSetting[] }>(`${this.baseUrl}/settings`)
+      .pipe(this.handleRateLimit(), map(res => res.data));
+  }
 
   getRegions(): Observable<Region[]> {
     if (!this.regions$) {

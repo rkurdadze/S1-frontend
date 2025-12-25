@@ -163,6 +163,27 @@
   background: rgba(255, 255, 255, 0.04);
   color: #f5f5f7;
   font-size: 14px;
+  transition: opacity 0.2s ease, background 0.2s ease;
+
+  &:disabled {
+    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.08);
+    filter: grayscale(1);
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: #ff0000;
+    border-width: 1px;
+    box-shadow: 0 0 0 1px #ff0000;
+    outline: none;
+
+    &:focus {
+      border-color: #ff0000;
+      box-shadow: 0 0 0 1px #ff0000;
+    }
+  }
 }
 
 .field.checkbox {

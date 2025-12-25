@@ -290,6 +290,7 @@
       "subtitle": "Добавьте товары из каталога, чтобы оформить заказ."
     },
     "form": {
+      "validation_error": "Заполните контактные данные для доставки.",
       "contacts": {
         "eyebrow": "Контакты",
         "subtitle": "Мы отправим подтверждение и статус заказа на указанные контакты.",
@@ -309,18 +310,18 @@
         "service_subtitle": "Выберите внутреннюю службу или Trackings.ge",
         "service_internal": "Внутренняя доставка",
         "service_internal_hint": "Используйте стандартное оформление заказа",
-        "service_tracking_hint": "Создать заказ через Trackings.ge",
+        "service_trackings_ge_hint": "Создать заказ через Trackings.ge",
         "service_trackings_ge": "Trackings.ge",
         "address_label": "Адрес",
         "address_placeholder": "Улица, дом",
         "apartment_label": "Квартира / офис",
         "apartment_placeholder": "Кв., подъезд",
-        "city_label": "Город",
+        "city_label": "Город / Село",
         "city_placeholder": "Тбилиси",
+        "municipality_label": "Муниципалитет",
+        "municipality_placeholder": "Выберите муниципалитет",
         "region_label": "Регион",
         "region_placeholder": "Кахетия",
-        "zip_label": "Почтовый индекс",
-        "zip_placeholder": "0100",
         "country_label": "Страна",
         "notes_label": "Комментарии",
         "notes_placeholder": "Уточнения по доставке"
@@ -375,12 +376,24 @@
     "delivery_form_error": "Заполните обязательные поля для доставки Trackings.ge.",
     "delivery_created": "Заказ Trackings.ge создан",
     "delivery_failed": "Не удалось создать заказ Trackings.ge",
+    "options": {
+      "courier": "Курьер",
+      "courier_desc": "Доставка по городу",
+      "pickup": "Самовывоз",
+      "pickup_desc": "Забрать из шоурума",
+      "express": "Экспресс",
+      "express_desc": "Экспресс-доставка в течение дня"
+    },
     "payment": {
       "title": "Итого к оплате",
       "login_status": "Войдите через Google, чтобы оплатить и сохранить данные для доставки",
       "submit_button": "Отправить заказ без оплаты",
       "google_pay_button": "Оплатить через Google Pay",
-      "hint": "После создания заказа мы отправим письмо с подтверждением."
+      "georgia_only_hint": "Доставка на данный момент возможна только по Грузии. Пожалуйста, выберите точку на карте.",
+      "hint": "После создания заказа мы отправим письмо с подтверждением.",
+      "auth_required": "Авторизуйтесь через Google, чтобы оплатить заказ.",
+      "empty_cart": "Ваша корзина пуста.",
+      "create_error": "Не удалось создать заказ. Попробуйте позже."
     }
   },
   "delivery": {
@@ -403,7 +416,7 @@
   },
   "item_page": {
     "breadcrumbs": {
-      "catalog": "Каталог",
+      "catalog": "Catalog",
       "outerwear": "Верхняя одежда"
     },
     "status": {
@@ -433,7 +446,7 @@
         "subtitle": "Примерка и бесплатный возврат"
       },
       "materials": {
-        "eyebrow": "Материалы",
+        "eyebrow": "Materials",
         "title": "Мембрана, утеплитель Primaloft®",
         "subtitle": "Тестируем на влагу и ветер"
       },
@@ -484,7 +497,7 @@
           "subtitle": "12 месяцев обслуживания"
         },
         "materials": {
-          "title": "Материалы",
+          "title": "Materials",
           "subtitle": "Водоотталкивающая мембрана"
         }
       },
@@ -531,8 +544,7 @@
         "share": "Поделиться"
       }
     }
-  }
-  ,
+  },
   "item_purchase": {
     "title": "Детали заказа",
     "add_to_cart": "В корзину",
@@ -753,13 +765,13 @@
         "toast_color_deleted": "Цвет удален",
         "toast_color_delete_error": "Не удалось удалить цвет",
         "toast_all_sizes_added": "Все размеры уже добавлены",
-        "toast_load_sizes_error": "Не удалось загрузить размеры",
+        "toast_load_sizes_error": "Failed to load sizes",
         "toast_size_added": "Размер добавлен",
-        "toast_size_add_error": "Не удалось добавить размер",
+        "toast_size_add_error": "Failed to add size",
         "toast_stock_updated": "Остатки обновлены",
-        "toast_stock_update_error": "Не удалось обновить остатки",
+        "toast_stock_update_error": "Failed to update stock",
         "toast_size_deleted": "Размер удален",
-        "toast_size_delete_error": "Не удалось удалить размер",
+        "toast_size_delete_error": "Failed to delete size",
         "confirm_delete_color": "Вы уверены, что хотите удалить этот цвет?",
         "confirm_delete_size": "Вы уверены, что хотите удалить этот размер?",
         "confirm_edit_color": "Вы уверены, что хотите изменить этот цвет?"
@@ -785,7 +797,7 @@
       "toast_create_error": "Не удалось создать тег",
       "toast_delete_error": "Не удалось удалить тег",
       "toast_delete_error_used": "Тег используется в товарах или категориях и не может быть удален",
-      "confirm_delete_used": "Тег «{{name}}» используется (количество упоминаний: {{count}}). При удалении он исчезнет из всех связанных объектов. Продолжить?",
+      "confirm_delete_used": "Тег \«{{name}}\» используется (количество упоминаний: {{count}}). При удалении он исчезнет из всех связанных объектов. Продолжить?",
       "tag_usage_warning": "Внимание: тег используется!",
       "button_delete": "Удалить",
       "button_cancel": "Отмена"

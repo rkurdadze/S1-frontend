@@ -290,6 +290,7 @@
       "subtitle": "Add items from the catalog to place an order."
     },
     "form": {
+      "validation_error": "Please fill in all required contact details for delivery.",
       "contacts": {
         "eyebrow": "Contacts",
         "subtitle": "We will send a confirmation and order status to the provided contacts.",
@@ -309,18 +310,18 @@
         "service_subtitle": "Use internal checkout or Trackings.ge",
         "service_internal": "Internal delivery",
         "service_internal_hint": "Use standard checkout",
-        "service_tracking_hint": "Create order via Trackings.ge",
+        "service_trackings_ge_hint": "Create order via Trackings.ge",
         "service_trackings_ge": "Trackings.ge",
         "address_label": "Address",
         "address_placeholder": "Street, house",
         "apartment_label": "Apartment / office",
         "apartment_placeholder": "Apt., entrance",
-        "city_label": "City",
+        "city_label": "City / Village",
         "city_placeholder": "Tbilisi",
+        "municipality_label": "Municipality",
+        "municipality_placeholder": "Select municipality",
         "region_label": "Region",
         "region_placeholder": "Kakheti",
-        "zip_label": "Postal code",
-        "zip_placeholder": "0100",
         "country_label": "Country",
         "notes_label": "Comments",
         "notes_placeholder": "Delivery clarifications"
@@ -375,12 +376,24 @@
     "delivery_form_error": "Fill required Trackings.ge delivery fields.",
     "delivery_created": "Trackings.ge order created",
     "delivery_failed": "Failed to create Trackings.ge order",
+    "options": {
+      "courier": "Courier",
+      "courier_desc": "City delivery",
+      "pickup": "Pickup",
+      "pickup_desc": "Collect from showroom",
+      "express": "Express",
+      "express_desc": "Same-day express delivery"
+    },
     "payment": {
       "title": "Total to pay",
       "login_status": "Log in via Google to pay and save delivery data",
       "submit_button": "Submit order without payment",
       "google_pay_button": "Pay with Google Pay",
-      "hint": "After creating the order, we will send a confirmation email."
+      "georgia_only_hint": "Delivery is currently only possible within Georgia. Please select a point on the map.",
+      "hint": "After creating the order, we will send a confirmation email.",
+      "auth_required": "Please log in via Google to pay for your order.",
+      "empty_cart": "Your cart is empty.",
+      "create_error": "Failed to create order. Please try again later."
     }
   },
   "delivery": {

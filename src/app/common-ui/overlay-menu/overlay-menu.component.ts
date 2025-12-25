@@ -12,6 +12,8 @@ import { AdminApiService } from '../../data/services/admin-api.service';
 import { AdminNewsletterSegment } from '../../data/interfaces/admin/admin.interfaces';
 import { Item } from '../../data/interfaces/item.interface';
 import { ADMIN_NAV_ITEMS, AdminNavItem } from '../../pages/admin/admin-nav.config';
+import {forkJoin} from 'rxjs';
+import {EventService} from '../../data/services/event.service';
 
 type SupportedLanguage = 'ka' | 'en' | 'ru';
 
@@ -29,6 +31,7 @@ export class OverlayMenuComponent implements OnInit {
   private googleAuth = inject(GoogleAuthService);
   private itemService = inject(ItemService);
   private adminApi = inject(AdminApiService);
+  private eventService = inject(EventService);
 
   isMenuOpen = this.overlayService.isMenuOpen;
   languageDropdownOpen = false;
@@ -66,10 +69,10 @@ export class OverlayMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.googleAuth.user$
+    this.eventService.refreshAdmin$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        if (this.googleAuth.isAdminOrManager) {
+        if (this.googleAuth.isAdminOrManager && this.activeView === 'admin') {
           this.loadAdminCounts();
         }
       });
@@ -124,10 +127,22 @@ export class OverlayMenuComponent implements OnInit {
         this.updateNavCount('/admin/orders', orders.length);
       });
 
-    this.adminApi.getDeliveryZones()
+    forkJoin([
+      this.adminApi.getDeliveryZones(),
+      this.adminApi.getDeliverySettings()
+    ]).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([zones, settings]) => {
+        const enabledSettings = settings.filter(s => s.enabled).length;
+        const totalSettings = settings.length;
+        const total = totalSettings + zones.length;
+        const enabled = enabledSettings + zones.length;
+        this.updateNavCount('/admin/delivery', `${enabled}/${total}`);
+      });
+
+    this.adminApi.getTags()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(zones => {
-        this.updateNavCount('/admin/delivery', zones.length);
+      .subscribe(tags => {
+        this.updateNavCount('/admin/tags', tags.length);
       });
 
     this.adminApi.getNewsletterSegments()
@@ -143,6 +158,7 @@ export class OverlayMenuComponent implements OnInit {
 
   showAdminView(): void {
     this.activeView = 'admin';
+    this.loadAdminCounts();
   }
 
   showMainView(): void {
@@ -199,7 +215,7 @@ export class OverlayMenuComponent implements OnInit {
     }
   }
 
-  private updateNavCount(route: string, count: number): void {
+  private updateNavCount(route: string, count: number | string): void {
     this.adminNavItems = this.adminNavItems.map(item =>
       item.route === route ? { ...item, count } : item
     );

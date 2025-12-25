@@ -90,24 +90,21 @@
         </div>
       </div>
 
-      <div class="panel-card" [formGroup]="deliveryForm">
+      <div class="panel-card" [formGroup]="deliveryForm" *ngIf="availableServices.length > 1">
         <div class="panel-card__header">
           <p class="eyebrow">{{ 'cart.form.delivery.service_eyebrow' | translate }}</p>
           <p class="muted">{{ 'cart.form.delivery.service_subtitle' | translate }}</p>
         </div>
         <div class="delivery-options">
-          <label class="delivery-option">
-            <input type="radio" formControlName="deliveryService" value="INTERNAL" />
+          <label class="delivery-option" *ngFor="let service of availableServices">
+            <input type="radio" formControlName="deliveryService" [value]="service.service" />
             <div>
-              <span class="delivery-option__title">{{ 'cart.form.delivery.service_internal' | translate }}</span>
-              <p class="muted">{{ 'cart.form.delivery.service_internal_hint' | translate }}</p>
-            </div>
-          </label>
-          <label class="delivery-option">
-            <input type="radio" formControlName="deliveryService" value="TRACKINGS_GE" />
-            <div>
-              <span class="delivery-option__title">{{ 'cart.form.delivery.service_trackings_ge' | translate }}</span>
-              <p class="muted">{{ 'cart.form.delivery.service_tracking_hint' | translate }}</p>
+              <span class="delivery-option__title">
+                 {{ service.label || ('cart.form.delivery.service_' + service.service.toLowerCase() | translate) }}
+              </span>
+              <p class="muted">
+                {{ 'cart.form.delivery.service_' + service.service.toLowerCase() + '_hint' | translate }}
+              </p>
             </div>
           </label>
         </div>
@@ -119,12 +116,14 @@
           <p class="muted">{{ 'cart.form.delivery.subtitle' | translate }}</p>
         </div>
 
+        <app-address-map (addressSelected)="onMapAddressSelected($event)"></app-address-map>
+
         <div class="delivery-options">
           <label class="delivery-option" *ngFor="let option of deliveryOptions">
             <input type="radio" formControlName="deliveryOption" [value]="option.id" />
             <div>
-              <span class="delivery-option__title">{{ option.label }}</span>
-              <p class="muted">{{ option.description }}</p>
+              <span class="delivery-option__title">{{ option.label | translate }}</span>
+              <p class="muted" *ngIf="option.description">{{ option.description | translate }}</p>
             </div>
           </label>
         </div>
@@ -139,16 +138,16 @@
             <input type="text" formControlName="addressLine2" [placeholder]="'cart.form.delivery.apartment_placeholder' | translate" />
           </label>
           <label class="field">
+            <span>{{ 'cart.form.delivery.municipality_label' | translate }}</span>
+            <input type="text" formControlName="municipality" [placeholder]="'cart.form.delivery.municipality_placeholder' | translate" />
+          </label>
+          <label class="field">
             <span>{{ 'cart.form.delivery.city_label' | translate }}</span>
             <input type="text" formControlName="city" [placeholder]="'cart.form.delivery.city_placeholder' | translate" />
           </label>
           <label class="field">
             <span>{{ 'cart.form.delivery.region_label' | translate }}</span>
             <input type="text" formControlName="region" [placeholder]="'cart.form.delivery.region_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.delivery.zip_label' | translate }}</span>
-            <input type="text" formControlName="postalCode" [placeholder]="'cart.form.delivery.zip_placeholder' | translate" />
           </label>
           <label class="field">
             <span>{{ 'cart.form.delivery.country_label' | translate }}</span>
@@ -328,16 +327,19 @@
         </div>
 
         <div class="payment-panel__buttons">
-          <button class="btn btn-dark" [disabled]="cartItems.length === 0 || isSubmitting" (click)="submitOrder()">
+          <button class="btn btn-dark" [disabled]="cartItems.length === 0 || isSubmitting || !isGeorgiaSelected" (click)="submitOrder()">
             {{ 'cart.payment.submit_button' | translate }}
           </button>
-          <button class="btn btn-google" [disabled]="!user || cartItems.length === 0 || isSubmitting" (click)="onGooglePay()">
+          <button class="btn btn-google" [disabled]="!user || cartItems.length === 0 || isSubmitting || !isGeorgiaSelected" (click)="onGooglePay()">
             <i class="fab fa-google-pay"></i>
             {{ 'cart.payment.google_pay_button' | translate }}
           </button>
         </div>
 
-        <div class="payment-panel__hint">{{ 'cart.payment.hint' | translate }}</div>
+        <div class="payment-panel__hint" *ngIf="!isGeorgiaSelected" style="color: #ffb4b4; margin-top: 8px; font-weight: 600;">
+          {{ 'cart.payment.georgia_only_hint' | translate }}
+        </div>
+        <div class="payment-panel__hint" *ngIf="isGeorgiaSelected">{{ 'cart.payment.hint' | translate }}</div>
         <div class="payment-panel__error" *ngIf="paymentError">{{ paymentError }}</div>
       </div>
     </form>

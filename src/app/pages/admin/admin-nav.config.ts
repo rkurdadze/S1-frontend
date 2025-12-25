@@ -2,7 +2,7 @@ export interface AdminNavItem {
   label: string;
   description: string;
   route: string;
-  count: number;
+  count: number | string;
 }
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [

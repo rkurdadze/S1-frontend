@@ -6,6 +6,7 @@ export interface ContactInfo {
   addressLine1: string;
   addressLine2?: string;
   city: string;
+  municipality?: string;
   region?: string;
   postalCode?: string;
   country?: string;

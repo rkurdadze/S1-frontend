@@ -20,15 +20,17 @@ import {
   AddressType,
   CreateOrderDto,
   DeliveryOrder,
+  DeliveryServiceSetting,
   PudoCity,
   PudoPoint
 } from '../../data/interfaces/delivery.interface';
 import {AddressModalComponent} from '../../common-ui/address-modal/address-modal.component';
+import {AddressMapComponent, MapAddress} from '../../common-ui/address-map/address-map.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, AddressModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, AddressModalComponent, AddressMapComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
@@ -37,9 +39,9 @@ export class CartComponent implements OnInit, OnDestroy {
   contactForm!: FormGroup;
   deliveryForm!: FormGroup;
   deliveryOptions: DeliveryOption[] = [
-    {id: 'courier', label: 'Курьер', description: 'Доставка по городу'},
-    {id: 'pickup', label: 'Самовывоз', description: 'Забрать из шоурума'},
-    {id: 'express', label: 'Экспресс', description: 'Экспресс-доставка в течение дня'}
+    {id: 'courier', label: 'cart.options.courier', description: 'cart.options.courier_desc'},
+    {id: 'pickup', label: 'cart.options.pickup', description: 'cart.options.pickup_desc'},
+    {id: 'express', label: 'cart.options.express', description: 'cart.options.express_desc'}
   ];
   isSubmitting = false;
   paymentError: string | null = null;
@@ -56,6 +58,7 @@ export class CartComponent implements OnInit, OnDestroy {
   addressModalOpen = false;
   addressModalType: AddressType = 'SENDER';
   lastDeliveryOrder?: DeliveryOrder;
+  availableServices: DeliveryServiceSetting[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -75,10 +78,10 @@ export class CartComponent implements OnInit, OnDestroy {
       phone: ['', Validators.required],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
-      city: ['', Validators.required],
-      region: [''],
-      postalCode: [''],
-      country: ['Georgia'],
+      city: [{value: '', disabled: true}, Validators.required],
+      municipality: [{value: '', disabled: true}],
+      region: [{value: '', disabled: true}],
+      country: [{value: '', disabled: true}],
       deliveryOption: [this.deliveryOptions[0].id, Validators.required],
       notes: ['']
     });
@@ -138,8 +141,11 @@ export class CartComponent implements OnInit, OnDestroy {
       this.deliveryForm.get('delivery_city_id')!.valueChanges.subscribe(cityId => this.loadDeliveryPudos(cityId))
     );
 
-    this.loadAddresses();
-    this.loadPudoCities();
+    this.subscription.add(
+      this.deliveryForm.get('deliveryService')!.valueChanges.subscribe(service => this.loadServiceData(service))
+    );
+
+    this.loadDeliverySettings();
     this.updatePickupValidators();
     this.updateCodValidators();
   }
@@ -154,6 +160,11 @@ export class CartComponent implements OnInit, OnDestroy {
 
   get selectedService(): string {
     return this.deliveryForm.get('deliveryService')?.value;
+  }
+
+  get isGeorgiaSelected(): boolean {
+    const country = this.contactForm.get('country')?.value;
+    return country === 'საქართველო' || country === 'Georgia';
   }
 
   getPhotoSrc(item: CartItem): string {
@@ -173,29 +184,44 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   private buildContactInfo(): ContactInfo {
+    const val = this.contactForm.getRawValue();
     return {
-      firstName: this.contactForm.value.firstName,
-      lastName: this.contactForm.value.lastName,
-      email: this.contactForm.value.email,
-      phone: this.contactForm.value.phone,
-      addressLine1: this.contactForm.value.addressLine1,
-      addressLine2: this.contactForm.value.addressLine2,
-      city: this.contactForm.value.city,
-      region: this.contactForm.value.region,
-      postalCode: this.contactForm.value.postalCode,
-      country: this.contactForm.value.country
+      firstName: val.firstName,
+      lastName: val.lastName,
+      email: val.email,
+      phone: val.phone,
+      addressLine1: val.addressLine1,
+      addressLine2: val.addressLine2,
+      city: val.city,
+      municipality: val.municipality,
+      region: val.region,
+      country: val.country
     };
   }
 
   async onGooglePay(): Promise<void> {
     this.paymentError = null;
     if (!this.user) {
-      this.paymentError = 'Авторизуйтесь через Google, чтобы оплатить заказ.';
+      this.paymentError = this.translate('cart.payment.auth_required');
       return;
     }
 
     if (this.cartItems.length === 0) {
-      this.paymentError = 'Корзина пуста.';
+      this.paymentError = this.translate('cart.payment.empty_cart');
+      return;
+    }
+
+    if (!this.contactForm.valid) {
+      this.contactForm.markAllAsTouched();
+      this.paymentError = this.translate('cart.form.validation_error');
+      this.toastService.error(this.paymentError);
+      this.focusFirstInvalidField();
+      return;
+    }
+
+    if (!this.isGeorgiaSelected) {
+      this.paymentError = this.translate('cart.payment.georgia_only_hint');
+      this.toastService.error(this.paymentError);
       return;
     }
 
@@ -215,7 +241,15 @@ export class CartComponent implements OnInit, OnDestroy {
 
     if (!this.contactForm.valid) {
       this.contactForm.markAllAsTouched();
-      this.paymentError = 'Заполните контактные данные для доставки.';
+      this.paymentError = this.translate('cart.form.validation_error');
+      this.toastService.error(this.paymentError);
+      this.focusFirstInvalidField();
+      return;
+    }
+
+    if (!this.isGeorgiaSelected) {
+      this.paymentError = this.translate('cart.payment.georgia_only_hint');
+      this.toastService.error(this.paymentError);
       return;
     }
 
@@ -243,7 +277,7 @@ export class CartComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Ошибка при создании заказа', error);
-        this.paymentError = 'Не удалось создать заказ. Попробуйте позже.';
+        this.paymentError = this.translate('cart.payment.create_error');
       },
       complete: () => (this.isSubmitting = false)
     });
@@ -303,9 +337,60 @@ export class CartComponent implements OnInit, OnDestroy {
     this.addressModalOpen = false;
   }
 
+  private focusFirstInvalidField(): void {
+    const firstInvalidControl = Object.keys(this.contactForm.controls).find(field => this.contactForm.get(field)?.invalid);
+    if (firstInvalidControl) {
+      const el = document.querySelector(`[formControlName="${firstInvalidControl}"]`) as HTMLElement;
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+
+  onMapAddressSelected(data: MapAddress): void {
+    this.contactForm.patchValue({
+      country: data.country,
+      region: data.region,
+      municipality: data.municipality,
+      city: data.city,
+      addressLine1: data.display_name
+    });
+
+    // Ensure fields remain disabled (patchValue doesn't change disabled state)
+    this.contactForm.get('country')?.disable();
+    this.contactForm.get('region')?.disable();
+    this.contactForm.get('municipality')?.disable();
+    this.contactForm.get('city')?.disable();
+  }
+
   private loadAddresses(): void {
     this.deliveryApi.listAddresses('SENDER').subscribe(addresses => (this.senderAddresses = addresses));
     this.deliveryApi.listAddresses('RECEIVER').subscribe(addresses => (this.receiverAddresses = addresses));
+  }
+
+  private loadDeliverySettings(): void {
+    this.deliveryApi.getSettings().subscribe(settings => {
+      this.availableServices = settings.filter(s => s.enabled);
+      if (this.availableServices.length === 1) {
+        this.deliveryForm.patchValue({ deliveryService: this.availableServices[0].service });
+      } else if (this.availableServices.length > 0) {
+        // If multiple options, ensure one is selected or keep default if valid
+        const currentService = this.deliveryForm.get('deliveryService')?.value;
+        const serviceExists = this.availableServices.some(s => s.service === currentService);
+        if (!serviceExists) {
+           this.deliveryForm.patchValue({ deliveryService: this.availableServices[0].service });
+        }
+      }
+      this.loadServiceData(this.deliveryForm.get('deliveryService')?.value);
+    });
+  }
+
+  private loadServiceData(service: string): void {
+    if (service === 'TRACKINGS_GE') {
+      this.loadAddresses();
+      this.loadPudoCities();
+    }
   }
 
   private loadPudoCities(): void {

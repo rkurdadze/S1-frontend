@@ -16,6 +16,24 @@ export interface City {
   name_ru?: string;
 }
 
+export interface Municipality {
+  id: number;
+  name: string;
+  name_en?: string;
+  name_ka?: string;
+  name_ru?: string;
+  region_id?: number;
+}
+
+export interface Village {
+  id: number;
+  name: string;
+  name_en?: string;
+  name_ka?: string;
+  name_ru?: string;
+  municipality_id?: number;
+}
+
 export interface PudoCity {
   id: number;
   name: string;

@@ -1,0 +1,9 @@
+.address-map {
+  height: 400px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+  z-index: 1; // Ensure map is below potential overlays
+}
