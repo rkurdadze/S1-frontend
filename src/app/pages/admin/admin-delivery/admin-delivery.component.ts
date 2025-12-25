@@ -27,7 +27,6 @@ export class AdminDeliveryComponent implements OnInit {
 
   zones: AdminDeliveryZone[] = [];
   selectedZone: AdminDeliveryZone | null = null;
-  showCreateForm = false;
   isLoading = false;
   isLoadingSettings = false;
   isSavingSettings = false;
@@ -61,13 +60,6 @@ export class AdminDeliveryComponent implements OnInit {
   resetForm(): void {
     this.selectedZone = null;
     this.form = { zone: '', price: '', eta: '', notes: '' };
-  }
-
-  toggleCreateForm(): void {
-    this.showCreateForm = !this.showCreateForm;
-    if (!this.showCreateForm) {
-      this.resetForm();
-    }
   }
 
   saveZone(): void {

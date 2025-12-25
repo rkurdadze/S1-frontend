@@ -21,7 +21,7 @@ export class AdminDeliverySettingsService {
 
   getSettings(): Observable<DeliveryServiceSetting[]> {
     return this.http
-      .get<{ data: DeliveryServiceSetting[] }>(this.baseUrl, this.authHeaders())
+      .get<{ data: DeliveryServiceSetting[] }>(`${this.baseApiUrl}delivery/settings`)
       .pipe(map(res => res.data));
   }
 

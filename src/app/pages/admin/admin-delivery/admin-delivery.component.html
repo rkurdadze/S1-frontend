@@ -5,46 +5,20 @@
       <h2>{{ 'admin.delivery.title' | translate }}</h2>
       <p class="admin-page__subtitle">{{ 'admin.delivery.subtitle' | translate }}</p>
     </div>
-    <button class="admin-button admin-button--primary admin-button--create" type="button" (click)="toggleCreateForm()">
-      {{ (showCreateForm ? 'admin.delivery.hide_form' : 'admin.delivery.show_form') | translate }}
-    </button>
   </header>
-
-  <article class="admin-card admin-card--form" *ngIf="showCreateForm">
-    <div class="admin-card__header">
-      <h3>{{ 'admin.delivery.new_card' | translate }}</h3>
-      <span class="admin-pill">{{ 'admin.delivery.draft' | translate }}</span>
-    </div>
-    <form class="admin-form" (ngSubmit)="saveZone()">
-      <label>
-        {{ 'admin.delivery.label_zone' | translate }}
-        <input type="text" name="zone" [(ngModel)]="form.zone" />
-      </label>
-      <div class="admin-form__row">
-        <label>
-          {{ 'admin.delivery.label_price' | translate }}
-          <input type="text" name="price" [(ngModel)]="form.price" />
-        </label>
-        <label>
-          {{ 'admin.delivery.label_eta' | translate }}
-          <input type="text" name="eta" [(ngModel)]="form.eta" />
-        </label>
-      </div>
-      <label>
-        {{ 'admin.delivery.label_notes' | translate }}
-        <textarea rows="4" name="notes" [(ngModel)]="form.notes"></textarea>
-      </label>
-      <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="submit">{{ 'admin.delivery.button_save' | translate }}</button>
-        <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.delivery.button_reset' | translate }}</button>
-      </div>
-    </form>
-  </article>
 
   <article class="admin-card admin-card--form">
     <div class="admin-card__header">
-      <h3>{{ 'admin.delivery.services.title' | translate }}</h3>
-      <span class="admin-pill" *ngIf="isLoadingSettings">{{ 'admin.delivery.services.loading' | translate }}</span>
+      <div class="admin-card__title-group">
+        <h3>{{ 'admin.delivery.services.title' | translate }}</h3>
+        <span class="admin-pill" *ngIf="isLoadingSettings">{{ 'admin.delivery.services.loading' | translate }}</span>
+      </div>
+      <div class="admin-card__header-actions">
+        <button class="admin-button admin-button--save" type="button" (click)="saveSettings()" [disabled]="isSavingSettings">
+          <i class="fas fa-save"></i>
+          {{ 'admin.delivery.services.save' | translate }}
+        </button>
+      </div>
     </div>
     <div class="admin-form settings-grid">
       <div class="settings-item" *ngFor="let setting of serviceSettings">
@@ -57,65 +31,29 @@
           <p class="muted">{{ 'admin.delivery.services.hint' | translate }}</p>
         </div>
       </div>
-      <div class="admin-form__actions">
-        <button class="admin-button admin-button--primary" type="button" (click)="saveSettings()" [disabled]="isSavingSettings">
-          {{ 'admin.delivery.services.save' | translate }}
-        </button>
-      </div>
     </div>
   </article>
 
-  <div class="admin-card">
-    <div class="admin-card__header">
-      <h3>{{ 'admin.delivery.list_title' | translate }}</h3>
-      <span class="admin-pill">{{ 'admin.delivery.active_count' | translate: { count: zones.length } }}</span>
-    </div>
-    <div class="zone-list">
-      <p class="admin-empty" *ngIf="isLoading">{{ 'admin.delivery.loading' | translate }}</p>
-      <ng-container *ngFor="let zone of zones">
-        <div class="zone">
-          <div>
-            <h4>{{ zone.zone }}</h4>
-            <p>{{ zone.eta }}</p>
-          </div>
-          <span class="zone__price">{{ zone.price }}</span>
-          <div class="zone__actions">
-            <button class="admin-button" type="button" (click)="selectZone(zone)">{{ 'admin.delivery.button_edit' | translate }}</button>
-            <button class="admin-button" type="button" (click)="deleteZone(zone)">{{ 'admin.delivery.button_delete' | translate }}</button>
-          </div>
-        </div>
-
-        <div class="admin-card admin-card--inline" *ngIf="selectedZone?.id === zone.id">
-          <div class="admin-card__header">
-            <h3>{{ 'admin.delivery.edit_card' | translate }}</h3>
-            <span class="admin-pill">{{ selectedZone?.zone }}</span>
-          </div>
-          <form class="admin-form" (ngSubmit)="saveZone()">
-            <label>
-              {{ 'admin.delivery.label_zone' | translate }}
-              <input type="text" name="editZone" [(ngModel)]="form.zone" />
-            </label>
-            <div class="admin-form__row">
-              <label>
-                {{ 'admin.delivery.label_price' | translate }}
-                <input type="text" name="editPrice" [(ngModel)]="form.price" />
-              </label>
-              <label>
-                {{ 'admin.delivery.label_eta' | translate }}
-                <input type="text" name="editEta" [(ngModel)]="form.eta" />
-              </label>
-            </div>
-            <label>
-              {{ 'admin.delivery.label_notes' | translate }}
-              <textarea rows="4" name="editNotes" [(ngModel)]="form.notes"></textarea>
-            </label>
-            <div class="admin-form__actions">
-              <button class="admin-button admin-button--primary" type="submit">{{ 'admin.delivery.button_save' | translate }}</button>
-              <button class="admin-button" type="button" (click)="resetForm()">{{ 'admin.delivery.button_reset' | translate }}</button>
-            </div>
-          </form>
-        </div>
-      </ng-container>
-    </div>
-  </div>
 </section>
+
+<!-- REUSABLE TEMPLATES -->
+<ng-template #zoneFormFields>
+  <label>
+    {{ 'admin.delivery.label_zone' | translate }}
+    <input type="text" name="zone" [(ngModel)]="form.zone" />
+  </label>
+  <div class="admin-form__row">
+    <label>
+      {{ 'admin.delivery.label_price' | translate }}
+      <input type="text" name="price" [(ngModel)]="form.price" />
+    </label>
+    <label>
+      {{ 'admin.delivery.label_eta' | translate }}
+      <input type="text" name="eta" [(ngModel)]="form.eta" />
+    </label>
+  </div>
+  <label>
+    {{ 'admin.delivery.label_notes' | translate }}
+    <textarea rows="4" name="notes" [(ngModel)]="form.notes"></textarea>
+  </label>
+</ng-template>

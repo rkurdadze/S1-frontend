@@ -3,12 +3,13 @@ import {ItemCardComponent} from '../../common-ui/item-card/item-card.component';
 import {Item} from '../../data/interfaces/item.interface';
 import {ItemService} from '../../data/services/item.service';
 import {JsonPipe, NgFor, NgIf} from '@angular/common';
-import {Subscription} from "rxjs";
+import {Subscription, catchError, of} from "rxjs";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {RouterLink} from "@angular/router";
 import {AdminApiService} from '../../data/services/admin-api.service';
 import {AdminCollection, AdminEditorial} from '../../data/interfaces/admin/admin.interfaces';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {GoogleAuthService} from '../../data/services/google-auth.service';
 
 interface CollectionCard {
   title: string;
@@ -42,6 +43,7 @@ interface EditorialStory {
 export class OutwearComponent implements OnDestroy, AfterViewInit {
   itemService = inject(ItemService);
   adminApi = inject(AdminApiService);
+  googleAuth = inject(GoogleAuthService);
   private destroyRef = inject(DestroyRef);
   items: Item[] = [];
   displayedItems: Item[] = [];
@@ -76,25 +78,33 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
       this.updateTranslatedSections(outwear);
     });
 
-    this.adminApi
-      .getCollections()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: collections => {
-          this.adminCollections = collections;
-          this.syncEditorialsAndCollections();
-        }
-      });
+    if (this.googleAuth.isAdminOrManager) {
+      this.adminApi
+        .getCollections()
+        .pipe(
+          catchError(() => of([])),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe({
+          next: collections => {
+            this.adminCollections = collections;
+            this.syncEditorialsAndCollections();
+          }
+        });
 
-    this.adminApi
-      .getEditorials()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: editorials => {
-          this.adminEditorials = editorials;
-          this.syncEditorialsAndCollections();
-        }
-      });
+      this.adminApi
+        .getEditorials()
+        .pipe(
+          catchError(() => of([])),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe({
+          next: editorials => {
+            this.adminEditorials = editorials;
+            this.syncEditorialsAndCollections();
+          }
+        });
+    }
   }
 
   ngAfterViewInit() {
@@ -112,7 +122,9 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   }
 
   private updateTranslatedSections(outwear: any) {
-    this.perks = outwear.perks;
+    if (outwear && typeof outwear === 'object') {
+      this.perks = outwear.perks;
+    }
     this.syncEditorialsAndCollections();
   }
 
@@ -125,7 +137,7 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
         image: collection.image,
         anchor: collection.anchor
       }));
-    } else if (this.translatedOutwear) {
+    } else if (this.translatedOutwear && Array.isArray(this.translatedOutwear.highlightCollections)) {
       this.highlightCollections = this.translatedOutwear.highlightCollections.map((item: any) => ({
         ...item,
         image: this.getHighlightCollectionImage(item.id),
@@ -140,7 +152,7 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
         image: story.image,
         cta: story.cta
       }));
-    } else if (this.translatedOutwear) {
+    } else if (this.translatedOutwear && Array.isArray(this.translatedOutwear.editorials)) {
       this.editorials = this.translatedOutwear.editorials.map((item: any) => ({
         ...item,
         image: this.getEditorialImage(item.id)
@@ -206,7 +218,7 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
     const cardWidth = 306; // 280px + 26px gap = 306px
     const maxCards = Math.floor(wrapperWidth / cardWidth);
 
-    this.displayedItems = this.items.slice(0, Math.max(1, maxCards));
+    this.displayedItems = this.items.slice(0, Math.max(6, maxCards));
   }
 
   @HostListener('window:resize')

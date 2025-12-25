@@ -1,75 +1,58 @@
 @use '_variables' as *;
 @use '../admin.scss' as *;
 
-.admin-card {
+.admin-list {
   display: grid;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.admin-card--form {
-  margin-bottom: 0;
-}
-
-.admin-card--inline {
+  gap: 12px;
   margin-top: 16px;
 }
 
-.order-list {
-  display: grid;
-  gap: 16px;
+.admin-card {
+  transition: all 0.3s ease;
+  
+  &.is-editing {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(var(--color-primary-rgb), 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
 }
 
-.order-row {
-  display: grid;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(18, 20, 26, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.order-row h4 {
-  margin: 0 0 6px;
-}
-
-.order-row p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 13px;
-}
-
-.order-row__meta {
+.admin-card__title-group {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
   align-items: center;
-}
-
-.order-row__status {
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(255, 118, 84, 0.2);
-  font-size: 12px;
-}
-
-.order-row__total {
-  font-weight: 600;
-}
-
-.order-row__delivery {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 13px;
-}
-
-.order-row__actions {
-  display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.admin-card__header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
 }
 
 @include media-sm {
   .admin-card {
-    padding: 18px;
+    padding: 16px;
+  }
+  
+  .admin-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .admin-card__header-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 }

@@ -47,9 +47,7 @@
         <div class="tag-card" *ngFor="let tag of filteredTags">
           <span class="tag-name">{{ tag }}</span>
           <button class="delete-btn" (click)="deleteTag(tag)" [title]="'admin.items.delete' | translate">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6L6 18M6 6l12 12"></path>
-            </svg>
+            <i class="fas fa-times"></i>
           </button>
         </div>
         <p class="admin-empty" *ngIf="filteredTags.length === 0">

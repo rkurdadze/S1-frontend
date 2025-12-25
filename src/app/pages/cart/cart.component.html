@@ -1,375 +1,396 @@
 <section class="cart-page">
-  <div class="cart-hero">
-    <div class="cart-hero__copy">
-      <p class="eyebrow">{{ 'cart.hero.eyebrow' | translate }}</p>
-      <h1>{{ 'cart.hero.title' | translate }}</h1>
-      <p class="muted">{{ 'cart.hero.subtitle' | translate }}</p>
-      <div class="cart-hero__chips">
-        <span class="chip">{{ 'cart.hero.chip_items' | translate: { count: cartItems.length } }}</span>
-        <span class="chip chip--ghost">{{ 'cart.hero.chip_taxes' | translate }}</span>
-      </div>
-    </div>
-    <div class="cart-hero__summary">
-      <p class="muted">{{ 'cart.hero.summary_title' | translate }}</p>
-      <div class="cart-hero__total">{{ total | number:'1.2-2' }} ₸</div>
-      <p class="muted">{{ 'cart.hero.summary_subtitle' | translate }}</p>
-      <button class="btn btn-ghost" *ngIf="cartItems.length > 0" (click)="clearCart()">{{ 'cart.hero.clear_cart' | translate }}</button>
-    </div>
-  </div>
-
-  <div class="cart-shell">
-    <div class="cart-items">
-      <div class="cart-card" *ngFor="let item of cartItems">
-        <div class="cart-card__media">
-          <img [src]="getPhotoSrc(item)" [alt]="item.name" />
-        </div>
-        <div class="cart-card__body">
-          <div class="cart-card__head">
-            <div>
-              <p class="eyebrow eyebrow--faded">{{ item.colorName }} · {{ item.sizeName }}</p>
-              <h3>{{ item.name }}</h3>
+    <div class="cart-hero">
+        <div class="cart-hero__copy">
+            <p class="eyebrow">{{ 'cart.hero.eyebrow' | translate }}</p>
+            <h1>{{ 'cart.hero.title' | translate }}</h1>
+            <p class="muted">{{ 'cart.hero.subtitle' | translate }}</p>
+            <div class="cart-hero__chips">
+                <span class="chip">{{ 'cart.hero.chip_items' | translate: {count: cartItems.length} }}</span>
+                <span class="chip chip--ghost">{{ 'cart.hero.chip_taxes' | translate }}</span>
             </div>
-            <button class="icon-circle" (click)="removeItem(item)" [attr.aria-label]="'cart.card.aria_remove_item' | translate">
-              <i class="fas fa-trash"></i>
+        </div>
+        <div class="cart-hero__summary">
+            <p class="muted">{{ 'cart.hero.summary_title' | translate }}</p>
+            <div class="cart-hero__total">{{ total | number:'1.2-2' }} ₸</div>
+            <p class="muted">{{ 'cart.hero.summary_subtitle' | translate }}</p>
+            <button class="btn btn-ghost" *ngIf="cartItems.length > 0"
+                    (click)="clearCart()">{{ 'cart.hero.clear_cart' | translate }}
             </button>
-          </div>
-
-          <div class="cart-card__meta">
-            <div class="meta-block">
-              <span class="muted">{{ 'cart.card.price' | translate }}</span>
-              <span class="strong">{{ item.price | number:'1.2-2' }} ₸</span>
-            </div>
-            <div class="meta-block quantity-control">
-              <label class="muted">{{ 'cart.card.quantity' | translate }}</label>
-              <div class="quantity-control__field">
-                <input
-                  type="number"
-                  min="1"
-                  [value]="item.quantity"
-                  (change)="updateQuantity(item, $any($event.target).valueAsNumber || 1)"
-                />
-              </div>
-            </div>
-            <div class="meta-block align-end">
-              <span class="muted">{{ 'cart.card.total' | translate }}</span>
-              <span class="strong">{{ (item.price * item.quantity) | number:'1.2-2' }} ₸</span>
-            </div>
-          </div>
         </div>
-      </div>
-
-      <div class="cart-empty" *ngIf="cartItems.length === 0">
-        <p class="strong">{{ 'cart.empty.title' | translate }}</p>
-        <p class="muted">{{ 'cart.empty.subtitle' | translate }}</p>
-      </div>
     </div>
 
-    <form [formGroup]="contactForm" class="checkout-form">
-      <div class="panel-card">
-        <div class="panel-card__header">
-          <p class="eyebrow">{{ 'cart.form.contacts.eyebrow' | translate }}</p>
-          <p class="muted">{{ 'cart.form.contacts.subtitle' | translate }}</p>
-        </div>
-        <div class="field-grid two-cols">
-          <label class="field">
-            <span>{{ 'cart.form.contacts.first_name_label' | translate }}</span>
-            <input type="text" formControlName="firstName" [placeholder]="'cart.form.contacts.first_name_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.contacts.last_name_label' | translate }}</span>
-            <input type="text" formControlName="lastName" [placeholder]="'cart.form.contacts.last_name_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.contacts.email_label' | translate }}</span>
-            <input type="email" formControlName="email" [placeholder]="'cart.form.contacts.email_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.contacts.phone_label' | translate }}</span>
-            <input type="tel" formControlName="phone" [placeholder]="'cart.form.contacts.phone_placeholder' | translate" />
-          </label>
-        </div>
-      </div>
+    <div class="cart-shell">
+        <div class="cart-items">
+            <div class="cart-card" *ngFor="let item of cartItems">
+                <div class="cart-card__media">
+                    <img [src]="getPhotoSrc(item)" [alt]="item.name"/>
+                </div>
+                <div class="cart-card__body">
+                    <div class="cart-card__head">
+                        <div>
+                            <p class="eyebrow eyebrow--faded">{{ item.colorName }} · {{ item.sizeName }}</p>
+                            <h3>{{ item.name }}</h3>
+                        </div>
+                        <button class="icon-circle" (click)="removeItem(item)"
+                                [attr.aria-label]="'cart.card.aria_remove_item' | translate">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
 
-      <div class="panel-card" [formGroup]="deliveryForm" *ngIf="availableServices.length > 1">
-        <div class="panel-card__header">
-          <p class="eyebrow">{{ 'cart.form.delivery.service_eyebrow' | translate }}</p>
-          <p class="muted">{{ 'cart.form.delivery.service_subtitle' | translate }}</p>
+                    <div class="cart-card__meta">
+                        <div class="meta-block">
+                            <span class="muted">{{ 'cart.card.price' | translate }}</span>
+                            <span class="strong">{{ item.price | number:'1.2-2' }} ₸</span>
+                        </div>
+                        <div class="meta-block quantity-control">
+                            <label class="muted">{{ 'cart.card.quantity' | translate }}</label>
+                            <div class="quantity-control__field">
+                                <input
+                                        type="number"
+                                        min="1"
+                                        [value]="item.quantity"
+                                        (change)="updateQuantity(item, $any($event.target).valueAsNumber || 1)"
+                                />
+                            </div>
+                        </div>
+                        <div class="meta-block align-end">
+                            <span class="muted">{{ 'cart.card.total' | translate }}</span>
+                            <span class="strong">{{ (item.price * item.quantity) | number:'1.2-2' }} ₸</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-empty" *ngIf="cartItems.length === 0">
+                <p class="strong">{{ 'cart.empty.title' | translate }}</p>
+                <p class="muted">{{ 'cart.empty.subtitle' | translate }}</p>
+            </div>
         </div>
-        <div class="delivery-options">
-          <label class="delivery-option" *ngFor="let service of availableServices">
-            <input type="radio" formControlName="deliveryService" [value]="service.service" />
-            <div>
+
+        <form [formGroup]="contactForm" class="checkout-form">
+            <div class="panel-card">
+                <div class="panel-card__header">
+                    <p class="eyebrow">{{ 'cart.form.contacts.eyebrow' | translate }}</p>
+                    <p class="muted">{{ 'cart.form.contacts.subtitle' | translate }}</p>
+                </div>
+                <div class="field-grid two-cols">
+                    <label class="field">
+                        <span>{{ 'cart.form.contacts.first_name_label' | translate }}</span>
+                        <input type="text" formControlName="firstName"
+                               [placeholder]="'cart.form.contacts.first_name_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.contacts.last_name_label' | translate }}</span>
+                        <input type="text" formControlName="lastName"
+                               [placeholder]="'cart.form.contacts.last_name_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.contacts.email_label' | translate }}</span>
+                        <input type="email" formControlName="email"
+                               [placeholder]="'cart.form.contacts.email_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.contacts.phone_label' | translate }}</span>
+                        <input type="tel" formControlName="phone"
+                               [placeholder]="'cart.form.contacts.phone_placeholder' | translate"/>
+                    </label>
+                </div>
+            </div>
+
+            <div class="panel-card" [formGroup]="deliveryForm" *ngIf="availableServices.length > 1">
+                <div class="panel-card__header">
+                    <p class="eyebrow">{{ 'cart.form.delivery.service_eyebrow' | translate }}</p>
+                    <p class="muted">{{ 'cart.form.delivery.service_subtitle' | translate }}</p>
+                </div>
+                <div class="delivery-options">
+                    <label class="delivery-option" *ngFor="let service of availableServices">
+                        <input type="radio" formControlName="deliveryService" [value]="service.service"/>
+                        <div>
               <span class="delivery-option__title">
                  {{ service.label || ('cart.form.delivery.service_' + service.service.toLowerCase() | translate) }}
               </span>
-              <p class="muted">
-                {{ 'cart.form.delivery.service_' + service.service.toLowerCase() + '_hint' | translate }}
-              </p>
+                            <p class="muted">
+                                {{ 'cart.form.delivery.service_' + service.service.toLowerCase() + '_hint' | translate }}
+                            </p>
+                        </div>
+                    </label>
+                </div>
             </div>
-          </label>
-        </div>
-      </div>
 
-      <div class="panel-card" *ngIf="selectedService === 'INTERNAL'">
+            <div class="panel-card" *ngIf="selectedService === 'INTERNAL'">
+                <div class="panel-card__header">
+                    <p class="eyebrow">{{ 'cart.form.delivery.eyebrow' | translate }}</p>
+                    <p class="muted">{{ 'cart.form.delivery.subtitle' | translate }}</p>
+                </div>
+
+                <app-address-map (addressSelected)="onMapAddressSelected($event)"></app-address-map>
+
+                <div class="field-grid two-cols">
+                    <label class="field">
+                        <span>{{ 'cart.form.delivery.address_label' | translate }}</span>
+                        <input type="text" formControlName="addressLine1"
+                               [placeholder]="'cart.form.delivery.address_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.delivery.apartment_label' | translate }}</span>
+                        <input type="text" formControlName="addressLine2"
+                               [placeholder]="'cart.form.delivery.apartment_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.delivery.municipality_label' | translate }}</span>
+                        <input type="text" formControlName="municipality"
+                               [placeholder]="'cart.form.delivery.municipality_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.delivery.city_label' | translate }}</span>
+                        <input type="text" formControlName="city"
+                               [placeholder]="'cart.form.delivery.city_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.delivery.region_label' | translate }}</span>
+                        <input type="text" formControlName="region"
+                               [placeholder]="'cart.form.delivery.region_placeholder' | translate"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.form.delivery.country_label' | translate }}</span>
+                        <input type="text" formControlName="country"/>
+                    </label>
+                </div>
+
+                <label class="field">
+                    <span>{{ 'cart.form.delivery.notes_label' | translate }}</span>
+                    <textarea formControlName="notes" [placeholder]="'cart.form.delivery.notes_placeholder' | translate"
+                              rows="3"></textarea>
+                </label>
+            </div>
+
+            <div class="panel-card" *ngIf="selectedService === 'TRACKINGS_GE'" [formGroup]="deliveryForm">
+                <div class="panel-card__header">
+                    <p class="eyebrow">{{ 'cart.delivery.trackings.eyebrow' | translate }}</p>
+                    <p class="muted">{{ 'cart.delivery.trackings.subtitle' | translate }}</p>
+                </div>
+
+                <div class="field-grid two-cols">
+                    <label class="field">
+                        <span>{{ 'cart.delivery.pickup_method' | translate }}</span>
+                        <select formControlName="pickup_method">
+                            <option value="COURIER">{{ 'cart.delivery.courier' | translate }}</option>
+                            <option value="PUDO">{{ 'cart.delivery.pudo' | translate }}</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.delivery_method' | translate }}</span>
+                        <select formControlName="delivery_method">
+                            <option value="COURIER">{{ 'cart.delivery.courier' | translate }}</option>
+                            <option value="PUDO">{{ 'cart.delivery.pudo' | translate }}</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="field-grid two-cols" *ngIf="deliveryForm.get('pickup_method')?.value === 'COURIER'">
+                    <label class="field">
+                        <span>{{ 'cart.delivery.sender_address' | translate }}</span>
+                        <select formControlName="sender_address_id">
+                            <option *ngFor="let address of senderAddresses" [value]="address.id">{{ address.address }}
+                            </option>
+                        </select>
+                    </label>
+                    <button type="button" class="btn"
+                            (click)="openAddressModal('SENDER')">{{ 'cart.delivery.add_sender' | translate }}
+                    </button>
+                </div>
+
+                <div class="field-grid two-cols" *ngIf="deliveryForm.get('pickup_method')?.value === 'PUDO'">
+                    <label class="field">
+                        <span>{{ 'cart.delivery.pickup_city' | translate }}</span>
+                        <select formControlName="pickup_city_id">
+                            <option value="">{{ 'cart.delivery.select_city' | translate }}</option>
+                            <option *ngFor="let city of pudoCities" [value]="city.id">{{ city.name_ru || city.name }}
+                            </option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.pickup_pudo' | translate }}</span>
+                        <select formControlName="pickup_pudo_id">
+                            <option value="">{{ 'cart.delivery.select_pudo' | translate }}</option>
+                            <option *ngFor="let pudo of pickupPudos"
+                                    [value]="pudo.pudo_id">{{ pudo.name_ka || pudo.city_name }}
+                            </option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="field-grid two-cols" *ngIf="deliveryForm.get('delivery_method')?.value === 'COURIER'">
+                    <label class="field">
+                        <span>{{ 'cart.delivery.receiver_address' | translate }}</span>
+                        <select formControlName="receiver_address_id">
+                            <option *ngFor="let address of receiverAddresses"
+                                    [value]="address.id">{{ address.address }}
+                            </option>
+                        </select>
+                    </label>
+                    <button type="button" class="btn"
+                            (click)="openAddressModal('RECEIVER')">{{ 'cart.delivery.add_receiver' | translate }}
+                    </button>
+                </div>
+
+                <div class="field-grid two-cols" *ngIf="deliveryForm.get('delivery_method')?.value === 'PUDO'">
+                    <label class="field">
+                        <span>{{ 'cart.delivery.delivery_city' | translate }}</span>
+                        <select formControlName="delivery_city_id">
+                            <option value="">{{ 'cart.delivery.select_city' | translate }}</option>
+                            <option *ngFor="let city of pudoCities" [value]="city.id">{{ city.name_ru || city.name }}
+                            </option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.delivery_pudo' | translate }}</span>
+                        <select formControlName="delivery_pudo_id">
+                            <option value="">{{ 'cart.delivery.select_pudo' | translate }}</option>
+                            <option *ngFor="let pudo of deliveryPudos"
+                                    [value]="pudo.pudo_id">{{ pudo.name_ka || pudo.city_name }}
+                            </option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="field-grid two-cols">
+                    <label class="field">
+                        <span>{{ 'cart.delivery.sender_phone' | translate }}</span>
+                        <input formControlName="sender_phone_number" type="tel"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.receiver_phone' | translate }}</span>
+                        <input formControlName="receiver_phone_number" type="tel"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.receiver_name' | translate }}</span>
+                        <input formControlName="receiver_name" type="text"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.weight' | translate }}</span>
+                        <input formControlName="weight" type="number" step="0.1" min="0.1"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.items_quantity' | translate }}</span>
+                        <input formControlName="items_quantity" type="number" min="1"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.description' | translate }}</span>
+                        <textarea formControlName="description" rows="2"></textarea>
+                    </label>
+                </div>
+
+                <div class="field-grid two-cols">
+                    <label class="field">
+                        <span>{{ 'cart.delivery.payer' | translate }}</span>
+                        <select formControlName="payer">
+                            <option value="SENDER">{{ 'cart.delivery.payer_sender' | translate }}</option>
+                            <option value="RECEIVER">{{ 'cart.delivery.payer_receiver' | translate }}</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.payment_type' | translate }}</span>
+                        <select formControlName="payment_type">
+                            <option value="CASH">{{ 'cart.delivery.payment_cash' | translate }}</option>
+                            <option value="CASHLESS">{{ 'cart.delivery.payment_cashless' | translate }}</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="field-grid two-cols">
+                    <label class="field checkbox">
+                        <input type="checkbox" formControlName="cod"/>
+                        <span>{{ 'cart.delivery.cod' | translate }}</span>
+                    </label>
+                    <label class="field" *ngIf="deliveryForm.get('cod')?.value">
+                        <span>{{ 'cart.delivery.cod_amount' | translate }}</span>
+                        <input type="number" min="0" formControlName="cod_amount"/>
+                    </label>
+                    <label class="field checkbox">
+                        <input type="checkbox" formControlName="fragile"/>
+                        <span>{{ 'cart.delivery.fragile' | translate }}</span>
+                    </label>
+                    <label class="field checkbox">
+                        <input type="checkbox" formControlName="to_have_picture"/>
+                        <span>{{ 'cart.delivery.photo' | translate }}</span>
+                    </label>
+                    <label class="field checkbox">
+                        <input type="checkbox" formControlName="insured"/>
+                        <span>{{ 'cart.delivery.insured' | translate }}</span>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.return_decision' | translate }}</span>
+                        <input type="text" formControlName="return_decision"/>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'cart.delivery.return_pudo' | translate }}</span>
+                        <input type="number" formControlName="return_pudo_id"/>
+                    </label>
+                </div>
+            </div>
+
+            <div class="panel-card payment-panel">
+                <div class="payment-panel__row">
+                    <div>
+                        <p class="eyebrow">{{ 'cart.payment.title' | translate }}</p>
+                        <div class="payment-panel__total">{{ total | number:'1.2-2' }} ₸</div>
+                    </div>
+                    <div class="login-status" *ngIf="!user">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ 'cart.payment.login_status' | translate }}
+                    </div>
+                </div>
+
+                <div class="payment-panel__buttons">
+                    <button class="btn btn-dark"
+                            [disabled]="cartItems.length === 0 || isSubmitting || !isGeorgiaSelected"
+                            (click)="submitOrder()">
+                        {{ 'cart.payment.submit_button' | translate }}
+                    </button>
+                    <button class="btn btn-google"
+                            [disabled]="!user || cartItems.length === 0 || isSubmitting || !isGeorgiaSelected"
+                            (click)="onGooglePay()">
+                        <i class="fab fa-google-pay"></i>
+                        {{ 'cart.payment.google_pay_button' | translate }}
+                    </button>
+                </div>
+
+                <div class="payment-panel__hint" *ngIf="!isGeorgiaSelected"
+                     style="color: #ffb4b4; margin-top: 8px; font-weight: 600;">
+                    {{ 'cart.payment.georgia_only_hint' | translate }}
+                </div>
+                <div class="payment-panel__hint" *ngIf="isGeorgiaSelected">{{ 'cart.payment.hint' | translate }}</div>
+                <div class="payment-panel__error" *ngIf="paymentError">{{ paymentError }}</div>
+            </div>
+        </form>
+    </div>
+
+    <div class="panel-card" *ngIf="lastDeliveryOrder">
         <div class="panel-card__header">
-          <p class="eyebrow">{{ 'cart.form.delivery.eyebrow' | translate }}</p>
-          <p class="muted">{{ 'cart.form.delivery.subtitle' | translate }}</p>
+            <p class="eyebrow">{{ 'cart.delivery.result_eyebrow' | translate }}</p>
+            <p class="muted">{{ 'cart.delivery.result_subtitle' | translate }}</p>
         </div>
-
-        <app-address-map (addressSelected)="onMapAddressSelected($event)"></app-address-map>
-
-        <div class="delivery-options">
-          <label class="delivery-option" *ngFor="let option of deliveryOptions">
-            <input type="radio" formControlName="deliveryOption" [value]="option.id" />
+        <div class="result-grid">
             <div>
-              <span class="delivery-option__title">{{ option.label | translate }}</span>
-              <p class="muted" *ngIf="option.description">{{ option.description | translate }}</p>
+                <p class="muted">{{ 'cart.delivery.tracking_code' | translate }}</p>
+                <p class="strong">{{ lastDeliveryOrder.tracking_code }}</p>
             </div>
-          </label>
+            <div>
+                <p class="muted">{{ 'cart.delivery.status' | translate }}</p>
+                <p class="strong">{{ lastDeliveryOrder.current_status_text || lastDeliveryOrder.status }}</p>
+            </div>
+            <div>
+                <p class="muted">{{ 'cart.delivery.created_at' | translate }}</p>
+                <p class="strong">{{ lastDeliveryOrder.created_at | date:'short' }}</p>
+            </div>
         </div>
-
-        <div class="field-grid two-cols">
-          <label class="field">
-            <span>{{ 'cart.form.delivery.address_label' | translate }}</span>
-            <input type="text" formControlName="addressLine1" [placeholder]="'cart.form.delivery.address_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.delivery.apartment_label' | translate }}</span>
-            <input type="text" formControlName="addressLine2" [placeholder]="'cart.form.delivery.apartment_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.delivery.municipality_label' | translate }}</span>
-            <input type="text" formControlName="municipality" [placeholder]="'cart.form.delivery.municipality_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.delivery.city_label' | translate }}</span>
-            <input type="text" formControlName="city" [placeholder]="'cart.form.delivery.city_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.delivery.region_label' | translate }}</span>
-            <input type="text" formControlName="region" [placeholder]="'cart.form.delivery.region_placeholder' | translate" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.form.delivery.country_label' | translate }}</span>
-            <input type="text" formControlName="country" />
-          </label>
-        </div>
-
-        <label class="field">
-          <span>{{ 'cart.form.delivery.notes_label' | translate }}</span>
-          <textarea formControlName="notes" [placeholder]="'cart.form.delivery.notes_placeholder' | translate" rows="3"></textarea>
-        </label>
-      </div>
-
-      <div class="panel-card" *ngIf="selectedService === 'TRACKINGS_GE'" [formGroup]="deliveryForm">
-        <div class="panel-card__header">
-          <p class="eyebrow">{{ 'cart.delivery.trackings.eyebrow' | translate }}</p>
-          <p class="muted">{{ 'cart.delivery.trackings.subtitle' | translate }}</p>
-        </div>
-
-        <div class="field-grid two-cols">
-          <label class="field">
-            <span>{{ 'cart.delivery.pickup_method' | translate }}</span>
-            <select formControlName="pickup_method">
-              <option value="COURIER">{{ 'cart.delivery.courier' | translate }}</option>
-              <option value="PUDO">{{ 'cart.delivery.pudo' | translate }}</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.delivery_method' | translate }}</span>
-            <select formControlName="delivery_method">
-              <option value="COURIER">{{ 'cart.delivery.courier' | translate }}</option>
-              <option value="PUDO">{{ 'cart.delivery.pudo' | translate }}</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="field-grid two-cols" *ngIf="deliveryForm.get('pickup_method')?.value === 'COURIER'">
-          <label class="field">
-            <span>{{ 'cart.delivery.sender_address' | translate }}</span>
-            <select formControlName="sender_address_id">
-              <option *ngFor="let address of senderAddresses" [value]="address.id">{{ address.address }}</option>
-            </select>
-          </label>
-          <button type="button" class="btn" (click)="openAddressModal('SENDER')">{{ 'cart.delivery.add_sender' | translate }}</button>
-        </div>
-
-        <div class="field-grid two-cols" *ngIf="deliveryForm.get('pickup_method')?.value === 'PUDO'">
-          <label class="field">
-            <span>{{ 'cart.delivery.pickup_city' | translate }}</span>
-            <select formControlName="pickup_city_id">
-              <option value="">{{ 'cart.delivery.select_city' | translate }}</option>
-              <option *ngFor="let city of pudoCities" [value]="city.id">{{ city.name_ru || city.name }}</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.pickup_pudo' | translate }}</span>
-            <select formControlName="pickup_pudo_id">
-              <option value="">{{ 'cart.delivery.select_pudo' | translate }}</option>
-              <option *ngFor="let pudo of pickupPudos" [value]="pudo.pudo_id">{{ pudo.name_ka || pudo.city_name }}</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="field-grid two-cols" *ngIf="deliveryForm.get('delivery_method')?.value === 'COURIER'">
-          <label class="field">
-            <span>{{ 'cart.delivery.receiver_address' | translate }}</span>
-            <select formControlName="receiver_address_id">
-              <option *ngFor="let address of receiverAddresses" [value]="address.id">{{ address.address }}</option>
-            </select>
-          </label>
-          <button type="button" class="btn" (click)="openAddressModal('RECEIVER')">{{ 'cart.delivery.add_receiver' | translate }}</button>
-        </div>
-
-        <div class="field-grid two-cols" *ngIf="deliveryForm.get('delivery_method')?.value === 'PUDO'">
-          <label class="field">
-            <span>{{ 'cart.delivery.delivery_city' | translate }}</span>
-            <select formControlName="delivery_city_id">
-              <option value="">{{ 'cart.delivery.select_city' | translate }}</option>
-              <option *ngFor="let city of pudoCities" [value]="city.id">{{ city.name_ru || city.name }}</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.delivery_pudo' | translate }}</span>
-            <select formControlName="delivery_pudo_id">
-              <option value="">{{ 'cart.delivery.select_pudo' | translate }}</option>
-              <option *ngFor="let pudo of deliveryPudos" [value]="pudo.pudo_id">{{ pudo.name_ka || pudo.city_name }}</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="field-grid two-cols">
-          <label class="field">
-            <span>{{ 'cart.delivery.sender_phone' | translate }}</span>
-            <input formControlName="sender_phone_number" type="tel" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.receiver_phone' | translate }}</span>
-            <input formControlName="receiver_phone_number" type="tel" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.receiver_name' | translate }}</span>
-            <input formControlName="receiver_name" type="text" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.weight' | translate }}</span>
-            <input formControlName="weight" type="number" step="0.1" min="0.1" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.items_quantity' | translate }}</span>
-            <input formControlName="items_quantity" type="number" min="1" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.description' | translate }}</span>
-            <textarea formControlName="description" rows="2"></textarea>
-          </label>
-        </div>
-
-        <div class="field-grid two-cols">
-          <label class="field">
-            <span>{{ 'cart.delivery.payer' | translate }}</span>
-            <select formControlName="payer">
-              <option value="SENDER">{{ 'cart.delivery.payer_sender' | translate }}</option>
-              <option value="RECEIVER">{{ 'cart.delivery.payer_receiver' | translate }}</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.payment_type' | translate }}</span>
-            <select formControlName="payment_type">
-              <option value="CASH">{{ 'cart.delivery.payment_cash' | translate }}</option>
-              <option value="CASHLESS">{{ 'cart.delivery.payment_cashless' | translate }}</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="field-grid two-cols">
-          <label class="field checkbox">
-            <input type="checkbox" formControlName="cod" />
-            <span>{{ 'cart.delivery.cod' | translate }}</span>
-          </label>
-          <label class="field" *ngIf="deliveryForm.get('cod')?.value">
-            <span>{{ 'cart.delivery.cod_amount' | translate }}</span>
-            <input type="number" min="0" formControlName="cod_amount" />
-          </label>
-          <label class="field checkbox">
-            <input type="checkbox" formControlName="fragile" />
-            <span>{{ 'cart.delivery.fragile' | translate }}</span>
-          </label>
-          <label class="field checkbox">
-            <input type="checkbox" formControlName="to_have_picture" />
-            <span>{{ 'cart.delivery.photo' | translate }}</span>
-          </label>
-          <label class="field checkbox">
-            <input type="checkbox" formControlName="insured" />
-            <span>{{ 'cart.delivery.insured' | translate }}</span>
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.return_decision' | translate }}</span>
-            <input type="text" formControlName="return_decision" />
-          </label>
-          <label class="field">
-            <span>{{ 'cart.delivery.return_pudo' | translate }}</span>
-            <input type="number" formControlName="return_pudo_id" />
-          </label>
-        </div>
-      </div>
-
-      <div class="panel-card payment-panel">
-        <div class="payment-panel__row">
-          <div>
-            <p class="eyebrow">{{ 'cart.payment.title' | translate }}</p>
-            <div class="payment-panel__total">{{ total | number:'1.2-2' }} ₸</div>
-          </div>
-          <div class="login-status" *ngIf="!user">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ 'cart.payment.login_status' | translate }}
-          </div>
-        </div>
-
-        <div class="payment-panel__buttons">
-          <button class="btn btn-dark" [disabled]="cartItems.length === 0 || isSubmitting || !isGeorgiaSelected" (click)="submitOrder()">
-            {{ 'cart.payment.submit_button' | translate }}
-          </button>
-          <button class="btn btn-google" [disabled]="!user || cartItems.length === 0 || isSubmitting || !isGeorgiaSelected" (click)="onGooglePay()">
-            <i class="fab fa-google-pay"></i>
-            {{ 'cart.payment.google_pay_button' | translate }}
-          </button>
-        </div>
-
-        <div class="payment-panel__hint" *ngIf="!isGeorgiaSelected" style="color: #ffb4b4; margin-top: 8px; font-weight: 600;">
-          {{ 'cart.payment.georgia_only_hint' | translate }}
-        </div>
-        <div class="payment-panel__hint" *ngIf="isGeorgiaSelected">{{ 'cart.payment.hint' | translate }}</div>
-        <div class="payment-panel__error" *ngIf="paymentError">{{ paymentError }}</div>
-      </div>
-    </form>
-  </div>
-
-  <div class="panel-card" *ngIf="lastDeliveryOrder">
-    <div class="panel-card__header">
-      <p class="eyebrow">{{ 'cart.delivery.result_eyebrow' | translate }}</p>
-      <p class="muted">{{ 'cart.delivery.result_subtitle' | translate }}</p>
     </div>
-    <div class="result-grid">
-      <div>
-        <p class="muted">{{ 'cart.delivery.tracking_code' | translate }}</p>
-        <p class="strong">{{ lastDeliveryOrder.tracking_code }}</p>
-      </div>
-      <div>
-        <p class="muted">{{ 'cart.delivery.status' | translate }}</p>
-        <p class="strong">{{ lastDeliveryOrder.current_status_text || lastDeliveryOrder.status }}</p>
-      </div>
-      <div>
-        <p class="muted">{{ 'cart.delivery.created_at' | translate }}</p>
-        <p class="strong">{{ lastDeliveryOrder.created_at | date:'short' }}</p>
-      </div>
-    </div>
-  </div>
 
-  <app-address-modal
-    [open]="addressModalOpen"
-    [defaultType]="addressModalType"
-    (closed)="onAddressModalClosed()"
-    (saved)="onAddressSaved($event)"
-  ></app-address-modal>
+    <app-address-modal
+            [open]="addressModalOpen"
+            [defaultType]="addressModalType"
+            (closed)="onAddressModalClosed()"
+            (saved)="onAddressSaved($event)"
+    ></app-address-modal>
 </section>

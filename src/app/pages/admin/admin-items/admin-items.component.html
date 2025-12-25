@@ -19,8 +19,14 @@
           <span class="admin-pill">{{ 'admin.items.creating' | translate }}</span>
         </div>
         <div class="admin-card__header-actions">
-          <button class="admin-button admin-button--primary" type="button" (click)="onSaveItem()">{{ 'admin.items.create_item' | translate }}</button>
-          <button class="admin-button admin-button--ghost" type="button" (click)="cancelEdit()">{{ 'admin.items.cancel_edit' | translate }}</button>
+          <button class="admin-button admin-button--primary" type="button" (click)="onSaveItem()">
+            <i class="fas fa-check"></i>
+            {{ 'admin.items.create_item' | translate }}
+          </button>
+          <button class="admin-button admin-button--ghost" type="button" (click)="cancelEdit()">
+            <i class="fas fa-times"></i>
+            {{ 'admin.items.cancel_edit' | translate }}
+          </button>
         </div>
       </div>
       <div class="admin-form">
@@ -77,7 +83,7 @@
                 <div class="admin-list__actions">
                   <ng-template #editAction>
                     <button class="admin-icon-button admin-icon-button--edit" type="button" (click)="$event.stopPropagation(); startEdit(item)" [title]="'admin.items.edit' | translate">
-                      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L19.81 7.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41l-2.51-2.51a1 1 0 0 0-1.41 0l-1.97 1.97 3.75 3.75 2.14-2.14z"/></svg>
+                      <i class="fas fa-edit"></i>
                     </button>
                   </ng-template>
                   
@@ -86,7 +92,7 @@
                   </ng-container>
 
                   <button class="admin-icon-button admin-icon-button--delete" type="button" (click)="$event.stopPropagation(); onDeleteItem(item)" [title]="'admin.items.delete' | translate">
-                    <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 7zm3-4h6l1 2h4v2H4V5h4l1-2z"/></svg>
+                    <i class="fas fa-trash"></i>
                   </button>
                 </div>
               </div>
@@ -100,8 +106,14 @@
                   <span class="admin-pill">{{ 'admin.items.id' | translate }} {{ selectedItem?.id }}</span>
                 </div>
                 <div class="admin-card__header-actions">
-                  <button class="admin-button admin-button--primary" type="button" (click)="onSaveItem()">{{ 'admin.items.save_changes' | translate }}</button>
-                  <button class="admin-button admin-button--ghost" type="button" (click)="cancelEdit()">{{ 'admin.items.cancel_edit' | translate }}</button>
+                  <button class="admin-button admin-button--primary" type="button" (click)="onSaveItem()">
+                    <i class="fas fa-check"></i>
+                    {{ 'admin.items.save_changes' | translate }}
+                  </button>
+                  <button class="admin-button admin-button--ghost" type="button" (click)="cancelEdit()">
+                    <i class="fas fa-times"></i>
+                    {{ 'admin.items.cancel_edit' | translate }}
+                  </button>
                 </div>
               </div>
               <div class="admin-form">
