@@ -19,6 +19,7 @@ import {AdminNewsletterComponent} from "./pages/admin/admin-newsletter/admin-new
 import {AdminDeliveryComponent} from "./pages/admin/admin-delivery/admin-delivery.component";
 import {AdminTagsComponent} from "./pages/admin/admin-tags/admin-tags.component";
 import {adminGuard} from "./data/guards/admin.guard";
+import {OrdersComponent} from './pages/orders/orders.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent},
@@ -28,6 +29,7 @@ export const routes: Routes = [
             {path: 'catalog', component: CatalogComponent},
             {path: 'items', redirectTo: 'catalog'},
             {path: 'cart', component: CartComponent},
+            {path: 'my-orders', component: OrdersComponent},
             {path: 'profile', component: ProfileComponent},
             {path: 'item/:id', component: ItemPageComponent},
             {

@@ -1,0 +1,47 @@
+<div class="modal-backdrop" *ngIf="open">
+  <div class="modal">
+    <div class="modal__header">
+      <h3>{{ (initialData ? 'delivery.address.edit_title' : 'delivery.address.create_title') | translate }}</h3>
+      <button class="icon-circle" type="button" (click)="close()" aria-label="close">×</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="modal__body">
+      <label class="field">
+        <span>{{ 'delivery.address.address_label' | translate }}</span>
+        <input formControlName="address" type="text" [placeholder]="'delivery.address.address_placeholder' | translate" />
+      </label>
+
+      <label class="field">
+        <span>{{ 'delivery.address.type_label' | translate }}</span>
+        <select formControlName="type">
+          <option value="SENDER">{{ 'delivery.address.sender' | translate }}</option>
+          <option value="RECEIVER">{{ 'delivery.address.receiver' | translate }}</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>{{ 'delivery.address.region_label' | translate }}</span>
+        <select formControlName="region" (change)="onRegionChange($any($event.target).value)">
+          <option value="">{{ 'delivery.address.region_placeholder' | translate }}</option>
+          <option *ngFor="let region of regions" [value]="region.id">{{ region.name_ru || region.name_en }}</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>{{ 'delivery.address.city_label' | translate }}</span>
+        <select formControlName="city_id">
+          <option value="" disabled>{{ 'delivery.address.city_placeholder' | translate }}</option>
+          <option *ngFor="let city of cities" [value]="city.id">{{ city.name_ru || city.name }}</option>
+        </select>
+        <small class="muted" *ngIf="cityLoading">{{ 'delivery.address.loading_cities' | translate }}</small>
+      </label>
+
+      <div class="modal__actions">
+        <button type="button" class="btn" (click)="close()">{{ 'delivery.address.cancel' | translate }}</button>
+        <button type="submit" class="btn btn-dark" [disabled]="isSaving || form.invalid">
+          {{ 'delivery.address.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

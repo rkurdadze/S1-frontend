@@ -1,0 +1,51 @@
+<section class="orders-page">
+  <header class="orders-header">
+    <div>
+      <p class="eyebrow">{{ 'orders.eyebrow' | translate }}</p>
+      <h2>{{ 'orders.title' | translate }}</h2>
+      <p class="muted">{{ 'orders.subtitle' | translate }}</p>
+    </div>
+    <button class="btn" type="button" (click)="refresh()">{{ 'orders.refresh' | translate }}</button>
+  </header>
+
+  <div class="orders-grid">
+    <div class="orders-list">
+      <p class="muted" *ngIf="isLoading">{{ 'orders.loading' | translate }}</p>
+      <div class="order-row" *ngFor="let order of orders" (click)="selectOrder(order)">
+        <div>
+          <p class="strong">#{{ order.order_id || order.id }}</p>
+          <p class="muted">{{ order.tracking_code }}</p>
+        </div>
+        <div class="order-row__meta">
+          <span class="pill">{{ order.current_status_text || order.status }}</span>
+          <span class="muted">{{ order.created_at | date:'short' }}</span>
+        </div>
+      </div>
+      <p class="muted" *ngIf="!isLoading && orders.length === 0">{{ 'orders.empty' | translate }}</p>
+    </div>
+
+    <div class="order-details" *ngIf="selectedOrder">
+      <h3>{{ 'orders.details_title' | translate }} {{ selectedOrder.tracking_code }}</h3>
+      <p class="muted" *ngIf="isLoadingDetails">{{ 'orders.loading' | translate }}</p>
+      <div class="details-grid" *ngIf="!isLoadingDetails">
+        <div>
+          <p class="muted">{{ 'orders.status' | translate }}</p>
+          <p class="strong">{{ selectedOrder.current_status_text || selectedOrder.status }}</p>
+        </div>
+        <div>
+          <p class="muted">{{ 'orders.weight' | translate }}</p>
+          <p class="strong">{{ selectedOrder.weight }}</p>
+        </div>
+        <div>
+          <p class="muted">{{ 'orders.items_quantity' | translate }}</p>
+          <p class="strong">{{ selectedOrder.items_quantity }}</p>
+        </div>
+        <div>
+          <p class="muted">{{ 'orders.payment_type' | translate }}</p>
+          <p class="strong">{{ selectedOrder.payment_type }}</p>
+        </div>
+      </div>
+      <pre class="raw-json">{{ selectedOrder | json }}</pre>
+    </div>
+  </div>
+</section>

@@ -7,6 +7,8 @@ import { AdminApiService } from '../../../data/services/admin-api.service';
 import { AdminDeliveryZone } from '../../../data/interfaces/admin/admin.interfaces';
 import { ToastService } from '../../../common-ui/toast-container/toast.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {DeliveryServiceSetting} from '../../../data/interfaces/delivery.interface';
+import {AdminDeliverySettingsService} from '../../../data/services/admin-delivery-settings.service';
 
 @Component({
   selector: 'app-admin-delivery',
@@ -19,11 +21,18 @@ export class AdminDeliveryComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
+  private deliverySettingsApi = inject(AdminDeliverySettingsService);
 
   zones: AdminDeliveryZone[] = [];
   selectedZone: AdminDeliveryZone | null = null;
   showCreateForm = false;
   isLoading = false;
+  isLoadingSettings = false;
+  isSavingSettings = false;
+  serviceSettings: DeliveryServiceSetting[] = [
+    { service: 'INTERNAL', enabled: true },
+    { service: 'TRACKINGS_GE', enabled: false }
+  ];
 
   form: Omit<AdminDeliveryZone, 'id'> = {
     zone: '',
@@ -34,6 +43,7 @@ export class AdminDeliveryComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadZones();
+    this.loadServiceSettings();
   }
 
   selectZone(zone: AdminDeliveryZone): void {
@@ -101,6 +111,43 @@ export class AdminDeliveryComponent implements OnInit {
         },
         error: () => {
           this.toast.error(this.translate.instant('admin.delivery.toast_delete_error'));
+        }
+      });
+  }
+
+  toggleService(setting: DeliveryServiceSetting): void {
+    setting.enabled = !setting.enabled;
+  }
+
+  saveSettings(): void {
+    this.isSavingSettings = true;
+    this.deliverySettingsApi
+      .saveSettings(this.serviceSettings)
+      .pipe(finalize(() => (this.isSavingSettings = false)))
+      .subscribe({
+        next: settings => {
+          this.serviceSettings = settings;
+          this.toast.success(this.translate.instant('admin.delivery.settings_saved'));
+        },
+        error: () => {
+          this.toast.error(this.translate.instant('admin.delivery.settings_error'));
+        }
+      });
+  }
+
+  private loadServiceSettings(): void {
+    this.isLoadingSettings = true;
+    this.deliverySettingsApi
+      .getSettings()
+      .pipe(finalize(() => (this.isLoadingSettings = false)))
+      .subscribe({
+        next: settings => {
+          if (settings?.length) {
+            this.serviceSettings = settings;
+          }
+        },
+        error: () => {
+          this.toast.error(this.translate.instant('admin.delivery.settings_error'));
         }
       });
   }
