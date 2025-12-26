@@ -59,6 +59,11 @@
 
 @include media-xs {
   .mobile-bottom-menu-item__label {
-    font-size: 11px;
+    font-size: .5rem;
+  }
+
+  .mobile-bottom-menu-item__icon {
+    width: 14px;
+    height: 14px;
   }
 }

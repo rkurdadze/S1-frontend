@@ -98,8 +98,6 @@ button, input {
 
 
 
-
-
 .item-card__wrapper {
   width: 100%;
   display: grid;
@@ -108,19 +106,6 @@ button, input {
   justify-content: center;
 }
 
-@include media-md {
-  .item-card__wrapper {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-}
-
-@include media-sm {
-  .item-card__wrapper {
-    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-  }
-}
-
-/* Common Selector Styles (used in item-page and admin) */
 .selector-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -145,3 +130,14 @@ button, input {
   font-size: 12px;
 }
 
+@include media-md {
+  .item-card__wrapper {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+@include media-sm {
+  .item-card__wrapper {
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  }
+}

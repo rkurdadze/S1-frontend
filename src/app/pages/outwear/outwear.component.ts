@@ -52,8 +52,10 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
   private resizeObserver?: ResizeObserver;
 
   highlightCollections: CollectionCard[] = [];
+  displayedCollections: CollectionCard[] = [];
   perks: any[] = [];
   editorials: EditorialStory[] = [];
+  displayedEditorials: EditorialStory[] = [];
 
   private translatedOutwear: any = null;
   private adminCollections: AdminCollection[] = [];
@@ -158,6 +160,7 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
         image: this.getEditorialImage(item.id)
       }));
     }
+    this.updateDisplayedItems();
   }
 
   private getHighlightCollectionImage(id: string): string {
@@ -215,10 +218,47 @@ export class OutwearComponent implements OnDestroy, AfterViewInit {
     if (!itemCardWrapper) return;
 
     const wrapperWidth = itemCardWrapper.offsetWidth;
-    const cardWidth = 306; // 280px + 26px gap = 306px
-    const maxCards = Math.floor(wrapperWidth / cardWidth);
+    const gap = 14;
+    const isMobileExtraSmall = window.innerWidth <= 364;
 
-    this.displayedItems = this.items.slice(0, Math.max(6, maxCards));
+    // 1. Items logic
+    let cardMinWidth = 280;
+    if (window.innerWidth <= 768) cardMinWidth = 220;
+    if (window.innerWidth <= 576) cardMinWidth = 165;
+
+    let columnsPerRow = Math.floor((wrapperWidth + gap) / (cardMinWidth + gap));
+    if (isMobileExtraSmall) columnsPerRow = 2;
+
+    if (columnsPerRow > 0) {
+      const rowsCount = Math.max(1, Math.ceil(6 / columnsPerRow));
+      this.displayedItems = this.items.slice(0, columnsPerRow * rowsCount);
+    }
+
+    // 2. Collections logic
+    let collectionMinWidth = 280;
+    let colColumns = Math.floor((wrapperWidth + 18) / (collectionMinWidth + 18));
+    if (isMobileExtraSmall) colColumns = 2;
+    if (colColumns > 0) {
+      const colRows = Math.ceil(this.highlightCollections.length / colColumns);
+      // If we want equal rows, we must have total = colColumns * N
+      // But for collections we usually want to show all, so we might truncate only if it's explicitly required
+      // Since the user asked for "number of cards in each row must be equal", we truncate to full rows.
+      const balancedCount = Math.floor(this.highlightCollections.length / colColumns) * colColumns;
+      this.displayedCollections = this.highlightCollections.slice(0, Math.max(colColumns, balancedCount));
+    } else {
+      this.displayedCollections = this.highlightCollections;
+    }
+
+    // 3. Editorials logic
+    let editorialMinWidth = 280;
+    let edColumns = Math.floor((wrapperWidth + 14) / (editorialMinWidth + 14));
+    if (isMobileExtraSmall) edColumns = 2;
+    if (edColumns > 0) {
+      const balancedCount = Math.floor(this.editorials.length / edColumns) * edColumns;
+      this.displayedEditorials = this.editorials.slice(0, Math.max(edColumns, balancedCount));
+    } else {
+      this.displayedEditorials = this.editorials;
+    }
   }
 
   @HostListener('window:resize')

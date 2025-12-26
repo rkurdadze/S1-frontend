@@ -29,7 +29,7 @@
     </div>
 </div>
 <section class="collection-cards" id="collection">
-  @for (collection of highlightCollections; track collection.title) {
+  @for (collection of displayedCollections; track collection.title) {
     <article class="collection-card">
       <div class="collection-card__image">
         <img [src]="collection.image" [alt]="collection.title" />
@@ -93,7 +93,7 @@
     <a href="#" class="text-link">{{ 'outwear.stories.cta' | translate }}</a>
   </div>
   <div class="editorial__grid">
-    @for (story of editorials; track story.title) {
+    @for (story of displayedEditorials; track story.title) {
       <article class="story">
         <div class="story__image">
           <img [src]="story.image" [alt]="story.title" />
